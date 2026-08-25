@@ -1,0 +1,50 @@
+## Visual Studio / General IDE
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## JetBrains Rider IDE
+.idea/
+*.sln.iml
+
+## Build Results & Outputs
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]uildResults/
+
+## .NET Core / NuGet
+project.lock.json
+project.fragment.lock.json
+artifacts/
+.nuget/packages/
+*.nupkg
+*.snupkg
+
+## WPF / Visual Studio Designer Caches
+_ReSharper*/
+*.rsuser
+*.cache
+*.patch
+
+## Operating System Files
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+~*
