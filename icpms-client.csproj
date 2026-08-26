@@ -7,6 +7,71 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
+        <ApplicationIcon>Assets\Images\FlexiTech-Logo-Icon.ico</ApplicationIcon>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentFTP" Version="54.2.0" />
+      <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
+      <PackageReference Include="log4net" Version="3.4.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="FontAwesome5" Version="2.1.11" />
+      
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.1" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.1" />
+      
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.1" />
+      
+      <PackageReference Include="System.IO.Ports" Version="9.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Common\" />
+      <Folder Include="UserControls\" />
+      <Folder Include="Utils\Helpers\Video\" />
+      <Folder Include="Utils\ModelHelpers\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="appsettings.json" />
+      <Content Include="appsettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Assets\Images\FlexiTech-Logo-Icon.ico" />
+      <Resource Include="Assets\Images\FlexiTech-Logo-Icon.ico" />
+      <None Remove="Assets\Images\FlexiTech-Logo-Icon.png" />
+      <Resource Include="Assets\Images\FlexiTech-Logo-Icon.png" />
+      <None Remove="Assets\Images\Icons\arrow-down-icon.svg" />
+      <Resource Include="Assets\Images\Icons\arrow-down-icon.svg" />
+      <None Remove="Assets\Images\Icons\back-arrow-icon.svg" />
+      <Resource Include="Assets\Images\Icons\back-arrow-icon.svg" />
+      <None Remove="Assets\Images\Icons\check-icon.svg" />
+      <Resource Include="Assets\Images\Icons\check-icon.svg" />
+      <None Remove="Assets\Images\Icons\next-arrow-icon.svg" />
+      <Resource Include="Assets\Images\Icons\next-arrow-icon.svg" />
+      <None Remove="Assets\Images\Icons\number-arrow-icon.svg" />
+      <Resource Include="Assets\Images\Icons\number-arrow-icon.svg" />
+      <None Remove="Assets\Images\Icons\password-eye-close-icon.svg" />
+      <Resource Include="Assets\Images\Icons\password-eye-close-icon.svg" />
+      <None Remove="Assets\Images\Icons\password-eye-open-icon.svg" />
+      <Resource Include="Assets\Images\Icons\password-eye-open-icon.svg" />
+      <None Remove="Assets\Images\Icons\previous-arrow-icon.svg" />
+      <Resource Include="Assets\Images\Icons\previous-arrow-icon.svg" />
+      <None Remove="Assets\Images\Icons\search-icon.svg" />
+      <Resource Include="Assets\Images\Icons\search-icon.svg" />
+      <None Remove="Assets\Images\Icons\truck-with-cargo.png" />
+      <Resource Include="Assets\Images\Icons\truck-with-cargo.png" />
+      <None Remove="Assets\Images\Icons\truck-with-cargo.svg" />
+      <Resource Include="Assets\Images\Icons\truck-with-cargo.svg" />
+      <None Remove="Assets\Images\Icons\Truck-without-cargo.png" />
+      <Resource Include="Assets\Images\Icons\Truck-without-cargo.png" />
+    </ItemGroup>
 
 </Project>

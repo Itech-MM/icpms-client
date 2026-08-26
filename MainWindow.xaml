@@ -1,12 +1,70 @@
-﻿<Window x:Class="icpms_client.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:icpms_client"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+﻿<base:BaseWindow x:Class="icpms_client.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:base="clr-namespace:icpms_client.Common.UI"
+                 xmlns:converters="clr-namespace:icpms_client.Common.Converters"
+                 xmlns:fa="http://schemas.fontawesome.io/icons/"
+                 WindowState="Maximized"
+                 WindowStyle="None"
+                 ResizeMode="CanResizeWithGrip"
+                 UseLayoutRounding="True"
+                 Icon="Assets/Images/FlexiTech-Logo-Icon.ico"
+                 Title="FlexiTech | ICPMS" Width="800">
+    
+    <!-- Add WindowChrome Settings -->
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            ResizeBorderThickness="0"
+            CaptionHeight="30"
+            GlassFrameThickness="0"
+            UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <converters:WindowStateToIconConverter x:Key="WindowStateToIconConverter"/>
+    </Window.Resources>
+    <Grid Background="{DynamicResource PrimaryBackgroundColor}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" 
+                Height="30" 
+                Background="{DynamicResource PrimaryTitleBarColor}"
+                MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid>
+                <StackPanel Orientation="Horizontal">
+                    <!--<Image Source="Assets/Images/FlexiTech-Logo-Icon.png" Width="20" Margin="10,0"/>-->
+                    <TextBlock Text="FlexiTech | ICPMS" 
+                               VerticalAlignment="Center"
+                               Margin="10,0"/>
+                </StackPanel>
 
+                <!-- Window Controls (Minimize, Maximize, Close) -->
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button Style="{StaticResource WindowControlButtonStyle}" 
+                            Click="Minimize_Click" WindowChrome.IsHitTestVisibleInChrome="True">
+                        <fa:FontAwesome Icon="Minus" VerticalAlignment="Center"/>
+                    </Button>
+                    <Button Style="{StaticResource WindowControlButtonStyle}" 
+                            Click="Maximize_Click" WindowChrome.IsHitTestVisibleInChrome="True">
+                        <fa:FontAwesome 
+                            Icon="{Binding WindowState, 
+                      RelativeSource={RelativeSource AncestorType=Window}, 
+                      Converter={StaticResource WindowStateToIconConverter}}" 
+                            VerticalAlignment="Center"/>
+                    </Button>
+                    <Button Style="{StaticResource WindowControlButtonStyle}" 
+                            Click="Close_Click" Tag="Close" WindowChrome.IsHitTestVisibleInChrome="True">
+                        <fa:FontAwesome Icon="Close" VerticalAlignment="Center"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+        
+        <Frame x:Name="MainWindowFrame" Grid.Row="1" Grid.Column="0" />
     </Grid>
-</Window>
+</base:BaseWindow>

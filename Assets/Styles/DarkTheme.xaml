@@ -1,0 +1,67 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Dark Theme with Light Theme's Button Colors -->
+    <SolidColorBrush x:Key="PrimaryColor" Color="#4b9be4" />
+    
+    <SolidColorBrush x:Key="PrimaryTitleBarColor" Color="#0A1929"/>
+    <SolidColorBrush x:Key="WindowControlHoverColor" Color="#1D3A4C"/>
+    
+    <SolidColorBrush x:Key="PrimaryBackgroundColor" Color="#0D1B2A" />
+    <SolidColorBrush x:Key="SecondaryBackgroundColor" Color="#1B263B" />
+
+    <SolidColorBrush x:Key="SecondaryTextColor" Color="#778DA9" />
+    
+    <!-- BUTTON COLORS MATCHING LIGHT THEME -->
+    <SolidColorBrush x:Key="PrimaryButtonColor" Color="#007BFF" />          <!-- Light Theme Primary Button -->
+    <SolidColorBrush x:Key="SecondaryButtonColor" Color="#CED4DA" />        <!-- Light Theme Secondary Button -->
+    <SolidColorBrush x:Key="MutedButtonColor" Color="#6C757D" />            <!-- Light Theme Muted Button -->
+    
+    <SolidColorBrush x:Key="PrimaryWhiteColor" Color="#0D1B2A" />
+    <SolidColorBrush x:Key="PrimaryTextBorderColor" Color="#415A77" />
+    <SolidColorBrush x:Key="PrimaryTextFocusColor" Color="#80BDFF" />
+
+    <SolidColorBrush x:Key="PrimaryBlackColor" Color="#E0E1DD" />
+    <SolidColorBrush x:Key="PrimaryRedColor" Color="#DC3545" />              <!-- Light Theme Red -->
+    <SolidColorBrush x:Key="PrimaryGreenColor" Color="#28A745" />            <!-- Light Theme Green -->
+    <SolidColorBrush x:Key="PrimaryGreenLighterColor" Color="#A0FFB5" />     <!-- Light Theme Green Lighter -->
+    <SolidColorBrush x:Key="PrimaryLightColor" Color="#1B263B" />
+    <SolidColorBrush x:Key="PrimaryAccentColor" Color="#3A86FF" />
+    <SolidColorBrush x:Key="SecondaryAccentColor" Color="#F4A261" />
+    <SolidColorBrush x:Key="SecondaryAccentHoverColor" Color="#FF9F1C" />
+    <SolidColorBrush x:Key="PrimaryBorderColor" Color="#415A77" />
+    <SolidColorBrush x:Key="SecondaryBorderColor" Color="#778DA9" />
+    <SolidColorBrush x:Key="PrimaryDarkColor" Color="#0A1121" />
+    <SolidColorBrush x:Key="PrimaryRedLighterColor" Color="#FF6666" />
+
+    <!-- Table Colors -->
+    <SolidColorBrush x:Key="TableBorder" Color="#1B263B" />
+    <SolidColorBrush x:Key="TableAlternatingRowBackground" Color="#14213D" />
+    <SolidColorBrush x:Key="TableColumnHeader" Color="#264653" />
+    <SolidColorBrush x:Key="TableMouseOverColor" Color="#2A9D8F30" />
+
+    <!-- Scrollbar Colors -->
+    <SolidColorBrush x:Key="ScrollBar.Thumb.Background" Color="#415A77" />
+    <SolidColorBrush x:Key="ScrollBar.Thumb.Hover.Background" Color="#778DA9" />
+    <SolidColorBrush x:Key="ScrollBar.Thumb.Pressed.Background" Color="#2A9D8F" />
+    
+    <!-- In DARK theme resource dictionary -->
+    <SolidColorBrush x:Key="PureBlackColor" Color="#000000"/> <!-- Pure black -->
+    <SolidColorBrush x:Key="PureWhiteColor" Color="#FFFFFF"/> <!-- Pure white -->
+    
+    <!-- Button Type Hover Colors (Dark Theme) -->
+    <SolidColorBrush x:Key="YesHoverBackground" Color="#1E3B2C"/>
+    <SolidColorBrush x:Key="NoHoverBackground" Color="#3B1E1E"/>
+    <SolidColorBrush x:Key="CancelHoverBackground" Color="#2D2D2D"/>
+    <SolidColorBrush x:Key="OkHoverBackground" Color="#1E2A3B"/>
+
+    <!-- Button Type Pressed Colors (Dark Theme) -->
+    <SolidColorBrush x:Key="YesPressedBackground" Color="#1A3325"/>
+    <SolidColorBrush x:Key="NoPressedBackground" Color="#331A1A"/>
+    <SolidColorBrush x:Key="CancelPressedBackground" Color="#252525"/>
+    <SolidColorBrush x:Key="OkPressedBackground" Color="#1A2433"/>
+    
+    <SolidColorBrush x:Key="ErrorColor" Color="#EA5455"/>
+    <SolidColorBrush x:Key="WarningColor" Color="#FF9F43"/>
+    <SolidColorBrush x:Key="QuestionColor" Color="#007ACC"/>
+    <SolidColorBrush x:Key="InfoColor" Color="#28C76F"/>
+</ResourceDictionary>
