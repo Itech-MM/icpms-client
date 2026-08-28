@@ -1,31 +1,27 @@
 ﻿using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+using icpms_client.Network.Request.Shift;
+using icpms_client.Network.Response;
+using icpms_client.Network.Response.Auth;
 using icpms_client.Network.Services.Auth;
+using icpms_client.Network.Services.Shift;
 using icpms_client.Network.Session;
 using icpms_client.Services.UIServices;
 using icpms_client.Utils.Storage;
 using log4net;
+using Newtonsoft.Json;
 
 namespace icpms_client;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow
 {
     private readonly ILog _log = LogManager.GetLogger(typeof(MainWindow));
     private readonly AuthService _authService = new();
-    
+    private readonly ShiftService _shiftService = new();
+
     private bool _isLoading;
 
     public MainWindow()
@@ -48,36 +44,42 @@ public partial class MainWindow
         }
     }
 
-    /// <summary>
-    /// Triggered when the MainWindow has finished loading.
-    /// </summary>
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
         DialogService.ShowLoadingDialog(this, "Initializing...");
         await LoadUserAsync();
     }
 
-
-    /// <summary>
-    /// Asynchronously loads the user session and token.
-    /// </summary>
     private async Task LoadUserAsync()
     {
         IsLoading = true;
 
         try
         {
-            /*var session = await UserSessionStorage.LoadSessionAsync();
+            var session = await UserSessionStorage.LoadSessionAsync();
             if (session != null)
             {
-                var response = await _authService.CheckToken(session.Token ?? "");
+                var response = await _authService.CheckToken(session.CurrentAuth?.AccessToken ?? "");
                 if (response is { Success: true })
                 {
-                    UserSession.CurrentUser = session;
-                    UserSession.CurrentUser.Token = session.Token;
+                    var auth = (BaseResponse<AuthResponse>)response;
+                    
+                    if (auth.Data is { StartShift: false })
+                    {
+                        
+                        Authenticated = true;
+                        _log.Info("User is already logged in.");
+                        UserSession.CurrentUser = session;
+                        UserSession.CurrentShift = auth.Data!.ActiveShift!;
 
-                    Authenticated = true;
-                    NavigateToMainPage();
+                        NavigateToMainPage();
+                    }
+                    else
+                    {
+                        _log.Warn("Token is valid but shift not start yet.");
+                        InitializeLoginPage();
+                        Authenticated = false;
+                    }
                 }
                 else
                 {
@@ -86,7 +88,7 @@ public partial class MainWindow
                     Authenticated = false;
                 }
             }
-            else*/
+            else
             {
                 _log.Warn("No user session found. Redirecting to login.");
                 InitializeLoginPage();
@@ -104,7 +106,7 @@ public partial class MainWindow
             IsLoading = false;
         }
     }
-    
+
     private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton == MouseButton.Left)
@@ -118,30 +120,81 @@ public partial class MainWindow
 
     private void Maximize_Click(object sender, RoutedEventArgs e)
     {
-        WindowState = (WindowState == WindowState.Maximized) 
-            ? WindowState.Normal 
+        WindowState = (WindowState == WindowState.Maximized)
+            ? WindowState.Normal
             : WindowState.Maximized;
     }
 
     private void Close_Click(object sender, RoutedEventArgs e)
     {
         var result = DialogService.ShowWarningDialog("Are you sure you want to close the application?", MessageBoxButton.YesNoCancel);
-        Console.WriteLine($"result is {result}");
         if (result == MessageBoxResult.Yes)
         {
-            Console.WriteLine("Calling Close()...");
             try
             {
                 Close();
-                Console.WriteLine("Close() returned normally.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Close() threw: {ex}");
+                _log.Error($"Close() threw: {ex}");
             }
         }
     }
-    
+
+    private void StopButton_Click(object sender, RoutedEventArgs e)
+    {
+    }
+
+    private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)
+    {
+    }
+
+    private void NotificationsButton_Click(object sender, RoutedEventArgs e)
+    {
+    }
+
+    private void SignOutButton_Click(object sender, RoutedEventArgs e)
+    {
+        var result = DialogService.ShowQuestionDialog("Do you want to end shift?", "Sign Out");
+        
+        if (result == MessageBoxResult.Yes)
+        {
+            DialogService.ShowStartShiftDialog(async void (data) =>
+            {
+                DialogService.HideStartShiftDialog();
+                if (data != null)
+                {
+                    DialogService.ShowLoadingDialog(this, "Please wait...");
+                    var request = new EndShiftRequest
+                    {
+                        ClosingCash = data.OpeningCash,
+                        Remark = data.Remark
+                    };
+                    var response = await _shiftService.EndShift(request);
+
+                    _log.Info($"EndShift response: {JsonConvert.SerializeObject(response)}");
+                    
+                    DialogService.HideLoading(this);
+                    if (response is { Success: true })
+                    {
+                        UserSessionStorage.ClearSession();
+                        Authenticated = false;
+                        InitializeLoginPage();
+                    }
+                    else
+                    {
+                        DialogService.ShowErrorDialog("Failed to end shift!");
+                    }
+                    
+                }
+            }, "End Shift");
+        }else if(result == MessageBoxResult.No){
+            UserSessionStorage.ClearSession();
+            Authenticated = false;
+            InitializeLoginPage();
+        }
+    }
+
     private void MainWindow_SourceInitialized(object? sender, EventArgs e)
     {
         IntPtr handle = new WindowInteropHelper(this).Handle;
@@ -152,7 +205,7 @@ public partial class MainWindow
     {
         switch (msg)
         {
-            case 0x0024: // WM_GETMINMAXINFO
+            case 0x0024:
                 WmGetMinMaxInfo(hwnd, lParam);
                 handled = true;
                 break;
@@ -168,10 +221,9 @@ public partial class MainWindow
         if (monitor != IntPtr.Zero)
         {
             var monitorInfo = new MONITORINFO();
-            monitorInfo.cbSize = Marshal.SizeOf(typeof(MONITORINFO)); // Initialize size
-        
-            // Pass by reference with 'ref'
-            GetMonitorInfo(monitor, ref monitorInfo); // <-- Added 'ref' keyword
+            monitorInfo.cbSize = Marshal.SizeOf(typeof(MONITORINFO));
+
+            GetMonitorInfo(monitor, ref monitorInfo);
 
             var workArea = monitorInfo.rcWork;
             var monitorArea = monitorInfo.rcMonitor;
@@ -184,7 +236,6 @@ public partial class MainWindow
         Marshal.StructureToPtr(mmi, lParam, true);
     }
 
-    // DllImports for Win32 APIs
     [DllImport("user32.dll")]
     private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint flags);
     [DllImport("user32.dll")]

@@ -1,0 +1,98 @@
+﻿<Window x:Class="icpms_client.Utils.UI.Dialog.Shift.StartShiftDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:forms="clr-namespace:icpms_client.UserControls.UI.Reusable.Inputs.Text"
+             mc:Ignorable="d"
+             WindowStyle="None"
+             AllowsTransparency="True"
+             Background="Transparent"
+             ResizeMode="NoResize"
+             SizeToContent="WidthAndHeight"
+             ShowInTaskbar="False"
+             Topmost="True"
+             WindowStartupLocation="CenterOwner">
+    <Grid Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Border MaxWidth="450" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="2" Background="{DynamicResource PrimaryBackgroundColor}" CornerRadius="5" Margin="10">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="5" Opacity="0.5"/>
+            </Border.Effect>
+            <Grid MinWidth="400">
+
+                <StackPanel Orientation="Vertical" Margin="10,0">
+                    <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" Style="{DynamicResource SmallTitleTextStyle}" Margin="0,10"/>
+
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                        <Grid Margin="0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Content="Cash" VerticalAlignment="Center" />
+                            <forms:FormTextField
+                                x:Name="OpeningCashField"
+                                Value="{Binding OpeningCashText,RelativeSource={RelativeSource AncestorType=Window}, Mode=TwoWay}"
+                                TextFormatting="Number"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                BackgroundColor="{DynamicResource PrimaryWhiteColor}"
+                                BorderSize="1"
+                                Color="{DynamicResource PrimaryBlackColor}"
+                                PlaceHolder="Opening cash (optional)"
+                                ContentPadding="8,5"
+                                RoundedRadius="5"
+                                ShowErrorMessage="False"
+                                />
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Content="Remark" VerticalAlignment="Center" />
+                            <forms:FormTextField
+                                x:Name="RemarkField"
+                                Grid.Column="1"
+                                Value="{Binding Remark,RelativeSource={RelativeSource AncestorType=Window}, Mode=TwoWay}"
+                                HorizontalAlignment="Stretch"
+                                BackgroundColor="{DynamicResource PrimaryWhiteColor}"
+                                BorderSize="1"
+                                Color="{DynamicResource PrimaryBlackColor}"
+                                PlaceHolder="Remark (optional)"
+                                ContentPadding="8,5"
+                                RoundedRadius="5"
+                                ShowErrorMessage="False"
+                            />
+                        </Grid>
+                    </StackPanel>
+
+                    <DockPanel Margin="0, 10" HorizontalAlignment="Stretch">
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <TextBlock
+                                MaxWidth="200"
+                                Text="{Binding ErrorMessage,RelativeSource={RelativeSource AncestorType=Window}}"
+                                VerticalAlignment="Center" TextWrapping="Wrap"
+                                Foreground="{DynamicResource PrimaryRedColor}"
+                                Margin="0,5,5,0"/>
+                            <Button Content="Cancel"
+                                    Width="80"
+                                    Margin="5"
+                                    Style="{DynamicResource SecondaryButtonStyle}"
+                                    Click="OnCancelClicked"
+                                    Padding="0,5"/>
+
+                            <Button Content="Start Shift"
+                                    Width="90"
+                                    Margin="5"
+                                    Style="{DynamicResource PrimaryButtonStyle}"
+                                    Click="OnConfirmClick"
+                                    Padding="0,5"/>
+                        </StackPanel>
+                    </DockPanel>
+
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

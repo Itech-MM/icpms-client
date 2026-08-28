@@ -1,9 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:fa="http://schemas.fontawesome.io/icons/"
+                    xmlns:sys="clr-namespace:System.Windows.Controls;assembly=PresentationFramework">
     <!--<ResourceDictionary.MergedDictionaries>
             <ResourceDictionary Source="Assets/Styles/LightTheme.xaml"/>
     </ResourceDictionary.MergedDictionaries>-->
-
+    <sys:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     <Style TargetType="Window">
         <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}" />
     </Style>
@@ -1248,5 +1250,26 @@
             </Setter.Value>
         </Setter>-->
     </Style>
-    
+    <Style x:Key="StatusPillStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource SuccessBackgroundColor}"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="10,4"/>
+    </Style>
+
+    <Style x:Key="StopButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryRedColor}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryRedColor}"/>
+        <Setter Property="Padding" Value="14,6"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource PrimaryRedHoverColor}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="HeaderIconStyle" TargetType="fa:ImageAwesome">
+        <Setter Property="Width" Value="16"/>
+        <Setter Property="Height" Value="16"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}"/>
+    </Style>
 </ResourceDictionary>

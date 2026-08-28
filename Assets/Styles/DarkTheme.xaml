@@ -2,28 +2,32 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- Dark Theme with Light Theme's Button Colors -->
     <SolidColorBrush x:Key="PrimaryColor" Color="#4b9be4" />
-    
+
     <SolidColorBrush x:Key="PrimaryTitleBarColor" Color="#0A1929"/>
     <SolidColorBrush x:Key="WindowControlHoverColor" Color="#1D3A4C"/>
-    
+
     <SolidColorBrush x:Key="PrimaryBackgroundColor" Color="#0D1B2A" />
     <SolidColorBrush x:Key="SecondaryBackgroundColor" Color="#1B263B" />
 
     <SolidColorBrush x:Key="SecondaryTextColor" Color="#778DA9" />
-    
+
     <!-- BUTTON COLORS MATCHING LIGHT THEME -->
-    <SolidColorBrush x:Key="PrimaryButtonColor" Color="#007BFF" />          <!-- Light Theme Primary Button -->
-    <SolidColorBrush x:Key="SecondaryButtonColor" Color="#CED4DA" />        <!-- Light Theme Secondary Button -->
-    <SolidColorBrush x:Key="MutedButtonColor" Color="#6C757D" />            <!-- Light Theme Muted Button -->
-    
-    <SolidColorBrush x:Key="PrimaryWhiteColor" Color="#0D1B2A" />
+    <SolidColorBrush x:Key="PrimaryButtonColor" Color="#007BFF" />
+    <SolidColorBrush x:Key="SecondaryButtonColor" Color="#CED4DA" />
+    <SolidColorBrush x:Key="MutedButtonColor" Color="#6C757D" />
+
+    <!-- Was identical to PrimaryBackgroundColor (#0D1B2A), so "elevated" surfaces like
+         selected tabs and this login card had no contrast against the page background.
+         Bumped one step lighter than SecondaryBackgroundColor to restore elevation. -->
+    <SolidColorBrush x:Key="PrimaryWhiteColor" Color="#22304A" />
+
     <SolidColorBrush x:Key="PrimaryTextBorderColor" Color="#415A77" />
     <SolidColorBrush x:Key="PrimaryTextFocusColor" Color="#80BDFF" />
 
     <SolidColorBrush x:Key="PrimaryBlackColor" Color="#E0E1DD" />
-    <SolidColorBrush x:Key="PrimaryRedColor" Color="#DC3545" />              <!-- Light Theme Red -->
-    <SolidColorBrush x:Key="PrimaryGreenColor" Color="#28A745" />            <!-- Light Theme Green -->
-    <SolidColorBrush x:Key="PrimaryGreenLighterColor" Color="#A0FFB5" />     <!-- Light Theme Green Lighter -->
+    <SolidColorBrush x:Key="PrimaryRedColor" Color="#DC3545" />
+    <SolidColorBrush x:Key="PrimaryGreenColor" Color="#28A745" />
+    <SolidColorBrush x:Key="PrimaryGreenLighterColor" Color="#A0FFB5" />
     <SolidColorBrush x:Key="PrimaryLightColor" Color="#1B263B" />
     <SolidColorBrush x:Key="PrimaryAccentColor" Color="#3A86FF" />
     <SolidColorBrush x:Key="SecondaryAccentColor" Color="#F4A261" />
@@ -43,11 +47,10 @@
     <SolidColorBrush x:Key="ScrollBar.Thumb.Background" Color="#415A77" />
     <SolidColorBrush x:Key="ScrollBar.Thumb.Hover.Background" Color="#778DA9" />
     <SolidColorBrush x:Key="ScrollBar.Thumb.Pressed.Background" Color="#2A9D8F" />
-    
-    <!-- In DARK theme resource dictionary -->
-    <SolidColorBrush x:Key="PureBlackColor" Color="#000000"/> <!-- Pure black -->
-    <SolidColorBrush x:Key="PureWhiteColor" Color="#FFFFFF"/> <!-- Pure white -->
-    
+
+    <SolidColorBrush x:Key="PureBlackColor" Color="#000000"/>
+    <SolidColorBrush x:Key="PureWhiteColor" Color="#FFFFFF"/>
+
     <!-- Button Type Hover Colors (Dark Theme) -->
     <SolidColorBrush x:Key="YesHoverBackground" Color="#1E3B2C"/>
     <SolidColorBrush x:Key="NoHoverBackground" Color="#3B1E1E"/>
@@ -59,9 +62,15 @@
     <SolidColorBrush x:Key="NoPressedBackground" Color="#331A1A"/>
     <SolidColorBrush x:Key="CancelPressedBackground" Color="#252525"/>
     <SolidColorBrush x:Key="OkPressedBackground" Color="#1A2433"/>
-    
+
     <SolidColorBrush x:Key="ErrorColor" Color="#EA5455"/>
     <SolidColorBrush x:Key="WarningColor" Color="#FF9F43"/>
     <SolidColorBrush x:Key="QuestionColor" Color="#007ACC"/>
     <SolidColorBrush x:Key="InfoColor" Color="#28C76F"/>
+
+    <!-- Auth / Login screen brand colors (new) -->
+    <SolidColorBrush x:Key="AuthHeaderBackgroundColor" Color="#0A1929"/>
+    <SolidColorBrush x:Key="AuthHeaderAccentColor" Color="#1D3A4C"/>
+    <SolidColorBrush x:Key="AuthHeaderSubTextColor" Color="#778DA9"/>
+
 </ResourceDictionary>

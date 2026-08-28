@@ -1,11 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
+
     <SolidColorBrush x:Key="PrimaryColor" Color="#4b9be4" />
-    
+
     <SolidColorBrush x:Key="PrimaryTitleBarColor" Color="#E0F4FF"/>
     <SolidColorBrush x:Key="WindowControlHoverColor" Color="#8FB3B3"/>
-    
+
     <SolidColorBrush x:Key="PrimaryBackgroundColor" Color="#F7F7F7" />
     <SolidColorBrush x:Key="SecondaryBackgroundColor" Color="#D9E2EC" />
 
@@ -29,26 +29,25 @@
     <SolidColorBrush x:Key="SecondaryBorderColor" Color="#6C757D" />
     <SolidColorBrush x:Key="PrimaryDarkColor" Color="#343A40" />
     <SolidColorBrush x:Key="PrimaryRedLighterColor" Color="#FF6666"/>
-    
+
     <SolidColorBrush x:Key="TableBorder" Color="#E0E0E0"/>
     <SolidColorBrush x:Key="TableAlternatingRowBackground" Color="#F9F9F9"/>
     <SolidColorBrush x:Key="TableColumnHeader" Color="#F4F4F4"/>
     <SolidColorBrush x:Key="TableMouseOverColor" Color="#E8F4FE"/>
-    
-    
+
     <SolidColorBrush x:Key="ScrollBar.Thumb.Background" Color="#DADCE0"/>
     <SolidColorBrush x:Key="ScrollBar.Thumb.Hover.Background" Color="#B9BABD"/>
     <SolidColorBrush x:Key="ScrollBar.Thumb.Pressed.Background" Color="#808184"/>
-    
-    <SolidColorBrush x:Key="PureBlackColor" Color="#000000"/> <!-- Pure black -->
-    <SolidColorBrush x:Key="PureWhiteColor" Color="#FFFFFF"/> <!-- Pure white -->
-    
+
+    <SolidColorBrush x:Key="PureBlackColor" Color="#000000"/>
+    <SolidColorBrush x:Key="PureWhiteColor" Color="#FFFFFF"/>
+
     <!-- Button Type Hover Colors -->
     <SolidColorBrush x:Key="YesHoverBackground" Color="#E6F4EA"/>
     <SolidColorBrush x:Key="NoHoverBackground" Color="#FFEFEF"/>
     <SolidColorBrush x:Key="CancelHoverBackground" Color="#F0F0F0"/>
     <SolidColorBrush x:Key="OkHoverBackground" Color="#E6F0FF"/>
-        
+
     <!-- Button Type Pressed Colors -->
     <SolidColorBrush x:Key="YesPressedBackground" Color="#D1EBDD"/>
     <SolidColorBrush x:Key="NoPressedBackground" Color="#FFE0E0"/>
@@ -59,4 +58,10 @@
     <SolidColorBrush x:Key="WarningColor" Color="#FF9F43"/>
     <SolidColorBrush x:Key="QuestionColor" Color="#007ACC"/>
     <SolidColorBrush x:Key="InfoColor" Color="#28C76F"/>
+
+    <!-- Auth / Login screen brand colors (new) -->
+    <SolidColorBrush x:Key="AuthHeaderBackgroundColor" Color="#1B3A6B"/>
+    <SolidColorBrush x:Key="AuthHeaderAccentColor" Color="#2C4E85"/>
+    <SolidColorBrush x:Key="AuthHeaderSubTextColor" Color="#9FB3D1"/>
+
 </ResourceDictionary>

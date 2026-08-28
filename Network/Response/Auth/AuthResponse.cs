@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using icpms_client.Network.DTO.Shift;
 
 namespace icpms_client.Network.Response.Auth;
 
@@ -10,6 +11,8 @@ public class AuthResponse
     public List<string> Roles { get; set; } = new();
     public long ExpiresIn { get; set; }
     public bool StartShift { get; set; }
+    
+    public ShiftDto? ActiveShift { get; set; }
 
     public AuthResponse() { }
 

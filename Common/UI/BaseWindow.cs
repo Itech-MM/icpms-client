@@ -5,37 +5,46 @@ using System.Windows.Controls;
 using System.Windows.Media.Effects;
 using icpms_client.Common.Threads;
 using icpms_client.Pages.Auth;
+using icpms_client.Pages.Layout;
+using icpms_client.Pages.Screens;
 using icpms_client.Services.UIServices;
+using log4net;
 
 namespace icpms_client.Common.UI;
 
 public abstract class BaseWindow : Window, INotifyPropertyChanged
 {
+    private readonly ILog _log = LogManager.GetLogger(typeof(BaseWindow));
     public static BaseWindow MainWindowInstance = null!;
     public Frame MainFrame { get; set; } = null!;
-    
+
+    private PageLayout? _pageLayout;
+
     private bool _authenticated;
-    
+    private string _pageTitle = "PARKING PRO";
+    private string _terminalLabel = string.Empty;
+    private bool _hasNotifications;
+    private int _notificationCount;
+
     public void ApplyBlur(bool enable)
     {
         Effect = enable ? new BlurEffect { Radius = 10 } : null;
     }
+
     protected override void OnClosed(EventArgs e)
     {
-        Console.WriteLine("OnClosed: start");
         try
         {
             var comportFinder = ComportFinderThread.Instance;
             comportFinder.Dispose();
-            Console.WriteLine("OnClosed: dispose succeeded");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"OnClosed: dispose threw: {ex}");
+            _log.Error($"Error on close {ex}");
         }
         base.OnClosed(e);
-        Console.WriteLine("OnClosed: end");
     }
+
     public bool Authenticated
     {
         get => _authenticated;
@@ -45,22 +54,57 @@ public abstract class BaseWindow : Window, INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
-    
-    /// <summary>
-    /// Navigates to the Login Page.
-    /// </summary>
+
+    public string PageTitle
+    {
+        get => _pageTitle;
+        set
+        {
+            _pageTitle = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string TerminalLabel
+    {
+        get => _terminalLabel;
+        set
+        {
+            _terminalLabel = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool HasNotifications
+    {
+        get => _hasNotifications;
+        set
+        {
+            _hasNotifications = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int NotificationCount
+    {
+        get => _notificationCount;
+        set
+        {
+            _notificationCount = value;
+            OnPropertyChanged();
+        }
+    }
+
     public void InitializeLoginPage()
     {
         DialogService.HideLoading(this);
         Authenticated = false;
+        _pageLayout = null;
         var loginPage = new LoginPage();
         loginPage.OnAuthChanged += AuthChanged;
         MainFrame.Navigate(loginPage);
     }
-    
-    /// <summary>
-    /// Triggered when authentication status changes.
-    /// </summary>
+
     private void AuthChanged(bool authenticated)
     {
         Authenticated = authenticated;
@@ -70,19 +114,32 @@ public abstract class BaseWindow : Window, INotifyPropertyChanged
         }
     }
 
-    /// <summary>
-    /// Navigates to the Main Template page.
-    /// </summary>
     public void NavigateToMainPage()
     {
         DialogService.HideLoading(this);
-        /*MainFrame.Navigate(new MainTemplate());*/
+        _pageLayout = new PageLayout();
+        MainFrame.Navigate(_pageLayout);
+        ChangeScreen(new HomeScreen(), "Dashboard");
     }
 
-    public void ChangePage(UserControl page)
+    public void ChangeScreen(UserControl screen, string? title = null, string? terminalLabel = null)
     {
-        MainFrame.Navigate(page);
+        if (title != null)
+            PageTitle = title;
+
+        if (terminalLabel != null)
+            TerminalLabel = terminalLabel;
+
+        if (_pageLayout != null)
+        {
+            _pageLayout.PageContent = screen;
+        }
+        else
+        {
+            MainFrame.Navigate(screen);
+        }
     }
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

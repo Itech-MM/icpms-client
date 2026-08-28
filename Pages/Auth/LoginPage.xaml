@@ -7,8 +7,8 @@
       xmlns:input="clr-namespace:icpms_client.UserControls.UI.Reusable.Inputs.Text"
       mc:Ignorable="d"
       Title="LoginPage" Height="620" Width="440">
-    <Grid Background="#F3F4F6">
-        <Border Width="380" CornerRadius="10" Background="White"
+    <Grid Background="{DynamicResource PrimaryBackgroundColor}">
+        <Border Width="380" CornerRadius="10" Background="{DynamicResource PrimaryWhiteColor}"
                 HorizontalAlignment="Center" VerticalAlignment="Center"
                 ClipToBounds="True">
             <Border.Effect>
@@ -17,84 +17,85 @@
             <StackPanel Orientation="Vertical">
 
                 <!-- Header -->
-                <Border Background="#1B3A6B" Padding="0,28,0,20">
+                <Border Background="{DynamicResource AuthHeaderBackgroundColor}" Padding="0,28,0,20">
                     <StackPanel HorizontalAlignment="Center">
-                        <Border Width="52" Height="52" CornerRadius="26" Background="#2C4E85"
+                        <Border Width="52" Height="52" CornerRadius="26" Background="{DynamicResource AuthHeaderAccentColor}"
                                 HorizontalAlignment="Center" Margin="0,0,0,12">
-                            <TextBlock Text="&#128737;" FontSize="22" Foreground="White"
+                            <TextBlock Text="&#128737;" FontSize="22" Foreground="{DynamicResource PureWhiteColor}"
                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <TextBlock Text="PARKING PRO" FontSize="20" FontWeight="Bold"
-                                   Foreground="White" HorizontalAlignment="Center"/>
+                                   Foreground="{DynamicResource PureWhiteColor}" HorizontalAlignment="Center"/>
                         <TextBlock Text="OPERATOR AUTHENTICATION" FontSize="10"
-                                   Foreground="#9FB3D1" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                                   Foreground="{DynamicResource AuthHeaderSubTextColor}" HorizontalAlignment="Center" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Body -->
                 <StackPanel Margin="24,20,24,24">
                     <TextBlock Text="Enter your credentials"
-                               FontSize="12" Foreground="#6B7280" TextWrapping="Wrap" Margin="0,0,0,16"/>
+                               FontSize="12" Foreground="{DynamicResource SecondaryTextColor}" TextWrapping="Wrap" Margin="0,0,0,16"/>
 
                     <TextBlock Text="OPERATOR ID" FontSize="11" FontWeight="SemiBold"
-                               Foreground="#374151" Margin="0,0,0,6"/>
+                               Foreground="{DynamicResource PrimaryBlackColor}" Margin="0,0,0,6"/>
                     <input:FormTextField x:Name="LoginNameField"
                                           ShowErrorMessage="True"
-                                          PlaceHolder="OP-XXXXX"
-                                          BackgroundColor="#F9FAFB"
-                                          Color="#111827"
+                                          PlaceHolder="XXXX"
+                                          BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                          Color="{DynamicResource PrimaryBlackColor}"
                                           RoundedRadius="6"
                                           BorderSize="1"
-                                          FocusColor="#1B3A6B"
+                                          FocusColor="{DynamicResource AuthHeaderBackgroundColor}"
                                           ContentPadding="12,10"
                                           Margin="0,0,0,16"/>
 
                     <Grid Margin="0,0,0,6">
                         <TextBlock Text="SECURITY KEY" FontSize="11" FontWeight="SemiBold"
-                                   Foreground="#374151" HorizontalAlignment="Left"/>
-                        <!--<TextBlock Text="Forgot Key?" FontSize="11" Foreground="#1B3A6B"
+                                   Foreground="{DynamicResource PrimaryBlackColor}" HorizontalAlignment="Left"/>
+                        <!--<TextBlock Text="Forgot Key?" FontSize="11" Foreground="{DynamicResource AuthHeaderBackgroundColor}"
                                    HorizontalAlignment="Right" Cursor="Hand"/>-->
                     </Grid>
                     <input:FormPasswordField x:Name="PasswordField"
                                               ShowErrorMessage="True"
                                               PlaceHolder="••••••••"
-                                              BackgroundColor="#F9FAFB"
-                                              Color="#111827"
+                                              BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                              Color="{DynamicResource PrimaryBlackColor}"
                                               RoundedRadius="6"
                                               BorderSize="1"
-                                              FocusColor="#1B3A6B"
+                                              FocusColor="{DynamicResource AuthHeaderBackgroundColor}"
                                               ContentPadding="12,10"
                                               Margin="0,0,0,20"/>
 
                     <Button x:Name="LoginButton" Height="44"
                             Click="ButtonBase_OnClick"
+                            Cursor="Hand"
                             IsEnabled="{Binding IsLoginEnabled, RelativeSource={RelativeSource AncestorType=Page}}">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <Border Background="#1B3A6B" CornerRadius="6" Opacity="{TemplateBinding Opacity}">
+                                <Border Background="{DynamicResource AuthHeaderBackgroundColor}" CornerRadius="6" Opacity="{TemplateBinding Opacity}">
                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
                             </ControlTemplate>
                         </Button.Template>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="AUTHORIZE ACCESS" Foreground="White" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                            <TextBlock Text="AUTHORIZE ACCESS" Foreground="{DynamicResource PureWhiteColor}" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
 
                 <!-- Footer -->
-                <Border BorderBrush="#E5E7EB" BorderThickness="0,1,0,0" Padding="20,10">
+                <Border BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="0,1,0,0" Padding="20,10">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" Grid.Column="0">
-                            <Ellipse Width="8" Height="8" Fill="#22C55E" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                            <TextBlock Text="System Status: Online" FontSize="10" Foreground="#6B7280"/>
+                            <Ellipse Width="8" Height="8" Fill="{DynamicResource PrimaryGreenColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="System Status: Online" FontSize="10" Foreground="{DynamicResource SecondaryTextColor}"/>
                         </StackPanel>
                         <TextBlock Grid.Column="1" Text="Emergency Contact" FontSize="10"
-                                   Foreground="#6B7280" HorizontalAlignment="Right"/>
+                                   Foreground="{DynamicResource SecondaryTextColor}" HorizontalAlignment="Right"/>
                     </Grid>
                 </Border>
             </StackPanel>

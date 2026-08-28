@@ -1,17 +1,17 @@
 ﻿using icpms_client.Network.Core;
-using icpms_client.Network.DTO.User;
-using icpms_client.Network.Request.Auth;
+using icpms_client.Network.DTO.Shift;
+using icpms_client.Network.Request.Shift;
 using icpms_client.Network.Response;
-using icpms_client.Network.Response.Auth;
+using icpms_client.Network.Session;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace icpms_client.Network.Services.Auth;
+namespace icpms_client.Network.Services.Shift;
 
-public class AuthService
+public class ShiftService
 {
     private readonly ApiClient _apiClient;
     
-    public AuthService()
+    public ShiftService()
     {
         if (App.ServiceProvider == null)
         {
@@ -20,11 +20,11 @@ public class AuthService
         _apiClient = App.ServiceProvider.GetRequiredService<ApiClient>();
     }
 
-    public async Task<Response.Response?> Login(LoginRequest request)
+    public async Task<Response.Response?> StartShift(StartShiftRequest request)
     {
         try
         {
-            var response = await _apiClient.PostAsync<AuthResponse>("auth/login", request,false);
+            var response = await _apiClient.PostAsync<ShiftDto>("shifts/start", request, true, UserSession.CurrentUser.CurrentAuth.AccessToken);
             return response;
         }
         catch (Exception ex)
@@ -39,13 +39,22 @@ public class AuthService
         }
     }
     
-    
-    
-    public async Task<Response.Response?> CheckToken(string token)
+    public async Task<Response.Response?> EndShift(EndShiftRequest request)
     {
         try
         {
-            var response = await _apiClient.GetAsync<AuthResponse>("auth/validate?token="+token, requiresAuth:false);
+            var accessToken = UserSession.CurrentUser?.CurrentAuth?.AccessToken;
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                return new BaseErrorResponse<string>
+                {
+                    Success = false,
+                    Message = "No active session/access token found.",
+                    Data = "No active session/access token found."
+                };
+            }
+
+            var response = await _apiClient.PostAsync<ShiftDto>("shifts/end", request, true, accessToken);
             return response;
         }
         catch (Exception ex)
@@ -59,4 +68,5 @@ public class AuthService
             return error;
         }
     }
+    
 }

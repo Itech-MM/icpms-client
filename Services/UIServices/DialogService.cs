@@ -1,14 +1,17 @@
 ﻿using System.Windows;
 using icpms_client.Common.UI;
+using icpms_client.Network.Request.Shift;
 using icpms_client.Utils.UI.Dialog;
 using icpms_client.Utils.UI.Dialog.ExportDialog;
 using icpms_client.Utils.UI.Dialog.MessageDialog;
+using icpms_client.Utils.UI.Dialog.Shift;
 
 namespace icpms_client.Services.UIServices;
 
 public abstract class DialogService
 {
     private static LoadingDialog? _loadingDialog;
+    private static StartShiftDialog? _startShiftDialog;
     
     public static void ShowLoadingDialog(BaseWindow? owner , string? message = null)
     {
@@ -103,4 +106,35 @@ public abstract class DialogService
         };
         dialog.ShowDialog();
     }
+
+    public static void ShowStartShiftDialog(Action<StartShiftRequest?> callback, string? title = "Start Shift")
+    {
+        if (_startShiftDialog != null) return;
+
+        var owner = BaseWindow.MainWindowInstance;
+        
+        _startShiftDialog = new StartShiftDialog
+        {
+            Owner = owner,
+            ShiftStarted = callback,
+            Title = title??"Start Shift"
+        };
+        
+        owner.IsEnabled = false;
+        owner.ApplyBlur(true);
+        _startShiftDialog.Show();
+    }
+    
+    public static void HideStartShiftDialog()
+    {
+        _startShiftDialog?.Close();
+        var owner = BaseWindow.MainWindowInstance;
+        owner.ApplyBlur(false);
+        if (_startShiftDialog?.Owner != null)
+        {
+            _startShiftDialog.Owner.IsEnabled = true;
+        }
+        _startShiftDialog = null;
+    }
+    
 }

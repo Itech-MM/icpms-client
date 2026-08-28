@@ -4,10 +4,12 @@ using System.Windows.Controls;
 using log4net;
 using Newtonsoft.Json;
 using icpms_client.Common.UI;
+using icpms_client.Network.DTO.Shift;
 using icpms_client.Network.Request.Auth;
 using icpms_client.Network.Response;
 using icpms_client.Network.Response.Auth;
 using icpms_client.Network.Services.Auth;
+using icpms_client.Network.Services.Shift;
 using icpms_client.Network.Session;
 using icpms_client.Services.UIServices;
 using icpms_client.UserControls.Customs.Forms.Validations.Core;
@@ -18,12 +20,14 @@ namespace icpms_client.Pages.Auth;
 
 public sealed partial class LoginPage : Page, INotifyPropertyChanged
 {
-    private readonly FormValidator _formValidator = new FormValidator();
+    private readonly FormValidator _formValidator = new();
     private readonly ILog _log = LogManager.GetLogger(typeof(LoginPage));
 
     public Action<bool>? OnAuthChanged;
 
     private readonly AuthService _authService = new();
+    
+    private readonly ShiftService _shiftService = new();
 
     private bool _isLoginEnabled = true;
 
@@ -77,13 +81,57 @@ public sealed partial class LoginPage : Page, INotifyPropertyChanged
                 {
                     var auth = (BaseResponse<AuthResponse>)response;
                     UserSession.CurrentUser.CurrentAuth = auth.Data;
+                    UserSession.CurrentShift = auth.Data!.ActiveShift!;
 
                     var data = new UserDataObject
                     {
-                        CurrentAuth = UserSession.CurrentUser.CurrentAuth,
+                        CurrentAuth = UserSession.CurrentUser.CurrentAuth
                     };
                     await UserSessionStorage.SaveSessionAsync(data);
-                    OnAuthChanged?.Invoke(true);
+                    
+                    if (auth.Data is { StartShift: true })
+                    {
+                        DialogService.ShowStartShiftDialog(async data =>
+                        {
+                            DialogService.HideStartShiftDialog();
+                            if (data != null)
+                            {
+                                DialogService.ShowLoadingDialog(BaseWindow.MainWindowInstance, "Please wait...");
+                                var startShiftResponse = await _shiftService.StartShift(data);
+                                DialogService.HideLoading(BaseWindow.MainWindowInstance);
+                                
+                                if (startShiftResponse is { Success: true })
+                                {
+                                    var shiftResponse = (BaseResponse<ShiftDto>)startShiftResponse;
+                                    if (shiftResponse.Data == null) return;
+                                    
+                                    UserSession.CurrentShift = shiftResponse.Data;
+                                    UserSession.CurrentUser.CurrentAuth = auth.Data;
+                                    var userData = new UserDataObject
+                                    {
+                                        CurrentAuth = UserSession.CurrentUser.CurrentAuth
+                                    };
+                                    await UserSessionStorage.SaveSessionAsync(userData);
+                                    OnAuthChanged?.Invoke(true);
+                                }
+                                else
+                                {
+                                    DialogService.ShowErrorDialog("Failed to start shift.");
+                                }
+                            }
+                            else
+                            {
+                                DialogService.ShowErrorDialog("You need to start shift!");
+                            }
+                        });
+                    }
+                    else
+                    {
+                        
+                        OnAuthChanged?.Invoke(true);
+                    }
+                    
+                    
                 }
                 else
                 {
