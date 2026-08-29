@@ -21,8 +21,8 @@ public abstract class BaseWindow : Window, INotifyPropertyChanged
     private PageLayout? _pageLayout;
 
     private bool _authenticated;
-    private string _pageTitle = "PARKING PRO";
-    private string _terminalLabel = string.Empty;
+    private string _pageTitle = "Flexitech | ";
+    private string _terminalLabel = "ICPMS";
     private bool _hasNotifications;
     private int _notificationCount;
 
@@ -119,7 +119,7 @@ public abstract class BaseWindow : Window, INotifyPropertyChanged
         DialogService.HideLoading(this);
         _pageLayout = new PageLayout();
         MainFrame.Navigate(_pageLayout);
-        ChangeScreen(new HomeScreen(), "Dashboard");
+        ChangeScreen(new HomeScreen(), terminalLabel: "Dashboard");
     }
 
     public void ChangeScreen(UserControl screen, string? title = null, string? terminalLabel = null)

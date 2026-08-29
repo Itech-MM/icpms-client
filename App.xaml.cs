@@ -5,6 +5,8 @@ using System.Windows;
 using icpms_client.Common.Constants;
 using icpms_client.Network.Constants;
 using icpms_client.Network.Core;
+using icpms_client.Network.Services.Home;
+using icpms_client.Pages.Screens.ViewModels;
 using icpms_client.Utils.Settings;
 using icpms_client.Utils.UI.Theme;
 using icpms_client.ViewModels.Main;
@@ -67,6 +69,9 @@ public partial class App
 
         // ViewModels
         services.AddSingleton<MainViewModel>();
+        
+        services.AddSingleton<HomeScreenService>();
+        services.AddTransient<HomeScreenViewModel>();
         
        /* services.AddSingleton<WeightTransactionTableViewModel>();
         services.AddSingleton<MainTemplateViewModel>();

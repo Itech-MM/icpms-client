@@ -11,7 +11,9 @@ using icpms_client.Network.Services.Shift;
 using icpms_client.Network.Session;
 using icpms_client.Services.UIServices;
 using icpms_client.Utils.Storage;
+using icpms_client.Utils.UI.Theme;
 using log4net;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace icpms_client;
@@ -23,6 +25,10 @@ public partial class MainWindow
     private readonly ShiftService _shiftService = new();
 
     private bool _isLoading;
+    
+    private bool _isDarkTheme;
+    
+    private ThemeManager? _themeManager;
 
     public MainWindow()
     {
@@ -32,6 +38,12 @@ public partial class MainWindow
         MainFrame = MainWindowFrame;
         Loaded += MainWindow_Loaded;
         SourceInitialized += MainWindow_SourceInitialized;
+
+        if (App.ServiceProvider != null)
+        {
+            _themeManager = App.ServiceProvider.GetRequiredService<ThemeManager>();
+            _isDarkTheme = _themeManager.CurrentTheme.Mode == "Dark";
+        }
     }
 
     public bool IsLoading
@@ -40,6 +52,16 @@ public partial class MainWindow
         set
         {
             _isLoading = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool IsDarkTheme
+    {
+        get => _isDarkTheme;
+        set
+        {
+            _isDarkTheme = value;
             OnPropertyChanged();
         }
     }
@@ -147,6 +169,12 @@ public partial class MainWindow
 
     private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)
     {
+        if (_themeManager != null)
+        {
+            _themeManager.ToggleTheme(!IsDarkTheme);
+            IsDarkTheme = !IsDarkTheme;
+        }
+        
     }
 
     private void NotificationsButton_Click(object sender, RoutedEventArgs e)

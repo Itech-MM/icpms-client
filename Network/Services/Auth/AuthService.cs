@@ -7,24 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace icpms_client.Network.Services.Auth;
 
-public class AuthService
+public class AuthService: ApiService
 {
-    private readonly ApiClient _apiClient;
-    
-    public AuthService()
-    {
-        if (App.ServiceProvider == null)
-        {
-            throw new InvalidOperationException("ServiceProvider not initialized");
-        }
-        _apiClient = App.ServiceProvider.GetRequiredService<ApiClient>();
-    }
 
     public async Task<Response.Response?> Login(LoginRequest request)
     {
         try
         {
-            var response = await _apiClient.PostAsync<AuthResponse>("auth/login", request,false);
+            var response = await ApiClient.PostAsync<AuthResponse>("auth/login", request,false);
             return response;
         }
         catch (Exception ex)
@@ -45,7 +35,7 @@ public class AuthService
     {
         try
         {
-            var response = await _apiClient.GetAsync<AuthResponse>("auth/validate?token="+token, requiresAuth:false);
+            var response = await ApiClient.GetAsync<AuthResponse>("auth/validate?token="+token, requiresAuth:false);
             return response;
         }
         catch (Exception ex)

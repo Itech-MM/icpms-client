@@ -10,6 +10,123 @@
         <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}" />
     </Style>
     
+    <!--Chips-->
+
+<!-- Primary -->
+<Style x:Key="PrimaryChipStyle" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource PrimaryChipBackgroundColor}" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="Padding" Value="8,2" />
+</Style>
+<Style x:Key="PrimaryChipTextStyle" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="9" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource PrimaryChipTextColor}" />
+</Style>
+
+<!-- Secondary / Neutral -->
+<Style x:Key="SecondaryChipStyle" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource SecondaryChipBackgroundColor}" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="Padding" Value="8,2" />
+</Style>
+<Style x:Key="SecondaryChipTextStyle" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="9" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource SecondaryChipTextColor}" />
+</Style>
+
+<!-- Success -->
+<Style x:Key="SuccessChipStyle" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource SuccessChipBackgroundColor}" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="Padding" Value="8,2" />
+</Style>
+<Style x:Key="SuccessChipTextStyle" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="9" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource SuccessChipTextColor}" />
+</Style>
+
+<!-- Danger -->
+<Style x:Key="DangerChipStyle" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource DangerChipBackgroundColor}" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="Padding" Value="8,2" />
+</Style>
+<Style x:Key="DangerChipTextStyle" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="9" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource DangerChipTextColor}" />
+</Style>
+
+<!-- Warning -->
+<Style x:Key="WarningChipStyle" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource WarningChipBackgroundColor}" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="Padding" Value="8,2" />
+</Style>
+<Style x:Key="WarningChipTextStyle" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="9" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource WarningChipTextColor}" />
+</Style>
+
+<!-- Info -->
+<Style x:Key="InfoChipStyle" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource InfoChipBackgroundColor}" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="Padding" Value="8,2" />
+</Style>
+<Style x:Key="InfoChipTextStyle" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="9" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource InfoChipTextColor}" />
+</Style>
+
+<!-- Muted -->
+<Style x:Key="MutedChipStyle" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource MutedChipBackgroundColor}" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="Padding" Value="8,2" />
+</Style>
+<Style x:Key="MutedChipTextStyle" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="9" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource MutedChipTextColor}" />
+</Style>
+
+<!-- Member -->
+<Style x:Key="MemberChipStyle" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource MemberChipBackgroundColor}" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="Padding" Value="8,2" />
+</Style>
+<Style x:Key="MemberChipTextStyle" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="9" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource MemberChipTextColor}" />
+</Style>
+
+<!-- VIP -->
+<Style x:Key="VipChipStyle" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource VipChipBackgroundColor}" />
+    <Setter Property="CornerRadius" Value="5" />
+    <Setter Property="Padding" Value="8,2" />
+</Style>
+<Style x:Key="VipChipTextStyle" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="9" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource VipChipTextColor}" />
+</Style>
+
+<!-- Data pill (icon + label + value) -->
+<Style x:Key="InfoChipBorderStyle" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource DataChipBackgroundColor}" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Padding" Value="10,6" />
+</Style>
+    
     <Style x:Key="WindowControlButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}"/>
@@ -1252,7 +1369,7 @@
     </Style>
     <Style x:Key="StatusPillStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource SuccessBackgroundColor}"/>
-        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Padding" Value="10,4"/>
     </Style>
 
@@ -1267,9 +1384,8 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="HeaderIconStyle" TargetType="fa:ImageAwesome">
-        <Setter Property="Width" Value="16"/>
-        <Setter Property="Height" Value="16"/>
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}"/>
+    <Style x:Key="HeaderIconStyle" TargetType="fa:FontAwesome">
+        <Setter Property="FontSize" Value="16"/>
+        <!--<Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}"/>-->
     </Style>
 </ResourceDictionary>

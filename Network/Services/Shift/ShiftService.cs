@@ -7,24 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace icpms_client.Network.Services.Shift;
 
-public class ShiftService
+public class ShiftService: ApiService
 {
-    private readonly ApiClient _apiClient;
-    
-    public ShiftService()
-    {
-        if (App.ServiceProvider == null)
-        {
-            throw new InvalidOperationException("ServiceProvider not initialized");
-        }
-        _apiClient = App.ServiceProvider.GetRequiredService<ApiClient>();
-    }
 
     public async Task<Response.Response?> StartShift(StartShiftRequest request)
     {
         try
         {
-            var response = await _apiClient.PostAsync<ShiftDto>("shifts/start", request, true, UserSession.CurrentUser.CurrentAuth.AccessToken);
+            var response = await ApiClient.PostAsync<ShiftDto>("shifts/start", request, true, UserSession.CurrentUser.CurrentAuth.AccessToken);
             return response;
         }
         catch (Exception ex)
@@ -54,7 +44,7 @@ public class ShiftService
                 };
             }
 
-            var response = await _apiClient.PostAsync<ShiftDto>("shifts/end", request, true, accessToken);
+            var response = await ApiClient.PostAsync<ShiftDto>("shifts/end", request, true, accessToken);
             return response;
         }
         catch (Exception ex)

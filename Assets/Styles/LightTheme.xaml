@@ -63,5 +63,44 @@
     <SolidColorBrush x:Key="AuthHeaderBackgroundColor" Color="#1B3A6B"/>
     <SolidColorBrush x:Key="AuthHeaderAccentColor" Color="#2C4E85"/>
     <SolidColorBrush x:Key="AuthHeaderSubTextColor" Color="#9FB3D1"/>
+    
+    <!-- Chip: Primary -->
+    <SolidColorBrush x:Key="PrimaryChipBackgroundColor" Color="#DCEBFF" />
+    <SolidColorBrush x:Key="PrimaryChipTextColor" Color="#1B5FBF" />
+
+    <!-- Chip: Secondary / Neutral -->
+    <SolidColorBrush x:Key="SecondaryChipBackgroundColor" Color="#E2E5E9" />
+    <SolidColorBrush x:Key="SecondaryChipTextColor" Color="#495057" />
+
+    <!-- Chip: Success -->
+    <SolidColorBrush x:Key="SuccessChipBackgroundColor" Color="#A0FFB5" />
+    <SolidColorBrush x:Key="SuccessChipTextColor" Color="#28A745" />
+
+    <!-- Chip: Danger -->
+    <SolidColorBrush x:Key="DangerChipBackgroundColor" Color="#FFE3E3" />
+    <SolidColorBrush x:Key="DangerChipTextColor" Color="#DC3545" />
+
+    <!-- Chip: Warning -->
+    <SolidColorBrush x:Key="WarningChipBackgroundColor" Color="#FFEBD2" />
+    <SolidColorBrush x:Key="WarningChipTextColor" Color="#FF9F43" />
+
+    <!-- Chip: Info -->
+    <SolidColorBrush x:Key="InfoChipBackgroundColor" Color="#D6F0FB" />
+    <SolidColorBrush x:Key="InfoChipTextColor" Color="#007ACC" />
+
+    <!-- Chip: Muted -->
+    <SolidColorBrush x:Key="MutedChipBackgroundColor" Color="#E9ECEF" />
+    <SolidColorBrush x:Key="MutedChipTextColor" Color="#6C757D" />
+
+    <!-- Chip: Member -->
+    <SolidColorBrush x:Key="MemberChipBackgroundColor" Color="#E3ECFF" />
+    <SolidColorBrush x:Key="MemberChipTextColor" Color="#2F6FED" />
+
+    <!-- Chip: VIP -->
+    <SolidColorBrush x:Key="VipChipBackgroundColor" Color="#FFF0C2" />
+    <SolidColorBrush x:Key="VipChipTextColor" Color="#8A6D00" />
+
+    <!-- Chip: Data pill (icon + label + value) -->
+    <SolidColorBrush x:Key="DataChipBackgroundColor" Color="#6C757D" />
 
 </ResourceDictionary>

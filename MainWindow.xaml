@@ -20,6 +20,8 @@
     </WindowChrome.WindowChrome>
     <Window.Resources>
         <converters:WindowStateToIconConverter x:Key="WindowStateToIconConverter"/>
+        <converters:ThemeColorConverter x:Key="ThemeColorConverter"/>
+        <converters:BooleanToIconConverter x:Key="BooleanToIconConverter"/>
     </Window.Resources>
     <Grid Background="{DynamicResource PrimaryBackgroundColor}">
         <Grid.ColumnDefinitions>
@@ -49,10 +51,10 @@
                                VerticalAlignment="Center"
                                Margin="10,0,0,0"/>
                     <TextBlock Text="{Binding TerminalLabel, RelativeSource={RelativeSource AncestorType=Window}}"
-                               Style="{StaticResource SmallTitleTextStyle}"
+                               Style="{StaticResource CompanyNameLabelTextStyle}"
                                Foreground="{DynamicResource SecondaryTextColor}"
                                FontWeight="Normal"
-                               Margin="12,2,0,0"
+                               Margin="12,0,0,0"
                                VerticalAlignment="Center"/>
                 </StackPanel>
 
@@ -96,12 +98,19 @@
                         </StackPanel>
                     </Button>
 
-                    <Button x:Name="ThemeToggleButton"
-                            Style="{StaticResource ThemeToggleButtonStyle}"
+                    <Button
+                            Style="{StaticResource WindowControlButtonStyle}"
                             Click="ThemeToggleButton_Click"
                             WindowChrome.IsHitTestVisibleInChrome="True"
-                            ToolTip="Toggle theme">
-                        <fa:ImageAwesome Icon="MoonOutline" Style="{StaticResource HeaderIconStyle}"/>
+                            ToolTip="Toggle theme" >
+                        <fa:FontAwesome FontSize="16"
+                            VerticalAlignment="Center" 
+                            Icon="{Binding IsDarkTheme, 
+                    Converter={StaticResource BooleanToIconConverter},
+                    RelativeSource={RelativeSource AncestorType=Window}}"
+                            Foreground="{Binding IsDarkTheme, 
+                    Converter={StaticResource ThemeColorConverter},
+                    RelativeSource={RelativeSource AncestorType=Window}}"/>
                     </Button>
 
                     <Grid Margin="4,0,4,0"
@@ -111,7 +120,7 @@
                                 Click="NotificationsButton_Click"
                                 WindowChrome.IsHitTestVisibleInChrome="True"
                                 ToolTip="Notifications">
-                            <fa:ImageAwesome Icon="Bell" Style="{StaticResource HeaderIconStyle}"/>
+                            <fa:FontAwesome Icon="BellOutline" Style="{StaticResource HeaderIconStyle}"/>
                         </Button>
                         <Border Background="{DynamicResource PrimaryRedColor}"
                                 CornerRadius="7"
@@ -132,7 +141,7 @@
                             WindowChrome.IsHitTestVisibleInChrome="True"
                             ToolTip="Settings"
                             Visibility="{Binding Authenticated, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <fa:ImageAwesome Icon="SignOut" Style="{StaticResource HeaderIconStyle}"/>
+                        <fa:FontAwesome Icon="SignOut" Style="{StaticResource HeaderIconStyle}"/>
                     </Button>
 
                     <Button Style="{StaticResource WindowControlButtonStyle}"
@@ -141,7 +150,7 @@
                     </Button>
                     <Button Style="{StaticResource WindowControlButtonStyle}"
                             Click="Maximize_Click" WindowChrome.IsHitTestVisibleInChrome="True">
-                        <fa:FontAwesome
+                        <fa:FontAwesome FontSize="16"
                             Icon="{Binding WindowState,
                       RelativeSource={RelativeSource AncestorType=Window},
                       Converter={StaticResource WindowStateToIconConverter}}"

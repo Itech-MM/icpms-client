@@ -27,6 +27,8 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.1" />
       
       <PackageReference Include="System.IO.Ports" Version="9.0.0" />
+      
+      <PackageReference Include="Vlc.DotNet.Wpf" Version="3.1.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -72,6 +74,10 @@
       <Resource Include="Assets\Images\Icons\truck-with-cargo.svg" />
       <None Remove="Assets\Images\Icons\Truck-without-cargo.png" />
       <Resource Include="Assets\Images\Icons\Truck-without-cargo.png" />
+      <None Remove="Assets\Images\no-image.jpg" />
+      <Resource Include="Assets\Images\no-image.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
     </ItemGroup>
 
 </Project>
