@@ -59,4 +59,34 @@ public class ShiftService: ApiService
         }
     }
     
+    public async Task<Response.Response?> GetShiftSummary()
+    {
+        try
+        {
+            var accessToken = UserSession.CurrentUser?.CurrentAuth?.AccessToken;
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                return new BaseErrorResponse<string>
+                {
+                    Success = false,
+                    Message = "No active session/access token found.",
+                    Data = "No active session/access token found."
+                };
+            }
+
+            var response = await ApiClient.GetAsync<ShiftSummaryDto>("shifts/summary", true, accessToken);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            var error = new BaseErrorResponse<string>
+            {
+                Success = false,
+                Message = ex.Message,
+                Data = ex.Message
+            };
+            return error;
+        }
+    }
+    
 }

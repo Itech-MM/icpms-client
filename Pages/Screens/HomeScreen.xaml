@@ -6,6 +6,7 @@
              xmlns:conv="clr-namespace:icpms_client.Common.Converters"
              xmlns:vlc="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:sections="clr-namespace:icpms_client.Pages.Screens.Sections"
              mc:Ignorable="d"
              d:DesignHeight="820" d:DesignWidth="1440">
 
@@ -13,43 +14,12 @@
         <conv:BoolToBrushConverter x:Key="GateStateBrushConverter"
                                     TrueBrush="{StaticResource PrimaryGreenColor}"
                                     FalseBrush="{StaticResource MutedButtonColor}" />
-        
+
         <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
         <conv:BoolToCursorConverter x:Key="BoolToCursorConverter" />
 
-        <Style x:Key="SkeletonShimmerStyle" TargetType="Border">
-            <Setter Property="CornerRadius" Value="5" />
-            <Setter Property="ClipToBounds" Value="True" />
-            <Setter Property="Background">
-                <Setter.Value>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <LinearGradientBrush.RelativeTransform>
-                            <TranslateTransform X="-1" Y="-1" />
-                        </LinearGradientBrush.RelativeTransform>
-                        <GradientStop Color="#FF222226" Offset="0.0" />
-                        <GradientStop Color="#FF222226" Offset="0.35" />
-                        <GradientStop Color="#FF3F3F47" Offset="0.5" />
-                        <GradientStop Color="#FF222226" Offset="0.65" />
-                        <GradientStop Color="#FF222226" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="Loaded">
-                    <BeginStoryboard>
-                        <Storyboard RepeatBehavior="Forever">
-                            <DoubleAnimation
-                                Storyboard.TargetProperty="(Border.Background).(LinearGradientBrush.RelativeTransform).(TranslateTransform.X)"
-                                From="-1.5" To="1.5" Duration="0:0:1.3" />
-                            <DoubleAnimation
-                                Storyboard.TargetProperty="(Border.Background).(LinearGradientBrush.RelativeTransform).(TranslateTransform.Y)"
-                                From="-1.5" To="1.5" Duration="0:0:1.3" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Style.Triggers>
-        </Style>
+
     </UserControl.Resources>
 
     <Border Background="{DynamicResource SecondaryBackgroundColor}">
@@ -65,16 +35,34 @@
                 <Border Grid.Row="1" Padding="14">
                     <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.6*" MinWidth="200" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Border Grid.Column="0" Margin="0,0,5,0" Padding="14" Background="{DynamicResource PrimaryBackgroundColor}"
+                    <Border Grid.Column="0" Margin="0,0,5,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0" Margin="0,0,0,5">
+                                <sections:HomeParkingAreaSummarySection x:Name="ParkingSection"/>
+                            </Border>
+
+                            <Border Grid.Row="1" Margin="0,5,0,0">
+                                <sections:HomeShiftSummarySection/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Column="1" Margin="5,0,5,0" Padding="14" Background="{DynamicResource PrimaryBackgroundColor}"
                             CornerRadius="5" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="2">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="300" />
+                                <RowDefinition Height="220" />
                                 <RowDefinition Height="20" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
@@ -96,9 +84,10 @@
                                         <TextBlock FontSize="10" FontWeight="Bold" Foreground="{DynamicResource PureWhiteColor}"
                                                    Text="{Binding ExitGateStateText}" />
                                     </Border>
-                                    <Button Margin="10,0,0,0" Command="{Binding RefreshEntranceCameraCommand}" Foreground="{DynamicResource PrimaryDarkColor}">
+                                    <Button Margin="10,0,0,0" Command="{Binding RefreshEntranceCameraCommand}">
                                         <Button.Style>
                                             <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
+                                                <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
                                                 <Style.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
                                                         <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
@@ -214,12 +203,12 @@
                         </Grid>
                     </Border>
 
-                    <Border Grid.Column="1" Margin="5,0,0,0" Padding="14" Background="{DynamicResource PrimaryBackgroundColor}"
+                    <Border Grid.Column="2" Margin="5,0,0,0" Padding="14" Background="{DynamicResource PrimaryBackgroundColor}"
                             CornerRadius="5" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="2">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="300" />
+                                <RowDefinition Height="220" />
                                 <RowDefinition Height="20" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
@@ -241,9 +230,10 @@
                                         <TextBlock FontSize="10" FontWeight="Bold" Foreground="{DynamicResource PureWhiteColor}"
                                                    Text="{Binding ExitGateStateText}" />
                                     </Border>
-                                    <Button Margin="10,0,0,0" Command="{Binding RefreshExitCameraCommand}" Foreground="{DynamicResource PrimaryDarkColor}">
+                                    <Button Margin="10,0,0,0" Command="{Binding RefreshExitCameraCommand}">
                                         <Button.Style>
                                             <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
+                                                <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
                                                 <Style.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
                                                         <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
@@ -390,113 +380,7 @@
                 <Border Grid.Row="2" Height="0" Background="Transparent" />
 
                 <Border Grid.Row="3" Padding="14, 0, 14, 14">
-                    <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="290" />
-                        <ColumnDefinition Width="240" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Border Grid.Column="0" Margin="0,0,5,0" Padding="14" Background="{DynamicResource SuccessChipBackgroundColor}"
-                            CornerRadius="5" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="2">
-                        <Grid>
-                            <StackPanel Visibility="{Binding IsParkingAreaLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                                <TextBlock Text="Parking Area Summary" Style="{DynamicResource SmallTitleTextStyle}" />
-                                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
-                                    <TextBlock Text="{Binding AreaCapacityPercentage, StringFormat={}{0}%}" FontSize="26" FontWeight="Bold"
-                                               Foreground="{DynamicResource SuccessChipTextColor}" />
-                                    <TextBlock Text="{Binding TotalSlotSummaryText}" FontSize="11" Margin="8,0,0,0"
-                                               VerticalAlignment="Bottom" Foreground="{DynamicResource SecondaryTextColor}" />
-                                </StackPanel>
-
-                                <StackPanel Margin="0,8,0,0">
-                                    <StackPanel Margin="0,0,0,8">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="Normal" FontSize="11"
-                                                       Foreground="{DynamicResource SuccessChipTextColor}" />
-                                            <TextBlock Grid.Column="1" Text="{Binding NormalSlotSummaryText}" FontSize="11" FontWeight="Bold" />
-                                        </Grid>
-                                        <ProgressBar Minimum="0" Maximum="{Binding NormalSlot}" Value="{Binding OccupiedNormalSlot, Mode=OneWay}"
-                                                     Height="6" Margin="0,4,0,0" BorderThickness="0"
-                                                     Foreground="{DynamicResource SuccessChipTextColor}"
-                                                     Background="{DynamicResource PrimaryBackgroundColor}" />
-                                    </StackPanel>
-                                    <StackPanel Margin="0,0,0,8">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="VIP" FontSize="11"
-                                                       Foreground="{DynamicResource SuccessChipTextColor}" />
-                                            <TextBlock Grid.Column="1" Text="{Binding VipSlotSummaryText}" FontSize="11" FontWeight="Bold" />
-                                        </Grid>
-                                        <ProgressBar Minimum="0" Maximum="{Binding VipSlot}" Value="{Binding OccupiedVipSlot, Mode=OneWay}"
-                                                     Height="6" Margin="0,4,0,0" BorderThickness="0"
-                                                     Foreground="{DynamicResource SuccessChipTextColor}"
-                                                     Background="{DynamicResource PrimaryBackgroundColor}" />
-                                    </StackPanel>
-                                </StackPanel>
-                            </StackPanel>
-
-                            <Border Style="{StaticResource SkeletonShimmerStyle}" 
-                                    d:DesignHeight="0"
-                                    Visibility="{Binding IsParkingAreaLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
-                        </Grid>
-                    </Border>
-
-                    <Border Grid.Column="1" Margin="5,0,5,0" Padding="14" Background="{DynamicResource PrimaryChipBackgroundColor}"
-                            CornerRadius="5" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="2">
-                        <StackPanel>
-                            <TextBlock Text="Shift Summary" Style="{DynamicResource SmallTitleTextStyle}" />
-                            <TextBlock Text="Operator - Shift #1" FontSize="11" Margin="0,8,0,10"
-                                       Foreground="{DynamicResource SecondaryTextColor}" />
-
-                            <Grid Margin="0,0,0,8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Vehicles in" FontSize="11.5"
-                                           Foreground="{DynamicResource SecondaryTextColor}" />
-                                <TextBlock Grid.Column="1" Text="0" FontWeight="Bold" FontSize="12.5" />
-                            </Grid>
-                            <Grid Margin="0,0,0,8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Vehicles out" FontSize="11.5"
-                                           Foreground="{DynamicResource SecondaryTextColor}" />
-                                <TextBlock Grid.Column="1" Text="0" FontWeight="Bold" FontSize="12.5" />
-                            </Grid>
-                            <Grid Margin="0,0,0,8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Currently parked" FontSize="11.5"
-                                           Foreground="{DynamicResource SecondaryTextColor}" />
-                                <TextBlock Grid.Column="1" Text="0" FontWeight="Bold" FontSize="12.5" />
-                            </Grid>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Revenue collected" FontSize="11.5"
-                                           Foreground="{DynamicResource SecondaryTextColor}" />
-                                <TextBlock Grid.Column="1" Text="0" FontWeight="Bold"
-                                           FontSize="12.5" Foreground="{DynamicResource PrimaryGreenColor}" />
-                            </Grid>
-                        </StackPanel>
-                    </Border>
-
-                    <Border Grid.Column="2" Margin="5,0,0,0" Background="{DynamicResource PrimaryBackgroundColor}"
+                    <Border Background="{DynamicResource PrimaryBackgroundColor}"
                             CornerRadius="5" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="2">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -518,7 +402,6 @@
                             </DataGrid>
                         </Grid>
                     </Border>
-                </Grid>
                 </Border>
             </Grid>
 

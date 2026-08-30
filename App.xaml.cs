@@ -6,7 +6,9 @@ using icpms_client.Common.Constants;
 using icpms_client.Network.Constants;
 using icpms_client.Network.Core;
 using icpms_client.Network.Services.Home;
+using icpms_client.Pages.Screens.Sections.ViewModels;
 using icpms_client.Pages.Screens.ViewModels;
+using icpms_client.Services.ExternalServices;
 using icpms_client.Utils.Settings;
 using icpms_client.Utils.UI.Theme;
 using icpms_client.ViewModels.Main;
@@ -41,12 +43,6 @@ public partial class App
 
         services.AddSingleton(Configuration);
 
-        /*string dbPath = PrepareWritableDatabase();
-        string connectionString = $"Data Source={dbPath};Pooling=true;";*/
-
-        /*services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlite(connectionString));*/
-
         // Configuration binding
         services.Configure<ApiSettings>(options =>
             Configuration.GetSection("ApiSettings").Bind(options));
@@ -54,8 +50,10 @@ public partial class App
             Configuration.GetSection("EnvironmentSettings").Bind(options));
         services.Configure<ThemeSettings>(options =>
             Configuration.GetSection("ThemeSettings").Bind(options));
-        services.Configure<Plugins>(options => 
+        services.Configure<Plugins>(options =>
             Configuration.GetSection("Plugins"));
+        services.Configure<VehicleDetectionSettings>(options => 
+            Configuration.GetSection("VehicleDetectionSettings").Bind(options));
 
         // Register services
         services.AddSingleton<IApiConstant, ApiConstant>();
@@ -63,25 +61,19 @@ public partial class App
         services.AddSingleton<IEnvironmentConstant, EnvironmentConstant>();
         services.AddSingleton<EnvironmentSettings>();
         services.AddSingleton<ThemeManager>();
-        
+
         services.AddSingleton<IPluginConstants, PluginConstants>();
         services.AddSingleton<Plugins>();
 
+        services.AddSingleton<VehicleDetectionRealtimeService>();
+
         // ViewModels
         services.AddSingleton<MainViewModel>();
-        
+
         services.AddSingleton<HomeScreenService>();
         services.AddTransient<HomeScreenViewModel>();
-        
-       /* services.AddSingleton<WeightTransactionTableViewModel>();
-        services.AddSingleton<MainTemplateViewModel>();
-        services.AddSingleton<DataSyncViewModel>();
-
-        // Repositories and Services
-        services.AddScoped<WeightTransactionRepository>();
-        services.AddScoped<WeightTransactionService>();
-        
-        */
+        services.AddTransient<HomeParkingAreaSummaryViewModel>();
+        services.AddTransient<HomeShiftSummaryViewModel>();
 
         // Window
         services.AddTransient<MainWindow>();
@@ -90,9 +82,20 @@ public partial class App
 
         ServiceProvider.GetRequiredService<ThemeManager>();
 
+        ServiceProvider.GetRequiredService<VehicleDetectionRealtimeService>()
+            .StartInBackground();
 
         var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
         mainWindow.Show();
+    }
+
+    protected override async void OnExit(ExitEventArgs e)
+    {
+        if (ServiceProvider?.GetService<VehicleDetectionRealtimeService>() is { } vehicleService)
+        {
+            await vehicleService.DisposeAsync();
+        }
+        base.OnExit(e);
     }
 
     /// <summary>

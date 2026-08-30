@@ -1,0 +1,121 @@
+﻿<UserControl x:Class="icpms_client.Pages.Screens.Sections.HomeParkingAreaSummarySection"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:conv="clr-namespace:icpms_client.Common.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+
+        <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+
+        <Style x:Key="CapacityCardBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource SuccessChipBackgroundColor}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding AreaCapacityStatus}" Value="Warning">
+                    <Setter Property="Background" Value="{DynamicResource WarningChipBackgroundColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AreaCapacityStatus}" Value="Danger">
+                    <Setter Property="Background" Value="{DynamicResource DangerChipBackgroundColor}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CapacityAccentTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource SuccessChipTextColor}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding AreaCapacityStatus}" Value="Warning">
+                    <Setter Property="Foreground" Value="{DynamicResource WarningChipTextColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AreaCapacityStatus}" Value="Danger">
+                    <Setter Property="Foreground" Value="{DynamicResource DangerChipTextColor}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CapacityAccentProgressBarStyle" TargetType="ProgressBar">
+            <Setter Property="Foreground" Value="{DynamicResource SuccessChipTextColor}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding AreaCapacityStatus}" Value="Warning">
+                    <Setter Property="Foreground" Value="{DynamicResource WarningChipTextColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AreaCapacityStatus}" Value="Danger">
+                    <Setter Property="Foreground" Value="{DynamicResource DangerChipTextColor}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    <Border Padding="14" Style="{StaticResource CapacityCardBorderStyle}"
+            CornerRadius="5" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="2">
+        <StackPanel>
+            <TextBlock Text="Parking Area Summary" Style="{DynamicResource SmallTitleTextStyle}" />
+
+            <!-- Percentage header section -->
+            <Grid Margin="0,8,0,4">
+                <StackPanel Orientation="Horizontal"
+                            Visibility="{Binding IsParkingAreaLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    <TextBlock Text="{Binding AreaCapacityPercentage, StringFormat={}{0}%}" FontSize="26" FontWeight="Bold"
+                               Style="{StaticResource CapacityAccentTextStyle}" />
+                    <TextBlock Text="{Binding TotalSlotSummaryText}" FontSize="11" Margin="8,0,0,0"
+                               VerticalAlignment="Bottom" Foreground="{DynamicResource SecondaryTextColor}" />
+                </StackPanel>
+
+                <Border Style="{StaticResource SkeletonShimmerStyle}"
+                        Height="26" HorizontalAlignment="Left" Width="120"
+                        Visibility="{Binding IsParkingAreaLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+            </Grid>
+
+            <StackPanel Margin="0,8,0,0">
+
+                <!-- Normal slot section -->
+                <Grid Margin="0,0,0,8">
+                    <StackPanel Visibility="{Binding IsParkingAreaLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Normal" FontSize="11"
+                                       Style="{StaticResource CapacityAccentTextStyle}" />
+                            <TextBlock Grid.Column="1" Text="{Binding NormalSlotSummaryText}" FontSize="11" FontWeight="Bold" />
+                        </Grid>
+                        <ProgressBar Minimum="0" Maximum="{Binding NormalSlot}" Value="{Binding OccupiedNormalSlot, Mode=OneWay}"
+                                     Height="6" Margin="0,4,0,0" BorderThickness="0"
+                                     Style="{StaticResource CapacityAccentProgressBarStyle}"
+                                     Background="{DynamicResource PrimaryBackgroundColor}" />
+                    </StackPanel>
+
+                    <Border Style="{StaticResource SkeletonShimmerStyle}"
+                            Height="30"
+                            Visibility="{Binding IsParkingAreaLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </Grid>
+
+                <!-- VIP slot section -->
+                <Grid Margin="0,0,0,8">
+                    <StackPanel Visibility="{Binding IsParkingAreaLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="VIP" FontSize="11"
+                                       Style="{StaticResource CapacityAccentTextStyle}" />
+                            <TextBlock Grid.Column="1" Text="{Binding VipSlotSummaryText}" FontSize="11" FontWeight="Bold" />
+                        </Grid>
+                        <ProgressBar Minimum="0" Maximum="{Binding VipSlot}" Value="{Binding OccupiedVipSlot, Mode=OneWay}"
+                                     Height="6" Margin="0,4,0,0" BorderThickness="0"
+                                     Style="{StaticResource CapacityAccentProgressBarStyle}"
+                                     Background="{DynamicResource PrimaryBackgroundColor}" />
+                    </StackPanel>
+
+                    <Border Style="{StaticResource SkeletonShimmerStyle}"
+                            Height="30"
+                            Visibility="{Binding IsParkingAreaLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </Grid>
+
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -1,30 +1,32 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using icpms_client.Common.Command;
 using icpms_client.Common.Constants;
 using icpms_client.Network.DTO.Gate;
-using icpms_client.Network.DTO.ParkingArea;
 using icpms_client.Network.Response;
 using icpms_client.Network.Response.Home;
 using icpms_client.Network.Services.Home;
-using icpms_client.Network.Services.ParkingArea;
+using icpms_client.Services.ExternalServices;
 using icpms_client.Tools.VideoPlayer;
+using VehicleDetection.Contracts;
 
 namespace icpms_client.Pages.Screens.ViewModels;
 
 public class HomeScreenViewModel : INotifyPropertyChanged
 {
+    public ObservableCollection<VehicleDetectedEvent> DetectedVehicles { get; } = new();
+
     private readonly HomeScreenService _homeScreenService;
-    private readonly ParkingAreaService _parkingAreaService = new();
 
     private bool _isPreloadLoading = true;
     private string? _loadError;
 
-    private bool _isParkingAreaLoading = true;
-    private string? _parkingAreaLoadError;
+    
 
     private bool _exitGateOpen;
     private string? _exitGateStateText = "Closed";
@@ -60,13 +62,7 @@ public class HomeScreenViewModel : INotifyPropertyChanged
     private bool _exitIsMember;
     private bool _exitIsVip;
 
-    private int _areaCapacityPercentage;
-    private int _totalSlot;
-    private int _totalAvailableSlot;
-    private int _vipSlot;
-    private int _totalAvailableVipSlot;
-    private int _normalSlot;
-    private int _totalAvailableNormalSlot;
+    
     
 
     private ImageSource? _entranceSnapshotImage;
@@ -85,18 +81,20 @@ public class HomeScreenViewModel : INotifyPropertyChanged
     private SnapshotSide _activeSnapshotSide;
     
 
-    public HomeScreenViewModel(HomeScreenService homeScreenService)
+    public HomeScreenViewModel(HomeScreenService homeScreenService, VehicleDetectionRealtimeService vehicleService)
     {
         _homeScreenService = homeScreenService;
+        
+        vehicleService.VehicleDetected += OnVehicleDetected;
 
         _entranceSnapshotImage = GetPlaceholderImage();
         _exitSnapshotImage = GetPlaceholderImage();
         
-        OpenExitGateCommand = new RelayCommand(async _ => await OpenExitGateAsync(), _ => ExitPlateMatched);
-        ConfirmPaymentCommand = new RelayCommand(async _ => await ConfirmPaymentAsync(), _ => ExitPlateMatched);
+        OpenExitGateCommand = new RelayCommand(async void (_) => await OpenExitGateAsync(), _ => ExitPlateMatched);
+        ConfirmPaymentCommand = new RelayCommand(async void (_) => await ConfirmPaymentAsync(), _ => ExitPlateMatched);
         SelectCardPaymentCommand = new RelayCommand(_ => SelectPaymentMethod("CARD"), _ => ExitPlateMatched);
         SelectCashPaymentCommand = new RelayCommand(_ => SelectPaymentMethod("CASH"), _ => ExitPlateMatched);
-        RetryLoadCommand = new RelayCommand(async _ => await InitializeAsync());
+        RetryLoadCommand = new RelayCommand(async void (_) => await InitializeAsync());
 
         RefreshEntranceCameraCommand = new RelayCommand(_ => RefreshEntranceCamera());
         RefreshExitCameraCommand = new RelayCommand(_ => RefreshExitCamera());
@@ -121,17 +119,6 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         private set { _loadError = value; OnPropertyChanged(); }
     }
 
-    public bool IsParkingAreaLoading
-    {
-        get => _isParkingAreaLoading;
-        private set { _isParkingAreaLoading = value; OnPropertyChanged(); }
-    }
-
-    public string? ParkingAreaLoadError
-    {
-        get => _parkingAreaLoadError;
-        private set { _parkingAreaLoadError = value; OnPropertyChanged(); }
-    }
 
     public bool ExitGateOpen
     {
@@ -232,48 +219,7 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         set { _exitIsVip = value; OnPropertyChanged(); }
     }
 
-    public int AreaCapacityPercentage
-    {
-        get => _areaCapacityPercentage;
-        set { _areaCapacityPercentage = value; OnPropertyChanged(); }
-    }
-
-    public int TotalSlot
-    {
-        get => _totalSlot;
-        set { _totalSlot = value; OnPropertyChanged(); }
-    }
-
-    public int TotalAvailableSlot
-    {
-        get => _totalAvailableSlot;
-        set { _totalAvailableSlot = value; OnPropertyChanged(); }
-    }
-
-    public int NormalSlot
-    {
-        get => _normalSlot;
-        set { _normalSlot = value; OnPropertyChanged(); }
-    }
-
-    public int TotalAvailableNormalSlot
-    {
-        get => _totalAvailableNormalSlot;
-        set { _totalAvailableNormalSlot = value; OnPropertyChanged(); }
-    }
-
-    public int VipSlot
-    {
-        get => _vipSlot;
-        set { _vipSlot = value; OnPropertyChanged(); }
-    }
-
-    public int TotalAvailableVipSlot
-    {
-        get => _totalAvailableVipSlot;
-        set { _totalAvailableVipSlot = value; OnPropertyChanged(); }
-    }
-
+    
     public ImageSource? EntranceSnapshotImage
     {
         get => _entranceSnapshotImage;
@@ -325,14 +271,6 @@ public class HomeScreenViewModel : INotifyPropertyChanged
             OpenExitSnapshotCommand.RaiseCanExecuteChanged();
         }
     }
-    
-    public int OccupiedTotalSlot => TotalSlot - TotalAvailableSlot;
-    public int OccupiedNormalSlot => NormalSlot - TotalAvailableNormalSlot;
-    public int OccupiedVipSlot => VipSlot - TotalAvailableVipSlot;
-
-    public string TotalSlotSummaryText => $"{OccupiedTotalSlot}/{TotalSlot}";
-    public string NormalSlotSummaryText => $"{OccupiedNormalSlot}/{NormalSlot}";
-    public string VipSlotSummaryText => $"{OccupiedVipSlot}/{VipSlot}";
 
     public RtspPlayer? EntranceAnprPlayer
     {
@@ -426,14 +364,12 @@ public class HomeScreenViewModel : INotifyPropertyChanged
     public async Task InitializeAsync()
     {
         LoadError = null;
-        ParkingAreaLoadError = null;
+        
         IsPreloadLoading = true;
-        IsParkingAreaLoading = true;
 
         var preloadTask = LoadPreloadAsync();
-        var parkingAreaTask = LoadParkingAreaAsync();
 
-        await Task.WhenAll(preloadTask, parkingAreaTask);
+        await Task.WhenAll(preloadTask);
     }
 
     private async Task LoadPreloadAsync()
@@ -461,51 +397,9 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         }
     }
 
-    private async Task LoadParkingAreaAsync()
-    {
-        try
-        {
-            var response = await _parkingAreaService.GetRealtimeParkingAreaData();
+    
 
-            if (response is BaseResponse<RealtimeParkingAreaDto> { Success: true, Data: not null } success)
-            {
-                ApplyParkingAreaData(success.Data);
-            }
-            else
-            {
-                ParkingAreaLoadError = response?.Message ?? "Failed to load parking area data.";
-            }
-        }
-        catch (Exception ex)
-        {
-            ParkingAreaLoadError = ex.Message;
-        }
-        finally
-        {
-            IsParkingAreaLoading = false;
-        }
-    }
-
-    private void ApplyParkingAreaData(RealtimeParkingAreaDto data)
-    {
-        TotalSlot = data.TotalSlot;
-        TotalAvailableSlot = data.AvailableTotalSlot;
-        VipSlot = data.VipSlot;
-        TotalAvailableVipSlot = data.AvailableTotalVipSlot;
-        NormalSlot = data.NormalSlot;
-        TotalAvailableNormalSlot = data.AvailableTotalNormalSlot;
-
-        AreaCapacityPercentage = TotalSlot > 0
-            ? (int)Math.Round((double)OccupiedTotalSlot / TotalSlot * 100)
-            : 0;
-
-        OnPropertyChanged(nameof(OccupiedTotalSlot));
-        OnPropertyChanged(nameof(OccupiedNormalSlot));
-        OnPropertyChanged(nameof(OccupiedVipSlot));
-        OnPropertyChanged(nameof(TotalSlotSummaryText));
-        OnPropertyChanged(nameof(NormalSlotSummaryText));
-        OnPropertyChanged(nameof(VipSlotSummaryText));
-    }
+    
 
     private void ApplyPreload(HomeScreenPreloadResponse data)
     {
@@ -702,12 +596,55 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         return _placeholderImage;
     }
     
-    
+    private void OnVehicleDetected(VehicleDetectedEvent evt)
+{
+    Application.Current.Dispatcher.Invoke(() =>
+    {
+        DetectedVehicles.Insert(0, evt);
+
+        switch (evt.DeviceIp.ToLowerInvariant())
+        {
+            case "entrance":
+                ApplyEntranceDetection(evt);
+                break;
+            case "exit":
+                ApplyExitDetection(evt);
+                break;
+            default:
+                Console.WriteLine($"Vehicle event from unrecognized source '{evt.DeviceIp}' - check camera httpHosts config.");
+                break;
+        }
+    });
+}
+
+    private void ApplyEntranceDetection(VehicleDetectedEvent evt)
+    {
+        EntranceDetectedVehicleNo = evt.LicensePlate;
+
+        // Membership/VIP status isn't in the ANPR event itself - look it up here if needed:
+        // var member = await _homeScreenService.LookupMemberAsync(evt.LicensePlate);
+        // EntranceIsMember = member?.IsMember ?? false;
+        // EntranceIsVip = member?.IsVip ?? false;
+
+        CaptureEntranceSnapshot();
+    }
+
+    private void ApplyExitDetection(VehicleDetectedEvent evt)
+    {
+        ExitDetectedVehicleNo = evt.LicensePlate;
+
+        CaptureExitSnapshot();
+
+        // Hook into your existing exit flow here, e.g.:
+        // ExitPlateMatched = await _homeScreenService.CheckPlateMatchAsync(evt.LicensePlate);
+    }
     private enum SnapshotSide
     {
         Entrance,
         Exit
     }
+    
+    
     
     public event PropertyChangedEventHandler? PropertyChanged;
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

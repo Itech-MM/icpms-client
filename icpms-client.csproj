@@ -16,18 +16,18 @@
       <PackageReference Include="log4net" Version="3.4.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="FontAwesome5" Version="2.1.11" />
-      
+
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.1" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.1" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
       <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.1" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.1" />
-      
+
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.1" />
-      
+
       <PackageReference Include="System.IO.Ports" Version="9.0.0" />
-      
+
       <PackageReference Include="Vlc.DotNet.Wpf" Version="3.1.0" />
     </ItemGroup>
 
@@ -79,5 +79,23 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Resource>
     </ItemGroup>
+
+    <ItemGroup>
+  <None Remove="libs\VehicleDetection.Client.dll" />
+  <None Remove="libs\VehicleDetection.Contracts.dll" />
+</ItemGroup>
+
+<ItemGroup>
+  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.1" />
+
+  <Reference Include="VehicleDetection.Client">
+    <HintPath>libs\VehicleDetection.Client.dll</HintPath>
+    <Private>true</Private>
+  </Reference>
+  <Reference Include="VehicleDetection.Contracts">
+    <HintPath>libs\VehicleDetection.Contracts.dll</HintPath>
+    <Private>true</Private>
+  </Reference>
+</ItemGroup>
 
 </Project>
