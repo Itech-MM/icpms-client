@@ -8,10 +8,15 @@ using System.Windows.Media.Imaging;
 using icpms_client.Common.Command;
 using icpms_client.Common.Constants;
 using icpms_client.Network.DTO.Gate;
+using icpms_client.Network.Request.Visitor;
 using icpms_client.Network.Response;
 using icpms_client.Network.Response.Home;
+using icpms_client.Network.Response.Vehicle;
 using icpms_client.Network.Services.Home;
+using icpms_client.Network.Services.Vehicle;
+using icpms_client.Network.Services.Visitor;
 using icpms_client.Services.ExternalServices;
+using icpms_client.Services.UIServices;
 using icpms_client.Tools.VideoPlayer;
 using VehicleDetection.Contracts;
 
@@ -19,14 +24,18 @@ namespace icpms_client.Pages.Screens.ViewModels;
 
 public class HomeScreenViewModel : INotifyPropertyChanged
 {
-    public ObservableCollection<VehicleDetectedEvent> DetectedVehicles { get; } = new();
 
+    public Action<bool>? OnVisitorSaved;
+    
     private readonly HomeScreenService _homeScreenService;
+
+    private readonly VehicleService _vehicleService;
+
+    private readonly VisitorService _visitorService;
 
     private bool _isPreloadLoading = true;
     private string? _loadError;
 
-    
 
     private bool _exitGateOpen;
     private string? _exitGateStateText = "Closed";
@@ -54,42 +63,49 @@ public class HomeScreenViewModel : INotifyPropertyChanged
     private string _exitAnprName = "CAM 03";
     private string _exitCctvName = "CAM 04";
 
-    private string _entranceDetectedVehicleNo = "--/----";
+    private string _entranceDetectedVehicleNo = "------";
     private bool _entranceIsMember;
     private bool _entranceIsVip;
 
-    private string _exitDetectedVehicleNo = "--/----";
+    private string _exitDetectedVehicleNo = "------";
     private bool _exitIsMember;
     private bool _exitIsVip;
 
-    
-    
-
     private ImageSource? _entranceSnapshotImage;
     private ImageSource? _exitSnapshotImage;
-    
+
     private static ImageSource? _placeholderImage;
     private static bool _placeholderLoadAttempted;
 
     private bool _isSnapshotModalOpen;
     private ImageSource? _modalSnapshotImage;
     private string? _modalSnapshotTitle;
-    
+
     private bool _entranceHasSnapshot;
     private bool _exitHasSnapshot;
-    
-    private SnapshotSide _activeSnapshotSide;
-    
 
-    public HomeScreenViewModel(HomeScreenService homeScreenService, VehicleDetectionRealtimeService vehicleService)
+    private SnapshotSide _activeSnapshotSide;
+
+    private int _entranceRequestSeq;
+    private int _exitRequestSeq;
+
+    private bool _entranceManualEntryRequired;
+    private string? _entranceManualEntryReason;
+
+    public HomeScreenViewModel(HomeScreenService homeScreenService, VehicleDetectionRealtimeService vehicleDetectionRealtimeService,
+        VehicleService vehicleService, VisitorService visitorService)
     {
         _homeScreenService = homeScreenService;
-        
-        vehicleService.VehicleDetected += OnVehicleDetected;
+
+        vehicleDetectionRealtimeService.VehicleDetected += OnVehicleDetected;
+
+        _vehicleService = vehicleService;
+
+        _visitorService = visitorService;
 
         _entranceSnapshotImage = GetPlaceholderImage();
         _exitSnapshotImage = GetPlaceholderImage();
-        
+
         OpenExitGateCommand = new RelayCommand(async void (_) => await OpenExitGateAsync(), _ => ExitPlateMatched);
         ConfirmPaymentCommand = new RelayCommand(async void (_) => await ConfirmPaymentAsync(), _ => ExitPlateMatched);
         SelectCardPaymentCommand = new RelayCommand(_ => SelectPaymentMethod("CARD"), _ => ExitPlateMatched);
@@ -105,6 +121,9 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         OpenExitSnapshotCommand = new RelayCommand(_ => OpenSnapshotModal(SnapshotSide.Exit), _ => ExitHasSnapshot);
         CloseSnapshotModalCommand = new RelayCommand(_ => CloseSnapshotModal());
         RecaptureSnapshotCommand = new RelayCommand(_ => RecaptureActiveSnapshot());
+
+        RetryEntranceVisitorSaveCommand = new RelayCommand(async void (_) => await RetryEntranceVisitorSaveAsync(), _ => EntranceManualEntryRequired);
+        DismissEntranceManualEntryCommand = new RelayCommand(_ => DismissEntranceManualEntry(), _ => EntranceManualEntryRequired);
     }
 
     public bool IsPreloadLoading
@@ -219,7 +238,7 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         set { _exitIsVip = value; OnPropertyChanged(); }
     }
 
-    
+
     public ImageSource? EntranceSnapshotImage
     {
         get => _entranceSnapshotImage;
@@ -231,7 +250,7 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         get => _exitSnapshotImage;
         private set { _exitSnapshotImage = value; OnPropertyChanged(); }
     }
-    
+
     public bool IsSnapshotModalOpen
     {
         get => _isSnapshotModalOpen;
@@ -270,6 +289,24 @@ public class HomeScreenViewModel : INotifyPropertyChanged
             OnPropertyChanged();
             OpenExitSnapshotCommand.RaiseCanExecuteChanged();
         }
+    }
+
+    public bool EntranceManualEntryRequired
+    {
+        get => _entranceManualEntryRequired;
+        private set
+        {
+            _entranceManualEntryRequired = value;
+            OnPropertyChanged();
+            RetryEntranceVisitorSaveCommand.RaiseCanExecuteChanged();
+            DismissEntranceManualEntryCommand.RaiseCanExecuteChanged();
+        }
+    }
+
+    public string? EntranceManualEntryReason
+    {
+        get => _entranceManualEntryReason;
+        private set { _entranceManualEntryReason = value; OnPropertyChanged(); }
     }
 
     public RtspPlayer? EntranceAnprPlayer
@@ -355,16 +392,19 @@ public class HomeScreenViewModel : INotifyPropertyChanged
 
     public RelayCommand RefreshEntranceCameraCommand { get; }
     public RelayCommand RefreshExitCameraCommand { get; }
-    
+
     public RelayCommand OpenEntranceSnapshotCommand { get; }
     public RelayCommand OpenExitSnapshotCommand { get; }
     public RelayCommand CloseSnapshotModalCommand { get; }
     public RelayCommand RecaptureSnapshotCommand { get; }
 
+    public RelayCommand RetryEntranceVisitorSaveCommand { get; }
+    public RelayCommand DismissEntranceManualEntryCommand { get; }
+
     public async Task InitializeAsync()
     {
         LoadError = null;
-        
+
         IsPreloadLoading = true;
 
         var preloadTask = LoadPreloadAsync();
@@ -396,10 +436,6 @@ public class HomeScreenViewModel : INotifyPropertyChanged
             IsPreloadLoading = false;
         }
     }
-
-    
-
-    
 
     private void ApplyPreload(HomeScreenPreloadResponse data)
     {
@@ -499,7 +535,6 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         CaptureExitSnapshot();
     }
 
-
     private static ImageSource? CaptureSnapshotImage(RtspPlayer? player)
     {
         if (player == null) return null;
@@ -543,7 +578,7 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         ExitSnapshotImage = captured ?? GetPlaceholderImage();
         ExitHasSnapshot = captured != null;
     }
-    
+
     private void OpenSnapshotModal(SnapshotSide side)
     {
         _activeSnapshotSide = side;
@@ -570,8 +605,7 @@ public class HomeScreenViewModel : INotifyPropertyChanged
             ModalSnapshotImage = ExitSnapshotImage;
         }
     }
-    
-    
+
     private static ImageSource? GetPlaceholderImage()
     {
         if (_placeholderLoadAttempted) return _placeholderImage;
@@ -595,57 +629,216 @@ public class HomeScreenViewModel : INotifyPropertyChanged
 
         return _placeholderImage;
     }
-    
-    private void OnVehicleDetected(VehicleDetectedEvent evt)
-{
-    Application.Current.Dispatcher.Invoke(() =>
-    {
-        DetectedVehicles.Insert(0, evt);
 
+    private void OnVehicleDetected(VehicleDetectedEvent evt)
+    {
         switch (evt.DeviceIp.ToLowerInvariant())
         {
             case "entrance":
-                ApplyEntranceDetection(evt);
+                _ = HandleEntranceDetectionAsync(evt);
                 break;
             case "exit":
-                ApplyExitDetection(evt);
+                _ = HandleExitDetectionAsync(evt);
                 break;
             default:
                 Console.WriteLine($"Vehicle event from unrecognized source '{evt.DeviceIp}' - check camera httpHosts config.");
                 break;
         }
-    });
-}
-
-    private void ApplyEntranceDetection(VehicleDetectedEvent evt)
-    {
-        EntranceDetectedVehicleNo = evt.LicensePlate;
-
-        // Membership/VIP status isn't in the ANPR event itself - look it up here if needed:
-        // var member = await _homeScreenService.LookupMemberAsync(evt.LicensePlate);
-        // EntranceIsMember = member?.IsMember ?? false;
-        // EntranceIsVip = member?.IsVip ?? false;
-
-        CaptureEntranceSnapshot();
     }
 
-    private void ApplyExitDetection(VehicleDetectedEvent evt)
+    private async Task HandleEntranceDetectionAsync(VehicleDetectedEvent evt)
     {
-        ExitDetectedVehicleNo = evt.LicensePlate;
+        var mySeq = ++_entranceRequestSeq;
 
-        CaptureExitSnapshot();
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            ToastService.ShowInfo("Entrance vehicle detected.");
+            EntranceDetectedVehicleNo = evt.LicensePlate;
+            EntranceManualEntryRequired = false;
+            EntranceManualEntryReason = null;
+            CaptureEntranceSnapshot();
+        });
 
-        // Hook into your existing exit flow here, e.g.:
-        // ExitPlateMatched = await _homeScreenService.CheckPlateMatchAsync(evt.LicensePlate);
+        Response? response;
+        try
+        {
+            response = await _vehicleService.GetVehicleDetailByPlateNumber(evt.LicensePlate);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Plate lookup failed for {evt.LicensePlate}: {ex.Message}");
+            return;
+        }
+
+        if (mySeq != _entranceRequestSeq) return;
+
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (response is BaseResponse<VehicleDetailResponse> { Success: true, Data: not null } success)
+            {
+                EntranceIsMember = success.Data.IsMember;
+                EntranceIsVip = success.Data.IsVip;
+            }
+            else
+            {
+                EntranceIsMember = false;
+                EntranceIsVip = false;
+            }
+        });
+
+        await SaveEntranceVisitorAsync(mySeq, evt.LicensePlate, evt.PlateType);
     }
+
+    private async Task SaveEntranceVisitorAsync(int mySeq, string plateNumber, string vehicleType)
+    {
+        Response? visitorResponse;
+        try
+        {
+            visitorResponse = await _visitorService.SaveEntryVisitor(new VisitorEntryRequest
+            {
+                PlateNumber = plateNumber,
+                VehicleType = vehicleType,
+                ParkingSlotId = null
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Visitor entry save failed for {plateNumber}: {ex.Message}");
+            visitorResponse = null;
+        }
+
+        if (mySeq != _entranceRequestSeq) return;
+
+        if (visitorResponse is not { Success: true })
+        {
+            var reason = visitorResponse?.Message ?? "Failed to save visitor entry.";
+            Console.WriteLine($"Visitor entry save unsuccessful for {plateNumber}: {reason}");
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                EntranceManualEntryReason = reason;
+                EntranceManualEntryRequired = true;
+                DialogService.ShowErrorDialog($"Auto entry failed for {plateNumber}: {reason}\nPlease enter the vehicle manually.");
+            });
+        }
+        else
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ToastService.ShowSuccess($"Successfully saved visitor entry for {plateNumber}");
+                EntranceManualEntryReason = null;
+                EntranceManualEntryRequired = false;
+            });
+            ResetEntranceData();
+            OnVisitorSaved?.Invoke(true);
+        }
+    }
+
+    private async Task RetryEntranceVisitorSaveAsync()
+    {
+        var mySeq = _entranceRequestSeq;
+        var plateNumber = EntranceDetectedVehicleNo;
+
+        if (string.IsNullOrWhiteSpace(plateNumber) || plateNumber == "------") return;
+
+        await SaveEntranceVisitorAsync(mySeq, plateNumber, string.Empty);
+    }
+
+    private void DismissEntranceManualEntry()
+    {
+        EntranceManualEntryReason = null;
+        EntranceManualEntryRequired = false;
+    }
+
+    private async Task HandleExitDetectionAsync(VehicleDetectedEvent evt)
+    {
+        var mySeq = ++_exitRequestSeq;
+
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            ExitDetectedVehicleNo = evt.LicensePlate;
+            CaptureExitSnapshot();
+        });
+
+        Response? response;
+        try
+        {
+            response = await _vehicleService.GetVehicleDetailByPlateNumber(evt.LicensePlate);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Plate lookup failed for {evt.LicensePlate}: {ex.Message}");
+            return;
+        }
+
+        if (mySeq != _exitRequestSeq) return;
+
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (response is BaseResponse<VehicleDetailResponse> { Success: true, Data: not null } success)
+            {
+                ExitIsMember = success.Data.IsMember;
+                ExitIsVip = success.Data.IsVip;
+                ExitPlateMatched = success.Data.Vehicle != null;
+            }
+            else
+            {
+                ExitIsMember = false;
+                ExitIsVip = false;
+                ExitPlateMatched = false;
+            }
+        });
+    }
+    
+    public void ResetEntranceData()
+    {
+        _entranceRequestSeq++;
+
+        EntranceDetectedVehicleNo = "------";
+        EntranceIsMember = false;
+        EntranceIsVip = false;
+
+        EntranceSnapshotImage = GetPlaceholderImage();
+        EntranceHasSnapshot = false;
+
+        EntranceManualEntryRequired = false;
+        EntranceManualEntryReason = null;
+    }
+
+    public void ResetExitData()
+    {
+        _exitRequestSeq++;
+
+        ExitDetectedVehicleNo = "------";
+        ExitIsMember = false;
+        ExitIsVip = false;
+
+        ExitSnapshotImage = GetPlaceholderImage();
+        ExitHasSnapshot = false;
+
+        ExitGateOpen = false;
+        ExitStatusText = null;
+        ExitPlateMatched = false;
+        ExitParkedDurationText = null;
+        ExitFeeDueText = null;
+
+        IsChoosingPaymentMethod = false;
+        IsReadyToConfirmPayment = false;
+        IsPaymentComplete = false;
+    }
+
+    public void ResetAllData()
+    {
+        ResetEntranceData();
+        ResetExitData();
+    }
+
     private enum SnapshotSide
     {
         Entrance,
         Exit
     }
-    
-    
-    
+
     public event PropertyChangedEventHandler? PropertyChanged;
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

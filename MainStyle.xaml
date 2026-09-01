@@ -7,6 +7,7 @@
     </ResourceDictionary.MergedDictionaries>-->
     <sys:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     <Style TargetType="Window">
+        <Setter Property="FontFamily" Value="/Assets/Fonts/#Poppins" />
         <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}" />
     </Style>
     
@@ -241,17 +242,51 @@
     <!--BorderStyle-->
     <Style x:Key="RoundedBorderStyle" TargetType="Border">
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderColor}" />
-        <Setter Property="CornerRadius" Value="5" />
-        <Setter Property="BorderThickness" Value="1.3" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderThickness" Value="1" />
     </Style>
 
+    <Style x:Key="ElevatedPanelStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundColor}" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style x:Key="LiveDotStyle" TargetType="Ellipse">
+        <Setter Property="Width" Value="7" />
+        <Setter Property="Height" Value="7" />
+        <Setter Property="Fill" Value="{DynamicResource PrimaryGreenColor}" />
+    </Style>
+
+    <Style x:Key="LaneAccentBarStyle" TargetType="Border">
+        <Setter Property="Width" Value="3" />
+        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+    </Style>
+
+    <Style x:Key="PlateBadgeStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource PlateBadgeBackgroundColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PlateBadgeBorderColor}" />
+        <Setter Property="BorderThickness" Value="1.5" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="16,9" />
+        
+    </Style>
+
+    <Style x:Key="PlateBadgeTextStyle" TargetType="TextBlock">
+        <Setter Property="TextElement.FontFamily" Value="/Assets/Fonts/#DIN 1451 fette Breitschrift 1936" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="Foreground" Value="{DynamicResource PlateBadgeTextColor}" />
+    </Style>
+    
     <!-- Primary Button Style -->
     <Style x:Key="PrimaryButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="{DynamicResource PrimaryButtonColor}" /> <!-- Blue color -->
-        <Setter Property="TextElement.Foreground" Value="{DynamicResource PureBlackColor}" />
-        <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Padding" Value="15,8" />
-        <Setter Property="BorderBrush" Value="#80BDFF" />
+        <Setter Property="Background" Value="{DynamicResource PrimaryButtonColor}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource PrimaryDarkColor}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Padding" Value="16,9" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryButtonColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -262,14 +297,12 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             Padding="{TemplateBinding Padding}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="5">
-                        <ContentPresenter HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"
-                                          >
+                            CornerRadius="7">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
                             <ContentPresenter.Resources>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextElement.FontFamily" Value="/Assets/Fonts/#Poppins" />
-                                    <Setter Property="TextElement.Foreground" Value="#333333"/>
+                                    <Setter Property="TextElement.Foreground" Value="{DynamicResource PrimaryDarkColor}"/>
                                 </Style>
                             </ContentPresenter.Resources>
                         </ContentPresenter>
@@ -279,7 +312,7 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource PrimaryTextFocusColor}" /> <!-- Darker Blue -->
+                <Setter Property="Opacity" Value="0.88" />
                 <Setter Property="Cursor" Value="Hand" />
             </Trigger>
         </Style.Triggers>
@@ -1368,7 +1401,7 @@
         </Setter>-->
     </Style>
     <Style x:Key="StatusPillStyle" TargetType="Border">
-        <Setter Property="Background" Value="{DynamicResource SuccessBackgroundColor}"/>
+        <Setter Property="Background" Value="{DynamicResource SuccessChipBackgroundColor}"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Padding" Value="10,4"/>
     </Style>

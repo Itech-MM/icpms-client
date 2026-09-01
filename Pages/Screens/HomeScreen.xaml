@@ -14,15 +14,12 @@
         <conv:BoolToBrushConverter x:Key="GateStateBrushConverter"
                                     TrueBrush="{StaticResource PrimaryGreenColor}"
                                     FalseBrush="{StaticResource MutedButtonColor}" />
-
         <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
         <conv:BoolToCursorConverter x:Key="BoolToCursorConverter" />
-
-
     </UserControl.Resources>
 
-    <Border Background="{DynamicResource SecondaryBackgroundColor}">
+    <Border Background="{DynamicResource PrimaryBackgroundColor}">
         <Grid>
             <Grid>
                 <Grid.RowDefinitions>
@@ -32,162 +29,148 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="1" Padding="14">
+                <Border Grid.Row="1" Padding="18">
                     <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.6*" MinWidth="200" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.6*" MinWidth="220" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
-                    <Border Grid.Column="0" Margin="0,0,5,0">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
+                        <Border Grid.Column="0" Margin="0,0,8,0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
 
-                            <Border Grid.Row="0" Margin="0,0,0,5">
-                                <sections:HomeParkingAreaSummarySection x:Name="ParkingSection"/>
-                            </Border>
-
-                            <Border Grid.Row="1" Margin="0,5,0,0">
-                                <sections:HomeShiftSummarySection/>
-                            </Border>
-                        </Grid>
-                    </Border>
-
-                    <Border Grid.Column="1" Margin="5,0,5,0" Padding="14" Background="{DynamicResource PrimaryBackgroundColor}"
-                            CornerRadius="5" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="2">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="220" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-
-                            <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,10">
-                                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Entrance Lane" Style="{DynamicResource SmallTitleTextStyle}" FontSize="14" />
-                                    <Border Style="{DynamicResource SuccessChipStyle}" Margin="10,0,0,0"
-                                            VerticalAlignment="Center">
-                                        <TextBlock Text="Auto" Style="{DynamicResource SuccessChipTextStyle}" />
-                                    </Border>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
-                                    <Button Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Test"
-                                            Command="{Binding TestEntranceEntryCommand}" Margin="0,0,10,0"/>
-
-                                    <Border Style="{DynamicResource StatusPillStyle}" VerticalAlignment="Center"
-                                            Background="{Binding ExitGateOpen, Converter={StaticResource GateStateBrushConverter}}">
-                                        <TextBlock FontSize="10" FontWeight="Bold" Foreground="{DynamicResource PureWhiteColor}"
-                                                   Text="{Binding ExitGateStateText}" />
-                                    </Border>
-                                    <Button Margin="10,0,0,0" Command="{Binding RefreshEntranceCameraCommand}">
-                                        <Button.Style>
-                                            <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
-                                                <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
-                                                        <Setter Property="Cursor" Value="Hand" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
-                                        <fa:FontAwesome Icon="Refresh" />
-                                    </Button>
-                                </StackPanel>
-                            </DockPanel>
-
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Border Grid.Column="0" Margin="0,0,5,0" Background="{DynamicResource PrimaryDarkColor}"
-                                        CornerRadius="5" ClipToBounds="True">
-                                    <Grid>
-                                        <vlc:VlcControl x:Name="EntranceAnprControl"
-                                                        Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"
-                                                    Margin="8"
-                                                    Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                                            <Ellipse Width="6" Height="6" Fill="{DynamicResource PrimaryRedColor}"
-                                                     Margin="0,0,5,0" />
-                                            <TextBlock Text="{Binding EntranceAnprName}" FontSize="9" FontWeight="Bold"
-                                                       Foreground="{DynamicResource PureWhiteColor}" />
-                                        </StackPanel>
-                                        <Border Style="{StaticResource SkeletonShimmerStyle}"
-                                                Visibility="{Binding IsPreloadLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                    </Grid>
+                                <Border Grid.Row="0" Margin="0,0,0,8">
+                                    <sections:HomeParkingAreaSummarySection x:Name="ParkingSection"/>
                                 </Border>
 
-                                <Border Grid.Column="1" Margin="5,0,0,0" Background="{DynamicResource PrimaryDarkColor}"
-                                        CornerRadius="5" ClipToBounds="True">
-                                    <Grid>
-                                        <vlc:VlcControl x:Name="EntranceCctvControl"
-                                                        Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"
-                                                    Margin="8"
-                                                    Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                                            <Ellipse Width="6" Height="6" Fill="{DynamicResource PrimaryRedColor}"
-                                                     Margin="0,0,5,0" />
-                                            <TextBlock Text="{Binding EntranceCctvName}" FontSize="9" FontWeight="Bold"
-                                                       Foreground="{DynamicResource PureWhiteColor}" />
-                                        </StackPanel>
-                                        <Border Style="{StaticResource SkeletonShimmerStyle}"
-                                                Visibility="{Binding IsPreloadLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                    </Grid>
+                                <Border Grid.Row="1" Margin="0,8,0,0">
+                                    <sections:HomeShiftSummarySection x:Name="ShiftSummarySection"/>
                                 </Border>
                             </Grid>
+                        </Border>
 
-                            <Border Grid.Row="3" Background="{DynamicResource SecondaryBackgroundColor}" CornerRadius="5"
-                                    Padding="12">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="180"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel  Margin="0,0,10,0">
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center">
-                                        <Border Background="{DynamicResource SecondaryBorderColor}" CornerRadius="5" Padding="14,8"
-                                                HorizontalAlignment="Left">
-                                            <TextBlock Text="{Binding EntranceDetectedVehicleNo}"
-                                                       Style="{DynamicResource TitleTextStyle}" Foreground="{DynamicResource PrimaryWhiteColor}" />
-                                        </Border>
+                        <Border Grid.Column="1" Margin="8,0,8,0" Style="{StaticResource ElevatedPanelStyle}">
+                            <Grid Margin="18">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="220" />
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
 
-                                        <Border Style="{DynamicResource MemberChipStyle}" Margin="10,0,0,0" VerticalAlignment="Center"
-                                                Visibility="{Binding EntranceIsMember, Converter={StaticResource BoolToVisibilityConverter}}">
-                                            <TextBlock Text="MEMBER" Style="{DynamicResource MemberChipTextStyle}" />
-                                        </Border>
-
-                                        <Border Style="{DynamicResource VipChipStyle}" Margin="10,0,0,0" VerticalAlignment="Center"
-                                                Visibility="{Binding EntranceIsVip, Converter={StaticResource BoolToVisibilityConverter}}">
-                                            <TextBlock Text="VIP" Style="{DynamicResource VipChipTextStyle}" />
+                                <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,12">
+                                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Border Style="{StaticResource LaneAccentBarStyle}" Height="18" Margin="0,0,10,0"/>
+                                        <TextBlock Text="Entrance Lane" Style="{DynamicResource SmallTitleTextStyle}" FontSize="15" />
+                                        <Border Style="{DynamicResource SuccessChipStyle}" Margin="10,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="Auto" Style="{DynamicResource SuccessChipTextStyle}" />
                                         </Border>
                                     </StackPanel>
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                                        <Button Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Test"
+                                                Command="{Binding TestEntranceEntryCommand}" Margin="0,0,10,0"/>
+                                        <Border Style="{DynamicResource StatusPillStyle}" VerticalAlignment="Center"
+                                                Background="{Binding ExitGateOpen, Converter={StaticResource GateStateBrushConverter}}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Style="{StaticResource LiveDotStyle}" Fill="{DynamicResource PureWhiteColor}" Margin="0,0,6,0"/>
+                                                <TextBlock FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource PureWhiteColor}"
+                                                           Text="{Binding ExitGateStateText}" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Button Margin="10,0,0,0" Command="{Binding RefreshEntranceCameraCommand}">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
+                                                    <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
+                                                            <Setter Property="Cursor" Value="Hand" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                            <fa:FontAwesome Icon="Refresh" />
+                                        </Button>
+                                    </StackPanel>
+                                </DockPanel>
 
-                                    <DockPanel LastChildFill="False">
-                                        <Button Content="Open Gate" Style="{DynamicResource SecondaryOutlineButtonStyle}"
-                                                Command="{Binding OpenExitGateCommand}" HorizontalAlignment="Stretch"
-                                                Margin="0,8,8,0"/>
-                                        <Button Content="Manual Entry" Style="{DynamicResource SecondaryOutlineButtonStyle}"
-                                                Command="{Binding ConfirmPaymentCommand}" HorizontalAlignment="Stretch"
-                                                Margin="0,8,0,0" />
-                                    </DockPanel>
-                                </StackPanel>
-                                    <Grid Grid.Column="1">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Column="0" Margin="0,0,5,0" Background="{DynamicResource PrimaryDarkColor}"
+                                            CornerRadius="8" ClipToBounds="True">
+                                        <Grid>
+                                            <vlc:VlcControl x:Name="EntranceAnprControl"
+                                                            Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                                        Margin="10"
+                                                        Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                                                <Ellipse Style="{StaticResource LiveDotStyle}" Fill="{DynamicResource PrimaryRedColor}" Margin="0,0,6,0" />
+                                                <TextBlock Text="{Binding EntranceAnprName}" FontSize="9.5" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource PureWhiteColor}" />
+                                            </StackPanel>
+                                            <Border Style="{StaticResource SkeletonShimmerStyle}"
+                                                    Visibility="{Binding IsPreloadLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                        </Grid>
+                                    </Border>
+
+                                    <Border Grid.Column="1" Margin="5,0,0,0" Background="{DynamicResource PrimaryDarkColor}"
+                                            CornerRadius="8" ClipToBounds="True">
+                                        <Grid>
+                                            <vlc:VlcControl x:Name="EntranceCctvControl"
+                                                            Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                                        Margin="10"
+                                                        Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                                                <Ellipse Style="{StaticResource LiveDotStyle}" Fill="{DynamicResource PrimaryRedColor}" Margin="0,0,6,0" />
+                                                <TextBlock Text="{Binding EntranceCctvName}" FontSize="9.5" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource PureWhiteColor}" />
+                                            </StackPanel>
+                                            <Border Style="{StaticResource SkeletonShimmerStyle}"
+                                                    Visibility="{Binding IsPreloadLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+
+                                <Border Grid.Row="3" Background="{DynamicResource PrimaryBackgroundColor}" CornerRadius="8" Padding="14">
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="180"/>
                                         </Grid.ColumnDefinitions>
-                                        <Border CornerRadius="5" Background="{DynamicResource PrimaryDarkColor}" ClipToBounds="True">
+                                        <StackPanel Margin="0,0,12,0">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,12" VerticalAlignment="Center">
+                                                <Border Style="{StaticResource PlateBadgeStyle}" HorizontalAlignment="Left">
+                                                    <TextBlock Text="{Binding EntranceDetectedVehicleNo}" Style="{DynamicResource PlateBadgeTextStyle}" />
+                                                </Border>
+                                                <Border Style="{DynamicResource MemberChipStyle}" Margin="10,0,0,0" VerticalAlignment="Center"
+                                                        Visibility="{Binding EntranceIsMember, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <TextBlock Text="Member" Style="{DynamicResource MemberChipTextStyle}" />
+                                                </Border>
+                                                <Border Style="{DynamicResource VipChipStyle}" Margin="10,0,0,0" VerticalAlignment="Center"
+                                                        Visibility="{Binding EntranceIsVip, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <TextBlock Text="VIP" Style="{DynamicResource VipChipTextStyle}" />
+                                                </Border>
+                                            </StackPanel>
+
+                                            <DockPanel LastChildFill="False">
+                                                <Button Content="Open Gate" Style="{DynamicResource SecondaryOutlineButtonStyle}"
+                                                        Command="{Binding OpenExitGateCommand}" HorizontalAlignment="Stretch"
+                                                        Margin="0,8,8,0"/>
+                                                <Button Content="Manual Entry" Style="{DynamicResource SecondaryOutlineButtonStyle}"
+                                                        Command="{Binding ConfirmPaymentCommand}" HorizontalAlignment="Stretch"
+                                                        Margin="0,8,0,0" />
+                                            </DockPanel>
+                                        </StackPanel>
+                                        <Border Grid.Column="1" CornerRadius="8" Background="{DynamicResource PrimaryDarkColor}" ClipToBounds="True">
                                             <Button Command="{Binding OpenEntranceSnapshotCommand}"
                                                     Background="Transparent" BorderThickness="0" Padding="0"
                                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
@@ -196,172 +179,155 @@
                                             </Button>
                                         </Border>
                                     </Grid>
-                                    
-                                </Grid>
-                                
-                            </Border>
-                        </Grid>
-                    </Border>
-
-                    <Border Grid.Column="2" Margin="5,0,0,0" Padding="14" Background="{DynamicResource PrimaryBackgroundColor}"
-                            CornerRadius="5" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="2">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="220" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-
-                            <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,10">
-                                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Exit Lane" Style="{DynamicResource SmallTitleTextStyle}" FontSize="14" />
-                                    <Border Style="{DynamicResource DangerChipStyle}" Margin="10,0,0,0"
-                                            VerticalAlignment="Center">
-                                        <TextBlock Text="MANUAL" Style="{DynamicResource DangerChipTextStyle}" />
-                                    </Border>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
-                                    <Button Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Test"
-                                            Command="{Binding TestExitEntryCommand}" Margin="0,0,10,0" />
-
-                                    <Border Style="{DynamicResource StatusPillStyle}" VerticalAlignment="Center"
-                                            Background="{Binding ExitGateOpen, Converter={StaticResource GateStateBrushConverter}}">
-                                        <TextBlock FontSize="10" FontWeight="Bold" Foreground="{DynamicResource PureWhiteColor}"
-                                                   Text="{Binding ExitGateStateText}" />
-                                    </Border>
-                                    <Button Margin="10,0,0,0" Command="{Binding RefreshExitCameraCommand}">
-                                        <Button.Style>
-                                            <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
-                                                <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
-                                                        <Setter Property="Cursor" Value="Hand" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
-                                        <fa:FontAwesome Icon="Refresh" />
-                                    </Button>
-                                </StackPanel>
-                            </DockPanel>
-
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Border Grid.Column="0" Margin="0,0,5,0" Background="{DynamicResource PrimaryDarkColor}"
-                                        CornerRadius="5" ClipToBounds="True">
-                                    <Grid>
-                                        <vlc:VlcControl x:Name="ExitAnprControl"
-                                                        Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"
-                                                    Margin="8"
-                                                    Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                                            <Ellipse Width="6" Height="6" Fill="{DynamicResource PrimaryRedColor}"
-                                                     Margin="0,0,5,0" />
-                                            <TextBlock Text="{Binding ExitAnprName}" FontSize="9" FontWeight="Bold"
-                                                       Foreground="{DynamicResource PureWhiteColor}" />
-                                        </StackPanel>
-                                        <Border Style="{StaticResource SkeletonShimmerStyle}"
-                                                Visibility="{Binding IsPreloadLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                    </Grid>
-                                </Border>
-
-                                <Border Grid.Column="1" Margin="5,0,0,0" Background="{DynamicResource PrimaryDarkColor}"
-                                        CornerRadius="5" ClipToBounds="True">
-                                    <Grid>
-                                        <vlc:VlcControl x:Name="ExitCctvControl"
-                                                        Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"
-                                                    Margin="8"
-                                                    Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                                            <Ellipse Width="6" Height="6" Fill="{DynamicResource PrimaryRedColor}"
-                                                     Margin="0,0,5,0" />
-                                            <TextBlock Text="{Binding ExitCctvName}" FontSize="9" FontWeight="Bold"
-                                                       Foreground="{DynamicResource PureWhiteColor}" />
-                                        </StackPanel>
-                                        <Border Style="{StaticResource SkeletonShimmerStyle}"
-                                                Visibility="{Binding IsPreloadLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                    </Grid>
                                 </Border>
                             </Grid>
+                        </Border>
 
-                            <TextBlock Grid.Row="2" Margin="0,10,0,10" FontSize="11.5"
-                                       Foreground="{DynamicResource SecondaryTextColor}"
-                                       Text="{Binding ExitStatusText}" />
+                        <Border Grid.Column="2" Margin="8,0,0,0" Style="{StaticResource ElevatedPanelStyle}">
+                            <Grid Margin="18">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="220" />
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
 
-                            <Border Grid.Row="3" Background="{DynamicResource SecondaryBackgroundColor}" CornerRadius="5"
-                                    Padding="12">
-                                <Grid>
+                                <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,12">
+                                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Border Style="{StaticResource LaneAccentBarStyle}" Height="18" Margin="0,0,10,0"
+                                                Background="{DynamicResource SecondaryAccentColor}"/>
+                                        <TextBlock Text="Exit Lane" Style="{DynamicResource SmallTitleTextStyle}" FontSize="15" />
+                                        <Border Style="{DynamicResource DangerChipStyle}" Margin="10,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="Manual" Style="{DynamicResource DangerChipTextStyle}" />
+                                        </Border>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                                        <Button Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Test"
+                                                Command="{Binding TestExitEntryCommand}" Margin="0,0,10,0" />
+                                        <Border Style="{DynamicResource StatusPillStyle}" VerticalAlignment="Center"
+                                                Background="{Binding ExitGateOpen, Converter={StaticResource GateStateBrushConverter}}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Style="{StaticResource LiveDotStyle}" Fill="{DynamicResource PureWhiteColor}" Margin="0,0,6,0"/>
+                                                <TextBlock FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource PureWhiteColor}"
+                                                           Text="{Binding ExitGateStateText}" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Button Margin="10,0,0,0" Command="{Binding RefreshExitCameraCommand}">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
+                                                    <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
+                                                            <Setter Property="Cursor" Value="Hand" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                            <fa:FontAwesome Icon="Refresh" />
+                                        </Button>
+                                    </StackPanel>
+                                </DockPanel>
+
+                                <Grid Grid.Row="1">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="180"/>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Margin="0,0,10,0">
 
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center">
-                                        <Border Background="{DynamicResource SecondaryBorderColor}" CornerRadius="5" Padding="14,8"
-                                                HorizontalAlignment="Left">
-                                            <TextBlock Text="{Binding ExitDetectedVehicleNo}"
-                                                       Style="{DynamicResource TitleTextStyle}" Foreground="{DynamicResource PrimaryWhiteColor}" />
-                                        </Border>
-
-                                        <Border Style="{DynamicResource MemberChipStyle}" Margin="10,0,0,0" VerticalAlignment="Center"
-                                                Visibility="{Binding ExitIsMember, Converter={StaticResource BoolToVisibilityConverter}}">
-                                            <TextBlock Text="MEMBER" Style="{DynamicResource MemberChipTextStyle}" />
-                                        </Border>
-
-                                        <Border Style="{DynamicResource VipChipStyle}" Margin="10,0,0,0" VerticalAlignment="Center"
-                                                Visibility="{Binding ExitIsVip, Converter={StaticResource BoolToVisibilityConverter}}">
-                                            <TextBlock Text="VIP" Style="{DynamicResource VipChipTextStyle}" />
-                                        </Border>
-                                    </StackPanel>
-
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                        <Border Style="{DynamicResource InfoChipStyle}" Margin="0,0,8,0"
-                                                Visibility="{Binding ExitParkedDurationText, Converter={StaticResource NullToVisibilityConverter}}">
-                                            <StackPanel Orientation="Horizontal">
-                                                <fa:ImageAwesome Icon="ClockOutline" Width="11" Height="11" Foreground="{DynamicResource PrimaryColor}" />
-                                                <TextBlock Text="Parked" FontSize="10.5" Margin="6,0,6,0"
-                                                           Foreground="{DynamicResource SecondaryTextColor}" VerticalAlignment="Center" />
-                                                <TextBlock Text="{Binding ExitParkedDurationText}" FontSize="11.5" FontWeight="Bold"
-                                                           VerticalAlignment="Center" />
+                                    <Border Grid.Column="0" Margin="0,0,5,0" Background="{DynamicResource PrimaryDarkColor}"
+                                            CornerRadius="8" ClipToBounds="True">
+                                        <Grid>
+                                            <vlc:VlcControl x:Name="ExitAnprControl"
+                                                            Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                                        Margin="10"
+                                                        Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                                                <Ellipse Style="{StaticResource LiveDotStyle}" Fill="{DynamicResource PrimaryRedColor}" Margin="0,0,6,0" />
+                                                <TextBlock Text="{Binding ExitAnprName}" FontSize="9.5" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource PureWhiteColor}" />
                                             </StackPanel>
-                                        </Border>
+                                            <Border Style="{StaticResource SkeletonShimmerStyle}"
+                                                    Visibility="{Binding IsPreloadLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                        </Grid>
+                                    </Border>
 
-                                        <Border Style="{DynamicResource PrimaryChipStyle}" Visibility="{Binding ExitFeeDueText, Converter={StaticResource NullToVisibilityConverter}}">
-                                            <StackPanel Orientation="Horizontal">
-                                                <fa:ImageAwesome Icon="Usd" Width="11" Height="11" Foreground="{DynamicResource PrimaryColor}" />
-                                                <TextBlock Text="Fee" FontSize="10.5" Margin="6,0,6,0"
-                                                           Foreground="{DynamicResource SecondaryTextColor}" VerticalAlignment="Center" />
-                                                <TextBlock Text="{Binding ExitFeeDueText}" FontSize="13" FontWeight="Bold"
-                                                           Foreground="{DynamicResource PrimaryColor}" VerticalAlignment="Center" />
+                                    <Border Grid.Column="1" Margin="5,0,0,0" Background="{DynamicResource PrimaryDarkColor}"
+                                            CornerRadius="8" ClipToBounds="True">
+                                        <Grid>
+                                            <vlc:VlcControl x:Name="ExitCctvControl"
+                                                            Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                                        Margin="10"
+                                                        Visibility="{Binding IsPreloadLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                                                <Ellipse Style="{StaticResource LiveDotStyle}" Fill="{DynamicResource PrimaryRedColor}" Margin="0,0,6,0" />
+                                                <TextBlock Text="{Binding ExitCctvName}" FontSize="9.5" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource PureWhiteColor}" />
                                             </StackPanel>
-                                        </Border>
-                                    </StackPanel>
+                                            <Border Style="{StaticResource SkeletonShimmerStyle}"
+                                                    Visibility="{Binding IsPreloadLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                        </Grid>
+                                    </Border>
+                                </Grid>
 
-                                    <DockPanel LastChildFill="True">
-                                        <Button Content="Open Gate" Style="{DynamicResource PrimaryButtonStyle}"
-                                                Command="{Binding OpenExitGateCommand}" HorizontalAlignment="Stretch"
-                                                Margin="0,8,0,0" />
-                                        <Button Content="Confirm Payment" Style="{DynamicResource InfoButtonStyle}"
-                                                Command="{Binding ConfirmPaymentCommand}" HorizontalAlignment="Stretch"
-                                                Margin="8,8,0,0" />
-                                    </DockPanel>
-                                </StackPanel>
-                                    <Grid Grid.Column="1">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="2" Margin="0,10,0,10" FontSize="11.5"
+                                           Foreground="{DynamicResource SecondaryTextColor}"
+                                           Text="{Binding ExitStatusText}" />
+
+                                <Border Grid.Row="3" Background="{DynamicResource PrimaryBackgroundColor}" CornerRadius="8" Padding="14">
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="180"/>
                                         </Grid.ColumnDefinitions>
-                                        <Border CornerRadius="5" Background="{DynamicResource PrimaryDarkColor}" ClipToBounds="True">
+                                        <StackPanel Margin="0,0,12,0">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center">
+                                                <Border Style="{StaticResource PlateBadgeStyle}" HorizontalAlignment="Left">
+                                                    <TextBlock Text="{Binding ExitDetectedVehicleNo}" Style="{DynamicResource PlateBadgeTextStyle}" />
+                                                </Border>
+                                                <Border Style="{DynamicResource MemberChipStyle}" Margin="10,0,0,0" VerticalAlignment="Center"
+                                                        Visibility="{Binding ExitIsMember, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <TextBlock Text="Member" Style="{DynamicResource MemberChipTextStyle}" />
+                                                </Border>
+                                                <Border Style="{DynamicResource VipChipStyle}" Margin="10,0,0,0" VerticalAlignment="Center"
+                                                        Visibility="{Binding ExitIsVip, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <TextBlock Text="VIP" Style="{DynamicResource VipChipTextStyle}" />
+                                                </Border>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                                <Border Style="{DynamicResource InfoChipStyle}" Margin="0,0,8,0"
+                                                        Visibility="{Binding ExitParkedDurationText, Converter={StaticResource NullToVisibilityConverter}}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <fa:ImageAwesome Icon="ClockOutline" Width="11" Height="11" Foreground="{DynamicResource PrimaryColor}" />
+                                                        <TextBlock Text="Parked" FontSize="10.5" Margin="6,0,6,0"
+                                                                   Foreground="{DynamicResource SecondaryTextColor}" VerticalAlignment="Center" />
+                                                        <TextBlock Text="{Binding ExitParkedDurationText}" FontSize="11.5" FontWeight="SemiBold"
+                                                                   VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <Border Style="{DynamicResource PrimaryChipStyle}" Visibility="{Binding ExitFeeDueText, Converter={StaticResource NullToVisibilityConverter}}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <fa:ImageAwesome Icon="Usd" Width="11" Height="11" Foreground="{DynamicResource PrimaryColor}" />
+                                                        <TextBlock Text="Fee" FontSize="10.5" Margin="6,0,6,0"
+                                                                   Foreground="{DynamicResource SecondaryTextColor}" VerticalAlignment="Center" />
+                                                        <TextBlock Text="{Binding ExitFeeDueText}" FontSize="13.5" FontWeight="Bold"
+                                                                   Foreground="{DynamicResource PrimaryColor}" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </StackPanel>
+
+                                            <DockPanel LastChildFill="True">
+                                                <Button Content="Open Gate" Style="{DynamicResource PrimaryButtonStyle}"
+                                                        Command="{Binding OpenExitGateCommand}" HorizontalAlignment="Stretch"
+                                                        Margin="0,8,0,0" />
+                                                <Button Content="Confirm Payment" Style="{DynamicResource InfoButtonStyle}"
+                                                        Command="{Binding ConfirmPaymentCommand}" HorizontalAlignment="Stretch"
+                                                        Margin="8,8,0,0" />
+                                            </DockPanel>
+                                        </StackPanel>
+                                        <Border Grid.Column="1" CornerRadius="8" Background="{DynamicResource PrimaryDarkColor}" ClipToBounds="True">
                                             <Button Command="{Binding OpenExitSnapshotCommand}"
                                                     Background="Transparent" BorderThickness="0" Padding="0"
                                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
@@ -370,18 +336,16 @@
                                             </Button>
                                         </Border>
                                     </Grid>
-                                </Grid>
-                            </Border>
-                        </Grid>
-                    </Border>
-                </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
                 </Border>
 
                 <Border Grid.Row="2" Height="0" Background="Transparent" />
 
-                <Border Grid.Row="3" Padding="14, 0, 14, 14">
-                    <Border Background="{DynamicResource PrimaryBackgroundColor}"
-                            CornerRadius="5" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="2">
+                <Border Grid.Row="3" Padding="18,0,18,18">
+                    <Border Style="{StaticResource ElevatedPanelStyle}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -389,9 +353,9 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0" Text="Recent Visitors" Style="{DynamicResource SmallTitleTextStyle}"
-                                       Margin="14,12,14,6" />
+                                       FontSize="15" Margin="18,16,18,8" />
 
-                            <DataGrid Grid.Row="1" Style="{DynamicResource TableDataGridStyle}" Margin="10,0,10,10"
+                            <DataGrid Grid.Row="1" Style="{DynamicResource TableDataGridStyle}" Margin="12,0,12,12"
                                       AutoGenerateColumns="False">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Plate" Width="*" />
@@ -405,7 +369,7 @@
                 </Border>
             </Grid>
 
-            <Border Background="{DynamicResource PrimaryBackgroundColor}" CornerRadius="5"
+            <Border Background="{DynamicResource PrimaryBackgroundColor}" CornerRadius="8"
                     Visibility="{Binding LoadError, Converter={StaticResource NullToVisibilityConverter}}"
                     d:DesignHeight="0">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -417,50 +381,50 @@
                             Command="{Binding RetryLoadCommand}" Width="120" />
                 </StackPanel>
             </Border>
+
             <Border Background="#CC000000"
-        Visibility="{Binding IsSnapshotModalOpen, Converter={StaticResource BoolToVisibilityConverter}}"
-        d:DesignHeight="0">
-    <Border Background="{DynamicResource PrimaryBackgroundColor}" CornerRadius="8"
-            BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="2"
-            Padding="16" MaxWidth="720" MaxHeight="600"
-            HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+                    Visibility="{Binding IsSnapshotModalOpen, Converter={StaticResource BoolToVisibilityConverter}}"
+                    d:DesignHeight="0">
+                <Border Background="{DynamicResource SecondaryBackgroundColor}" CornerRadius="12"
+                        BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="1"
+                        Padding="20" MaxWidth="720" MaxHeight="600"
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-            <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,12">
-                <TextBlock DockPanel.Dock="Left" Text="{Binding ModalSnapshotTitle}"
-                           Style="{DynamicResource SmallTitleTextStyle}" FontSize="14" />
-                <Button DockPanel.Dock="Right" Command="{Binding CloseSnapshotModalCommand}"
-                        >
-                    <Button.Style>
-                        <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
-                            <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}" />
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
-                                    <Setter Property="Cursor" Value="Hand" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                    <fa:FontAwesome Icon="Close" />
-                </Button>
-            </DockPanel>
+                        <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,14">
+                            <TextBlock DockPanel.Dock="Left" Text="{Binding ModalSnapshotTitle}"
+                                       Style="{DynamicResource SmallTitleTextStyle}" FontSize="15" />
+                            <Button DockPanel.Dock="Right" Command="{Binding CloseSnapshotModalCommand}">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
+                                        <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
+                                                <Setter Property="Cursor" Value="Hand" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <fa:FontAwesome Icon="Close" />
+                            </Button>
+                        </DockPanel>
 
-            <Border Grid.Row="1" Background="{DynamicResource PrimaryDarkColor}" CornerRadius="5" ClipToBounds="True">
-                <Image Source="{Binding ModalSnapshotImage}" Stretch="Uniform" />
+                        <Border Grid.Row="1" Background="{DynamicResource PrimaryDarkColor}" CornerRadius="8" ClipToBounds="True">
+                            <Image Source="{Binding ModalSnapshotImage}" Stretch="Uniform" />
+                        </Border>
+
+                        <Button Grid.Row="2" Content="Re-capture" Style="{StaticResource PrimaryOutlineButtonStyle}"
+                                Command="{Binding RecaptureSnapshotCommand}"
+                                HorizontalAlignment="Stretch" Margin="0,14,0,0" />
+                    </Grid>
+                </Border>
             </Border>
-
-            <Button Grid.Row="2" Content="Re-capture" Style="{StaticResource PrimaryOutlineButtonStyle}"
-                    Command="{Binding RecaptureSnapshotCommand}"
-                    HorizontalAlignment="Stretch" Margin="0,12,0,0" />
-        </Grid>
-    </Border>
-</Border>
         </Grid>
     </Border>
 </UserControl>

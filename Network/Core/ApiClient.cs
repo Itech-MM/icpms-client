@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Text;
 using icpms_client.Network.Constants;
@@ -14,7 +15,7 @@ public class ApiClient
 {
     private readonly HttpClient _httpClient;
     private readonly ILog _log = LogManager.GetLogger(typeof(ApiClient));
-    
+
     public ApiClient(IApiConstant apiConstant)
     {
         _httpClient = new HttpClient();
@@ -22,35 +23,22 @@ public class ApiClient
         _httpClient.Timeout = TimeSpan.FromSeconds(40);
     }
 
-    private void PrepareRequestHeaders(bool requiresAuth, string token)
+    private void ApplyRequestHeaders(HttpRequestMessage request, bool requiresAuth, string token)
     {
         if (requiresAuth && !string.IsNullOrEmpty(token))
         {
-            _httpClient.DefaultRequestHeaders.Authorization = 
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-        }
-        else
-        {
-            _httpClient.DefaultRequestHeaders.Authorization = null;
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
-        string localIp = GetLocalIpAddress();
-        _httpClient.DefaultRequestHeaders.Remove("gate-ip");
-        _httpClient.DefaultRequestHeaders.Add("gate-ip", localIp);
+        var localIp = GetLocalIpAddress();
+        request.Headers.Remove("gate-ip");
+        request.Headers.Add("gate-ip", localIp);
     }
 
     private string GetLocalIpAddress()
     {
         try
         {
-            /*var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }*/
             return "127.0.0.1";
         }
         catch (Exception ex)
@@ -62,39 +50,41 @@ public class ApiClient
 
     public async Task<Response.Response?> GetAsync<T>(string endpoint, bool requiresAuth = true, string token = "")
     {
-        PrepareRequestHeaders(requiresAuth, token);
         _log.Debug($"Sending GET request to: {endpoint}");
 
-        var response = await _httpClient.GetAsync(endpoint);
+        using var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+        ApplyRequestHeaders(request, requiresAuth, token);
+
+        var response = await _httpClient.SendAsync(request);
         return await HandleResponse<T>(response);
     }
-    
+
     public async Task<Response.Response?> GetLongPollingAsync<T>(
-        string endpoint, 
+        string endpoint,
         TimeSpan? timeout = null,
-        bool requiresAuth = true, 
+        bool requiresAuth = true,
         string token = "",
         CancellationToken cancellationToken = default)
     {
-        PrepareRequestHeaders(requiresAuth, token);
-    
         using var timeoutCts = new CancellationTokenSource();
         var finalTimeout = timeout ?? TimeSpan.FromSeconds(30);
-    
+
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
             cancellationToken,
             timeoutCts.Token
         );
-    
+
         try
         {
             _log.Debug($"Starting long polling request to: {endpoint}");
             timeoutCts.CancelAfter(finalTimeout);
 
-            var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+            using var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+            ApplyRequestHeaders(request, requiresAuth, token);
+
             var response = await _httpClient.SendAsync(
-                request, 
-                HttpCompletionOption.ResponseHeadersRead, 
+                request,
+                HttpCompletionOption.ResponseHeadersRead,
                 linkedCts.Token
             );
 
@@ -126,32 +116,36 @@ public class ApiClient
 
     public async Task<Response.Response?> PostAsync<T>(string endpoint, object? data = null, bool requiresAuth = true, string token = "")
     {
-        PrepareRequestHeaders(requiresAuth, token);
+        using var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
+        ApplyRequestHeaders(request, requiresAuth, token);
 
-        HttpContent? content = data != null ? CreateJsonContent(data) : null;
-        _log.Debug($"POST request to: {endpoint}, Body: {(content != null ? await content.ReadAsStringAsync() : "EMPTY")}");
+        request.Content = data != null ? CreateJsonContent(data) : null;
+        _log.Debug($"POST request to: {endpoint}, Body: {(request.Content != null ? await request.Content.ReadAsStringAsync() : "EMPTY")}");
 
-        var response = await _httpClient.PostAsync(endpoint, content);
+        var response = await _httpClient.SendAsync(request);
         return await HandleResponse<T>(response);
     }
 
     public async Task<Response.Response?> PutAsync<T>(string endpoint, object? data = null, bool requiresAuth = true, string token = "")
     {
-        PrepareRequestHeaders(requiresAuth, token);
+        using var request = new HttpRequestMessage(HttpMethod.Put, endpoint);
+        ApplyRequestHeaders(request, requiresAuth, token);
 
-        HttpContent? content = data != null ? CreateJsonContent(data) : null;
-        _log.Debug($"PUT request to: {endpoint}, Body: {(content != null ? await content.ReadAsStringAsync() : "EMPTY")}");
+        request.Content = data != null ? CreateJsonContent(data) : null;
+        _log.Debug($"PUT request to: {endpoint}, Body: {(request.Content != null ? await request.Content.ReadAsStringAsync() : "EMPTY")}");
 
-        var response = await _httpClient.PutAsync(endpoint, content);
+        var response = await _httpClient.SendAsync(request);
         return await HandleResponse<T>(response);
     }
 
     public async Task<Response.Response?> DeleteAsync<T>(string endpoint, bool requiresAuth = true, string token = "")
     {
-        PrepareRequestHeaders(requiresAuth, token);
         _log.Debug($"DELETE request to: {endpoint}");
 
-        var response = await _httpClient.DeleteAsync(endpoint);
+        using var request = new HttpRequestMessage(HttpMethod.Delete, endpoint);
+        ApplyRequestHeaders(request, requiresAuth, token);
+
+        var response = await _httpClient.SendAsync(request);
         return await HandleResponse<T>(response);
     }
 
@@ -168,8 +162,8 @@ public class ApiClient
     private StringContent CreateJsonContent(object? data)
     {
         return new StringContent(
-            data != null ? JsonConvert.SerializeObject(data) : string.Empty, 
-            Encoding.UTF8, 
+            data != null ? JsonConvert.SerializeObject(data) : string.Empty,
+            Encoding.UTF8,
             "application/json"
         );
     }
