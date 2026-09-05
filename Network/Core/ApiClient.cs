@@ -137,6 +137,18 @@ public class ApiClient
         var response = await _httpClient.SendAsync(request);
         return await HandleResponse<T>(response);
     }
+    
+    public async Task<Response.Response?> PatchAsync<T>(string endpoint, object? data = null, bool requiresAuth = true, string token = "")
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Patch, endpoint);
+        ApplyRequestHeaders(request, requiresAuth, token);
+
+        request.Content = data != null ? CreateJsonContent(data) : null;
+        _log.Debug($"PATCH request to: {endpoint}, Body: {(request.Content != null ? await request.Content.ReadAsStringAsync() : "EMPTY")}");
+
+        var response = await _httpClient.SendAsync(request);
+        return await HandleResponse<T>(response);
+    }
 
     public async Task<Response.Response?> DeleteAsync<T>(string endpoint, bool requiresAuth = true, string token = "")
     {

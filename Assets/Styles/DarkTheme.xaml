@@ -15,7 +15,7 @@
     <SolidColorBrush x:Key="SecondaryButtonColor" Color="#243547" />
     <SolidColorBrush x:Key="MutedButtonColor" Color="#5A6B7E" />
 
-    <SolidColorBrush x:Key="PrimaryWhiteColor" Color="#16233420" />
+    <SolidColorBrush x:Key="PrimaryWhiteColor" Color="#16233A" />
     <SolidColorBrush x:Key="PrimaryWhiteColorBase" Color="#16233A" />
 
     <SolidColorBrush x:Key="PrimaryTextBorderColor" Color="#223347" />

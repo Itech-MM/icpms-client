@@ -2,7 +2,7 @@
 
 public static class CommonConstants
 {
-    
+    public static int RowPerPage = 10;
 }
 
 public static class DeviceTypeCodes

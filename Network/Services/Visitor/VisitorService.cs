@@ -1,6 +1,7 @@
 ﻿using icpms_client.Network.DTO.ParkingSession;
 using icpms_client.Network.Request.Visitor;
 using icpms_client.Network.Response;
+using icpms_client.Network.Response.Visitor;
 using icpms_client.Network.Session;
 
 namespace icpms_client.Network.Services.Visitor;
@@ -23,6 +24,66 @@ public class VisitorService: ApiService
             }
 
             var response = await ApiClient.PostAsync<ParkingSessionDto>("visitors/entry", request, true, accessToken);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            var error = new BaseErrorResponse<string>
+            {
+                Success = false,
+                Message = ex.Message,
+                Data = ex.Message
+            };
+            return error;
+        }
+    }
+    
+    public async Task<Response.Response?> GetExitPreview(string plateNumber)
+    {
+        try
+        {
+            var accessToken = UserSession.CurrentUser?.CurrentAuth?.AccessToken;
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                return new BaseErrorResponse<string>
+                {
+                    Success = false,
+                    Message = "No active session/access token found.",
+                    Data = "No active session/access token found."
+                };
+            }
+
+            var response = await ApiClient.GetAsync<ExitPreviewResponse>($"visitors/exit-preview?plateNumber={plateNumber}", true, accessToken);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            var error = new BaseErrorResponse<string>
+            {
+                Success = false,
+                Message = ex.Message,
+                Data = ex.Message
+            };
+            return error;
+        }
+    }
+    
+    public async Task<Response.Response?> SaveExitVisitor(VisitorExitRequest request)
+    {
+        try
+        {
+            var accessToken = UserSession.CurrentUser?.CurrentAuth?.AccessToken;
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                return new BaseErrorResponse<string>
+                {
+                    Success = false,
+                    Message = "No active session/access token found.",
+                    Data = "No active session/access token found."
+                };
+            }
+
+            var response = await ApiClient.PostAsync<VisitorExitResponse>("visitors/exit", request, true, accessToken);
             return response;
         }
         catch (Exception ex)

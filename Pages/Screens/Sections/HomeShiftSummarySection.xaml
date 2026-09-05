@@ -14,126 +14,134 @@
         <Style x:Key="StatTileStyle" TargetType="Border">
             <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundColor}" />
             <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Padding" Value="10,10" />
+            <Setter Property="Padding" Value="8,6" />
         </Style>
 
         <Style x:Key="StatIconBadgeStyle" TargetType="Border">
-            <Setter Property="Width" Value="26" />
-            <Setter Property="Height" Value="26" />
-            <Setter Property="CornerRadius" Value="13" />
+            <Setter Property="Width" Value="20" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="CornerRadius" Value="10" />
             <Setter Property="Background" Value="{DynamicResource PrimaryChipBackgroundColor}" />
         </Style>
 
     </UserControl.Resources>
-    <Border Padding="18" Background="{DynamicResource PrimaryDarkColor}"
-            CornerRadius="10" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="1">
-        <StackPanel>
+    <Border Padding="12" Background="{DynamicResource PrimaryDarkColor}"
+        CornerRadius="10" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="1">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <TextBlock Text="Shift Summary" Style="{DynamicResource SmallTitleTextStyle}" FontSize="13"
-                       Foreground="{DynamicResource PureWhiteColor}" />
-            <Grid Margin="0,4,0,16">
-                <TextBlock Text="{Binding ShiftSubtitle}" FontSize="11"
-                           Foreground="{DynamicResource SecondaryTextColor}"
-                           Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
-                <Border Style="{StaticResource SkeletonShimmerStyle}"
-                        Height="12" Width="90" HorizontalAlignment="Left"
-                        Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource BoolToVisibilityConverter}}"
-                        d:DesignHeight="0"/>
-            </Grid>
+        <TextBlock Grid.Row="0" Text="Shift Summary" Style="{DynamicResource SmallTitleTextStyle}" FontSize="13"
+                   Foreground="{DynamicResource PureWhiteColor}" />
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+        <Grid Grid.Row="1" Margin="0,2,0,10">
+            <TextBlock Text="{Binding ShiftSubtitle}" FontSize="11"
+                       Foreground="{DynamicResource SecondaryTextColor}"
+                       Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
+            <Border Style="{StaticResource SkeletonShimmerStyle}"
+                    Height="12" Width="90" HorizontalAlignment="Left"
+                    Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                    d:DesignHeight="0"/>
+        </Grid>
 
-                <Border Grid.Column="0" Margin="0,0,5,0" Style="{StaticResource StatTileStyle}">
-                    <Grid>
-                        <StackPanel HorizontalAlignment="Center"
-                                    Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                            <Border Style="{StaticResource StatIconBadgeStyle}" HorizontalAlignment="Center">
-                                <fa:ImageAwesome Icon="SignIn" Width="11" Height="11"
-                                                  Foreground="{DynamicResource PrimaryChipTextColor}" />
-                            </Border>
-                            <TextBlock Text="{Binding VehiclesIn}" FontWeight="Bold" FontSize="17" Margin="0,8,0,2"
-                                       
-                                       HorizontalAlignment="Center" />
-                        </StackPanel>
-                        <Border Style="{StaticResource SkeletonShimmerStyle}"
-                                Height="66"
-                                Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
-                    </Grid>
-                </Border>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="1" Margin="5,0,5,0" Style="{StaticResource StatTileStyle}">
-                    <Grid>
-                        <StackPanel HorizontalAlignment="Center"
-                                    Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                            <Border Style="{StaticResource StatIconBadgeStyle}" HorizontalAlignment="Center">
-                                <fa:ImageAwesome Icon="SignOut" Width="11" Height="11"
-                                                  Foreground="{DynamicResource PrimaryChipTextColor}" />
-                            </Border>
-                            <TextBlock Text="{Binding VehiclesOut}" FontWeight="Bold" FontSize="17" Margin="0,8,0,2"
-                                       
-                                       HorizontalAlignment="Center" />
-                        </StackPanel>
-                        <Border Style="{StaticResource SkeletonShimmerStyle}"
-                                Height="66"
-                                Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
-                    </Grid>
-                </Border>
-
-                <Border Grid.Column="2" Margin="5,0,0,0" Style="{StaticResource StatTileStyle}">
-                    <Grid>
-                        <StackPanel HorizontalAlignment="Center"
-                                    Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                            <Border Style="{StaticResource StatIconBadgeStyle}" HorizontalAlignment="Center">
-                                <fa:ImageAwesome Icon="Car" Width="11" Height="11"
-                                                  Foreground="{DynamicResource PrimaryChipTextColor}" />
-                            </Border>
-                            <TextBlock Text="{Binding CurrentlyParked}" FontWeight="Bold" FontSize="17" Margin="0,8,0,2"
-                                      
-                                       HorizontalAlignment="Center" />
-                        </StackPanel>
-                        <Border Style="{StaticResource SkeletonShimmerStyle}"
-                                Height="66"
-                                Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
-                    </Grid>
-                </Border>
-            </Grid>
-
-            <Border Margin="0,12,0,0" Padding="14,12" CornerRadius="8"
-                    Background="{DynamicResource SecondaryBackgroundColor}">
+            <Border Grid.Column="0" Margin="0,0,5,0" Style="{StaticResource StatTileStyle}">
                 <Grid>
-                    <Grid Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <Border Grid.Column="0" Width="30" Height="30" CornerRadius="15"
-                                Background="{DynamicResource PrimaryGreenColor}" Opacity="0.18" />
-                        <fa:ImageAwesome Grid.Column="0" Icon="Money" Width="13" Height="13"
-                                          Foreground="{DynamicResource PrimaryGreenColor}" />
-
-                        <TextBlock Grid.Column="1" Text="Revenue collected" FontSize="11.5"
-                                   VerticalAlignment="Center" Margin="10,0,0,0"
-                                   Foreground="{DynamicResource SecondaryTextColor}" />
-
-                        <TextBlock Grid.Column="2" Text="{Binding RevenueCollectedText}" FontWeight="Bold" FontSize="16"
-                                   VerticalAlignment="Center"
-                                   Foreground="{DynamicResource PrimaryGreenColor}" />
-                    </Grid>
-
+                    <StackPanel HorizontalAlignment="Center"
+                                Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                        <Border Style="{StaticResource StatIconBadgeStyle}" HorizontalAlignment="Center">
+                            <fa:ImageAwesome Icon="SignIn" Width="9" Height="9"
+                                              Foreground="{DynamicResource PrimaryChipTextColor}" />
+                        </Border>
+                        <TextBlock Text="{Binding VehiclesIn}" FontWeight="Bold" FontSize="15" Margin="0,4,0,0"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
                     <Border Style="{StaticResource SkeletonShimmerStyle}"
-                            Height="30"
-                            Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource BoolToVisibilityConverter}}"
-                            d:DesignHeight="0"/>
+                            Height="50"
+                            Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
                 </Grid>
             </Border>
 
-        </StackPanel>
-    </Border>
+            <Border Grid.Column="1" Margin="5,0,5,0" Style="{StaticResource StatTileStyle}">
+                <Grid>
+                    <StackPanel HorizontalAlignment="Center"
+                                Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                        <Border Style="{StaticResource StatIconBadgeStyle}" HorizontalAlignment="Center">
+                            <fa:ImageAwesome Icon="SignOut" Width="9" Height="9"
+                                              Foreground="{DynamicResource PrimaryChipTextColor}" />
+                        </Border>
+                        <TextBlock Text="{Binding VehiclesOut}" FontWeight="Bold" FontSize="15" Margin="0,4,0,0"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+                    <Border Style="{StaticResource SkeletonShimmerStyle}"
+                            Height="50"
+                            Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="2" Margin="5,0,0,0" Style="{StaticResource StatTileStyle}">
+                <Grid>
+                    <StackPanel HorizontalAlignment="Center"
+                                Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                        <Border Style="{StaticResource StatIconBadgeStyle}" HorizontalAlignment="Center">
+                            <fa:ImageAwesome Icon="Car" Width="9" Height="9"
+                                              Foreground="{DynamicResource PrimaryChipTextColor}" />
+                        </Border>
+                        <TextBlock Text="{Binding CurrentlyParked}" FontWeight="Bold" FontSize="15" Margin="0,4,0,0"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+                    <Border Style="{StaticResource SkeletonShimmerStyle}"
+                            Height="50"
+                            Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </Grid>
+            </Border>
+        </Grid>
+        </Grid>
+        
+        <Border Grid.Row="3" Margin="0,8,0,0" Padding="10,8" CornerRadius="8"
+                Background="{DynamicResource SecondaryBackgroundColor}">
+            <Grid>
+                <Grid Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Width="24" Height="24" CornerRadius="12"
+                            Background="{DynamicResource PrimaryGreenColor}" Opacity="0.18" />
+                    <fa:ImageAwesome Grid.Column="0" Icon="Money" Width="11" Height="11"
+                                      Foreground="{DynamicResource PrimaryGreenColor}" />
+
+                    <TextBlock Grid.Column="1" Text="Revenue collected" FontSize="10.5"
+                               VerticalAlignment="Center" Margin="8,0,0,0"
+                               Foreground="{DynamicResource SecondaryTextColor}" />
+
+                    <TextBlock Grid.Column="2" Text="{Binding RevenueCollectedText}" FontWeight="Bold" FontSize="14"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource PrimaryGreenColor}" />
+                </Grid>
+
+                <Border Style="{StaticResource SkeletonShimmerStyle}"
+                        Height="24"
+                        Visibility="{Binding IsShiftSummaryLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                        d:DesignHeight="0"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Border>
 </UserControl>

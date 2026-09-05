@@ -92,6 +92,9 @@ namespace icpms_client.UserControls.Customs.Forms.Validations.Form
             DependencyProperty.Register(nameof(IsInputFocus), typeof(bool), typeof(FormField), 
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        public static readonly DependencyProperty InputHeightProperty =
+            DependencyProperty.Register(nameof(InputHeight), typeof(double), typeof(FormField), 
+                new FrameworkPropertyMetadata(double.NaN, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public bool UseVirtualKeyboard
         {
@@ -201,6 +204,12 @@ namespace icpms_client.UserControls.Customs.Forms.Validations.Form
             set => SetValue(IsInputFocusProperty, value);
         }
 
+        public double InputHeight
+        {
+            get => (double)GetValue(InputHeightProperty);
+            set => SetValue(InputHeightProperty, value);
+        }
+        
         public bool Readonly
         {
             get => (bool)GetValue(ReadonlyProperty);

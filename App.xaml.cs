@@ -6,6 +6,8 @@ using icpms_client.Common.Constants;
 using icpms_client.Network.Constants;
 using icpms_client.Network.Core;
 using icpms_client.Network.Services.Home;
+using icpms_client.Network.Services.Logs;
+using icpms_client.Network.Services.Realtime;
 using icpms_client.Network.Services.Vehicle;
 using icpms_client.Network.Services.Visitor;
 using icpms_client.Pages.Screens.Sections.ViewModels;
@@ -75,6 +77,10 @@ public partial class App
         services.AddSingleton<HomeScreenService>();
         services.AddSingleton<VehicleService>();
         services.AddSingleton<VisitorService>();
+        
+        services.AddSingleton<VehicleAlertRealtimeService>();
+        services.AddSingleton<VehicleAlertLogService>();
+        
         services.AddTransient<HomeScreenViewModel>();
         services.AddTransient<HomeParkingAreaSummaryViewModel>();
         services.AddTransient<HomeShiftSummaryViewModel>();
@@ -88,6 +94,9 @@ public partial class App
 
         ServiceProvider.GetRequiredService<VehicleDetectionRealtimeService>()
             .StartInBackground();
+        
+        ServiceProvider.GetRequiredService<VehicleAlertRealtimeService>()
+            .StartInBackground();
 
         var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
         mainWindow.Show();
@@ -98,6 +107,10 @@ public partial class App
         if (ServiceProvider?.GetService<VehicleDetectionRealtimeService>() is { } vehicleService)
         {
             await vehicleService.DisposeAsync();
+        }
+        if (ServiceProvider?.GetService<VehicleAlertRealtimeService>() is { } alertService)
+        {
+            await alertService.DisposeAsync();
         }
         base.OnExit(e);
     }

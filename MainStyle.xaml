@@ -406,7 +406,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Padding" Value="15,5" />
+        <Setter Property="Padding" Value="16,9" />
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalAlignment" Value="Center" />
@@ -436,7 +436,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Padding" Value="15,5" />
+        <Setter Property="Padding" Value="16,9" />
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalAlignment" Value="Center" />
