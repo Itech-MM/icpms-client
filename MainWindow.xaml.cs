@@ -1,14 +1,17 @@
 ﻿using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Navigation;
+using icpms_client.Common.Enums;
 using icpms_client.Network.Request.Shift;
 using icpms_client.Network.Response;
 using icpms_client.Network.Response.Auth;
 using icpms_client.Network.Services.Auth;
 using icpms_client.Network.Services.Shift;
 using icpms_client.Network.Session;
+using icpms_client.Pages.Screens;
 using icpms_client.Services.UIServices;
 using icpms_client.Utils.Storage;
 using icpms_client.Utils.UI.Theme;
@@ -129,10 +132,38 @@ public partial class MainWindow
         }
     }
 
+    private void MenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem { Tag: AppPage page } menuItem) return;
+
+        ActiveMenu = page;
+
+        switch (page)
+        {
+            case AppPage.Dashboard:
+                ChangeScreen(new HomeScreen(), terminalLabel: "Dashboard");
+                break;
+            case AppPage.Reports:
+                /*ChangeScreen(new ReportsScreen(), terminalLabel: "Reports");*/
+                break;
+            case AppPage.Members:
+                /*ChangeScreen(new MembersScreen(), terminalLabel: "Members");*/
+                break;
+        }
+    }
+    
     private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (e.ChangedButton == MouseButton.Left)
+        if (e.ChangedButton != MouseButton.Left) return;
+
+        if (e.ClickCount == 2)
+        {
+            Maximize_Click(sender, e);
+        }
+        else
+        {
             DragMove();
+        }
     }
 
     private void Minimize_Click(object sender, RoutedEventArgs e)
@@ -163,9 +194,6 @@ public partial class MainWindow
         }
     }
 
-    private void StopButton_Click(object sender, RoutedEventArgs e)
-    {
-    }
 
     private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)
     {

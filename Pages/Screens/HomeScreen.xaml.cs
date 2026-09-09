@@ -1,8 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using icpms_client.Network.DTO.Vehicle;
 using icpms_client.Pages.Screens.ViewModels;
 using icpms_client.Services.UIServices;
 using icpms_client.Tools.VideoPlayer;
+using icpms_client.ViewModels.Wrappers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace icpms_client.Pages.Screens;
@@ -20,6 +22,9 @@ public partial class HomeScreen
         _viewModel.OnExitVisitorSaved += OnExitVisitorSaved;
         DataContext = _viewModel;
 
+        PlateSearchField.OnSearch += OnPlateSearch;
+        PlateSearchField.OnValueChanged += OnPlateSearchValueChanged;
+        
         Loaded += HomeScreen_Loaded;
     }
 
@@ -27,12 +32,14 @@ public partial class HomeScreen
     {
         ParkingSection.Refresh();
         ShiftSummarySection.Refresh();
+        RecentVisitorsSection.Refresh();
     }
 
     private void OnVisitorSaved(bool obj)
     {
         ParkingSection.Refresh();
         ShiftSummarySection.Refresh();
+        RecentVisitorsSection.Refresh();
     }
 
     private async void HomeScreen_Loaded(object sender, RoutedEventArgs e)
@@ -44,7 +51,6 @@ public partial class HomeScreen
 
         await _viewModel.InitializeAsync();
         
-        ToastService.ShowInfo("Home screen loaded.");
     }
 
     private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
@@ -70,6 +76,45 @@ public partial class HomeScreen
         if (nearBottom && scrollViewer.ScrollableHeight > 0 && DataContext is HomeScreenViewModel vm)
         {
             await vm.LoadMoreSecurityAlertsAsync();
+        }
+    }
+    
+    private async void OnPlateSearch(string keyword)
+    {
+        if (DataContext is not HomeScreenViewModel vm) return;
+
+        PlateSearchField.SearchResults.Clear();
+        // This now works because of the parameterless constructor
+        PlateSearchField.SearchResults.Add(new LabelValueWrapper { Label = "Searching..." });
+        PlateSearchField.IsPopupOpen = true;
+
+        var results = await vm.SearchVehiclesAsync(keyword);
+
+        PlateSearchField.SearchResults.Clear();
+        if (results.Count == 0)
+        {
+            PlateSearchField.SearchResults.Add(new LabelValueWrapper { Label = "No matches" });
+            return;
+        }
+
+        foreach (var vehicle in results)
+        {
+            PlateSearchField.SearchResults.Add(new LabelValueWrapper
+            {
+                Label = string.IsNullOrWhiteSpace(vehicle.MemberName)
+                    ? vehicle.PlateNumber
+                    : $"{vehicle.PlateNumber} — {vehicle.MemberName}",
+                Value = vehicle.PlateNumber,
+                ReferenceObject = vehicle
+            });
+        }
+    }
+
+    private void OnPlateSearchValueChanged(LabelValueWrapper wrapper)
+    {
+        if (wrapper.ReferenceObject is VehicleDto vehicle && DataContext is HomeScreenViewModel vm)
+        {
+            vm.SelectPlateSearchResultCommand.Execute(vehicle);
         }
     }
 }

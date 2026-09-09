@@ -9,7 +9,14 @@ public class LabelValueWrapper
     public bool IsFocus { get; set; }
     public bool IsManual { get; set; }
     
-    public object? ReferenceObject {get; set;}
+    public object? ReferenceObject { get; set; }
+
+    public LabelValueWrapper() 
+    {
+        Label = string.Empty;
+        Value = string.Empty;
+        IsEnabled = true;
+    }
 
     public LabelValueWrapper(string label, string value, bool isEnabled = true, bool isManual = false, bool isFocus = false, object? referenceObject = null)
     {
@@ -22,6 +29,7 @@ public class LabelValueWrapper
     }
 
     public static LabelValueWrapper Empty => new("", "");
+    
     public override string ToString()
     {
         return Label;

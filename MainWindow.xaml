@@ -4,30 +4,88 @@
                  xmlns:base="clr-namespace:icpms_client.Common.UI"
                  xmlns:converters="clr-namespace:icpms_client.Common.Converters"
                  xmlns:fa="http://schemas.fontawesome.io/icons/"
+                 xmlns:enums="clr-namespace:icpms_client.Common.Enums"
                  WindowState="Maximized"
                  WindowStyle="None"
-                 ResizeMode="CanResizeWithGrip"
+                 ResizeMode="CanResize"
                  UseLayoutRounding="True"
                  Icon="Assets/Images/FlexiTech-Logo-Icon.ico"
                  Title="FlexiTech | ICPMS" Width="800">
 
     <WindowChrome.WindowChrome>
         <WindowChrome
-            ResizeBorderThickness="0"
+            ResizeBorderThickness="6"
             CaptionHeight="44"
             GlassFrameThickness="0"
             UseAeroCaptionButtons="False"/>
     </WindowChrome.WindowChrome>
     <Window.Resources>
-        <converters:WindowStateToIconConverter x:Key="WindowStateToIconConverter"/>
         <converters:ThemeColorConverter x:Key="ThemeColorConverter"/>
         <converters:BooleanToIconConverter x:Key="BooleanToIconConverter"/>
+        <Style x:Key="TitleBarMenuItemStyle" TargetType="MenuItem">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}"/>
+    <Setter Property="FontFamily" Value="/Assets/Fonts/#Poppins"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Padding" Value="12,7"/>
+    <Setter Property="Margin" Value="2,0"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="MenuItem">
+                <Border x:Name="Bd"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="8"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid>
+                        <ContentPresenter ContentSource="Header"
+                                          RecognizesAccessKey="True"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                        <Border x:Name="ActiveIndicator"
+                                Height="2.5"
+                                CornerRadius="2"
+                                Background="{DynamicResource PrimaryColor}"
+                                VerticalAlignment="Bottom"
+                                Margin="10,0,10,-9"
+                                Opacity="0"/>
+                    </Grid>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SecondaryBackgroundColor}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}"/>
+                    </Trigger>
+                    <Trigger Property="IsHighlighted" Value="True">
+                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource PrimaryChipBackgroundColor}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}"/>
+                    </Trigger>
+                    <DataTrigger Value="True">
+                        <DataTrigger.Binding>
+                            <MultiBinding Converter="{StaticResource ActiveMenuConverter}">
+                                <Binding Path="Tag" RelativeSource="{RelativeSource Self}"/>
+                                <Binding Path="ActiveMenu" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                            </MultiBinding>
+                        </DataTrigger.Binding>
+                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource PrimaryChipBackgroundColor}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}"/>
+                        <Setter TargetName="ActiveIndicator" Property="Opacity" Value="1"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
+        <Style x:Key="TitleBarMenuStyle" TargetType="Menu">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource TitleBarMenuItemStyle}"/>
+        </Style>
     </Window.Resources>
     <Grid Background="{DynamicResource PrimaryBackgroundColor}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -35,10 +93,14 @@
 
         <Border Grid.Row="0"
                 Background="{DynamicResource PrimaryTitleBarColor}"
-                Padding="10,6"
+                BorderBrush="{DynamicResource PrimaryBorderColor}"
+                BorderThickness="0,0,0,1"
+                Padding="16,0"
                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
@@ -46,119 +108,140 @@
                 <StackPanel Grid.Column="0"
                             Orientation="Horizontal"
                             VerticalAlignment="Center">
+                    <Image Source="Assets/Images/FlexiTech-Logo-Icon.ico"
+                           Width="20" Height="20"
+                           VerticalAlignment="Center"
+                           WindowChrome.IsHitTestVisibleInChrome="False"/>
                     <TextBlock Text="{Binding PageTitle, RelativeSource={RelativeSource AncestorType=Window}}"
                                Style="{StaticResource CompanyNameLabelTextStyle}"
+                               FontSize="14"
                                VerticalAlignment="Center"
                                Margin="10,0,0,0"/>
                     <TextBlock Text="{Binding TerminalLabel, RelativeSource={RelativeSource AncestorType=Window}}"
                                Style="{StaticResource CompanyNameLabelTextStyle}"
                                Foreground="{DynamicResource SecondaryTextColor}"
                                FontWeight="Normal"
-                               Margin="12,0,0,0"
+                               FontSize="12"
+                               Margin="10,0,0,0"
                                VerticalAlignment="Center"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1"
+                <Menu x:Name="MainMenu"
+                      Grid.Column="1"
+                      Style="{StaticResource TitleBarMenuStyle}"
+                      Margin="24,0,0,0"
+                      VerticalAlignment="Center"
+                      WindowChrome.IsHitTestVisibleInChrome="True"
+                      Visibility="{Binding Authenticated, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <MenuItem Header="Dashboard" Tag="{x:Static enums:AppPage.Dashboard}" Click="MenuItem_Click" Style="{StaticResource TitleBarMenuItemStyle}"/>
+                    <MenuItem Header="Reports"   Tag="{x:Static enums:AppPage.Reports}"   Click="MenuItem_Click" Style="{StaticResource TitleBarMenuItemStyle}"/>
+                    <MenuItem Header="Members"   Tag="{x:Static enums:AppPage.Members}"   Click="MenuItem_Click" Style="{StaticResource TitleBarMenuItemStyle}"/>
+                </Menu>
+
+                <StackPanel Grid.Column="3"
                             Orientation="Horizontal"
                             VerticalAlignment="Center">
 
                     <Border Style="{StaticResource StatusPillStyle}"
                             VerticalAlignment="Center"
-                            Margin="0,0,10,0"
+                            Margin="0,0,8,0"
                             Visibility="{Binding Authenticated, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
-                            <fa:ImageAwesome Icon="Circle"
-                                              Width="8" Height="8"
-                                              Foreground="{DynamicResource PrimaryGreenColor}"
-                                              VerticalAlignment="Center"/>
-                            <TextBlock Text="System Online"
+                            <Ellipse Style="{StaticResource LiveDotStyle}" VerticalAlignment="Center"/>
+                            <TextBlock Text="Online"
                                        Style="{StaticResource UserSessionTextStyle}"
-                                       Foreground="{DynamicResource PrimaryGreenColor}"
-                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource SuccessChipTextColor}"
+                                       FontWeight="SemiBold"
+                                       FontSize="11"
                                        Margin="6,0,0,0"/>
                         </StackPanel>
                     </Border>
 
-                    <Button x:Name="StopButton"
-                            Style="{StaticResource StopButtonStyle}"
-                            Click="StopButton_Click"
-                            Margin="0,0,10,0"
-                            WindowChrome.IsHitTestVisibleInChrome="True"
-                            Visibility="{Binding Authenticated, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <StackPanel Orientation="Horizontal">
-                            <fa:ImageAwesome Icon="Stop"
-                                              Width="12" Height="12"
-                                              Foreground="White"
-                                              VerticalAlignment="Center"/>
-                            <TextBlock Text="STOP"
-                                       Foreground="White"
-                                       FontWeight="Bold"
-                                       Margin="6,0,0,0"
-                                       VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                            Style="{StaticResource WindowControlButtonStyle}"
+                    <Button Style="{StaticResource TitleBarIconButtonStyle}"
                             Click="ThemeToggleButton_Click"
                             WindowChrome.IsHitTestVisibleInChrome="True"
-                            ToolTip="Toggle theme" >
-                        <fa:FontAwesome FontSize="16"
-                            VerticalAlignment="Center" 
-                            Icon="{Binding IsDarkTheme, 
+                            ToolTip="Toggle theme">
+                        <fa:FontAwesome
+                            Style="{StaticResource HeaderIconStyle}"
+                            Icon="{Binding IsDarkTheme,
                     Converter={StaticResource BooleanToIconConverter},
                     RelativeSource={RelativeSource AncestorType=Window}}"
-                            Foreground="{Binding IsDarkTheme, 
+                            Foreground="{Binding IsDarkTheme,
                     Converter={StaticResource ThemeColorConverter},
                     RelativeSource={RelativeSource AncestorType=Window}}"/>
                     </Button>
 
-                    <Grid Margin="4,0,4,0"
+                    <Grid Margin="2,0"
                           Visibility="{Binding Authenticated, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Button x:Name="NotificationsButton"
-                                Style="{StaticResource WindowControlButtonStyle}"
+                                Style="{StaticResource TitleBarIconButtonStyle}"
                                 Click="NotificationsButton_Click"
                                 WindowChrome.IsHitTestVisibleInChrome="True"
                                 ToolTip="Notifications">
                             <fa:FontAwesome Icon="BellOutline" Style="{StaticResource HeaderIconStyle}"/>
                         </Button>
                         <Border Background="{DynamicResource PrimaryRedColor}"
-                                CornerRadius="7"
-                                Width="14" Height="14"
+                                CornerRadius="6"
+                                Width="12" Height="12"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
-                                Margin="0,-2,-2,0"
+                                Margin="0,4,4,0"
                                 Visibility="{Binding HasNotifications, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
                             <TextBlock Text="{Binding NotificationCount, RelativeSource={RelativeSource AncestorType=Window}}"
-                                       Foreground="White" FontSize="9" FontWeight="Bold"
+                                       Foreground="White" FontSize="8" FontWeight="Bold"
                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </Grid>
 
                     <Button x:Name="SettingsButton"
-                            Style="{StaticResource WindowControlButtonStyle}"
+                            Style="{StaticResource TitleBarIconButtonStyle}"
                             Click="SignOutButton_Click"
                             WindowChrome.IsHitTestVisibleInChrome="True"
-                            ToolTip="Settings"
+                            ToolTip="Sign out"
                             Visibility="{Binding Authenticated, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
                         <fa:FontAwesome Icon="SignOut" Style="{StaticResource HeaderIconStyle}"/>
                     </Button>
 
+                    <Rectangle Width="1" Height="20" Fill="{DynamicResource PrimaryBorderColor}" Margin="8,0"/>
+
                     <Button Style="{StaticResource WindowControlButtonStyle}"
-                            Click="Minimize_Click" WindowChrome.IsHitTestVisibleInChrome="True">
-                        <fa:FontAwesome Icon="Minus" VerticalAlignment="Center"/>
+                            Click="Minimize_Click" WindowChrome.IsHitTestVisibleInChrome="True"
+                            ToolTip="Minimize">
+                        <TextBlock Text="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"/>
                     </Button>
                     <Button Style="{StaticResource WindowControlButtonStyle}"
-                            Click="Maximize_Click" WindowChrome.IsHitTestVisibleInChrome="True">
-                        <fa:FontAwesome FontSize="16"
-                            Icon="{Binding WindowState,
-                      RelativeSource={RelativeSource AncestorType=Window},
-                      Converter={StaticResource WindowStateToIconConverter}}"
-                            VerticalAlignment="Center"/>
+                            Click="Maximize_Click" WindowChrome.IsHitTestVisibleInChrome="True"
+                            ToolTip="Maximize">
+                        <Grid>
+                            <TextBlock Text="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="10">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" Value="Maximized">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <TextBlock Text="&#xE923;" FontFamily="Segoe MDL2 Assets" FontSize="10">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" Value="Maximized">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
                     </Button>
                     <Button Style="{StaticResource WindowControlButtonStyle}"
-                            Click="Close_Click" Tag="Close" WindowChrome.IsHitTestVisibleInChrome="True">
-                        <fa:FontAwesome Icon="Close" VerticalAlignment="Center"/>
+                            Click="Close_Click" Tag="Close" WindowChrome.IsHitTestVisibleInChrome="True"
+                            ToolTip="Close">
+                        <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="10"/>
                     </Button>
                 </StackPanel>
             </Grid>

@@ -1,11 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:fa="http://schemas.fontawesome.io/icons/"
+                    xmlns:conv="clr-namespace:icpms_client.Common.Converters"
                     xmlns:sys="clr-namespace:System.Windows.Controls;assembly=PresentationFramework">
     <!--<ResourceDictionary.MergedDictionaries>
             <ResourceDictionary Source="Assets/Styles/LightTheme.xaml"/>
     </ResourceDictionary.MergedDictionaries>-->
     <sys:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <conv:ActiveMenuConverter x:Key="ActiveMenuConverter"/>
     <Style TargetType="Window">
         <Setter Property="FontFamily" Value="/Assets/Fonts/#Poppins" />
         <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}" />
@@ -129,27 +131,61 @@
 </Style>
     
     <Style x:Key="WindowControlButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Width" Value="40"/>
-        <Setter Property="Cursor" Value="Hand"/>
-        <Style.Triggers>
-            <!-- Hover effect for all buttons -->
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{DynamicResource WindowControlHoverColor}"/>
-            </Trigger>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Width" Value="42"/>
+    <Setter Property="Height" Value="32"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="Button">
+                <Border x:Name="Bd"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="8">
+                    <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      TextElement.Foreground="{TemplateBinding Foreground}"/>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SecondaryBackgroundColor}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}"/>
+                    </Trigger>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="Tag" Value="Close"/>
+                            <Condition Property="IsMouseOver" Value="True"/>
+                        </MultiTrigger.Conditions>
+                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource PrimaryRedColor}"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </MultiTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
 
-            <!-- Special hover effect for Close button (Tag="Close") -->
-            <MultiTrigger>
-                <MultiTrigger.Conditions>
-                    <Condition Property="Tag" Value="Close"/>
-                    <Condition Property="IsMouseOver" Value="True"/>
-                </MultiTrigger.Conditions>
-                <Setter Property="Foreground" Value="{DynamicResource PrimaryRedColor}"/> <!-- Coral Red -->
-            </MultiTrigger>
-        </Style.Triggers>
-    </Style>
+<Style x:Key="TitleBarIconButtonStyle" TargetType="Button" BasedOn="{StaticResource WindowControlButtonStyle}">
+    <Setter Property="Width" Value="34"/>
+    <Setter Property="Height" Value="34"/>
+    <Setter Property="Margin" Value="2,0"/>
+</Style>
+
+<Style x:Key="HeaderIconStyle" TargetType="fa:FontAwesome">
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="Opacity" Value="0.85"/>
+</Style>
+
+<Style x:Key="StatusPillStyle" TargetType="Border">
+    <Setter Property="Background" Value="{DynamicResource SuccessChipBackgroundColor}"/>
+    <Setter Property="CornerRadius" Value="12"/>
+    <Setter Property="Padding" Value="10,5"/>
+</Style>
+
+
+
+
     
     <Style x:Key="IconButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
@@ -1400,11 +1436,11 @@
             </Setter.Value>
         </Setter>-->
     </Style>
-    <Style x:Key="StatusPillStyle" TargetType="Border">
+    <!--<Style x:Key="StatusPillStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource SuccessChipBackgroundColor}"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Padding" Value="10,4"/>
-    </Style>
+    </Style>-->
 
     <Style x:Key="StopButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
         <Setter Property="Background" Value="{DynamicResource PrimaryRedColor}"/>
@@ -1417,10 +1453,9 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="HeaderIconStyle" TargetType="fa:FontAwesome">
+    <!--<Style x:Key="HeaderIconStyle" TargetType="fa:FontAwesome">
         <Setter Property="FontSize" Value="16"/>
-        <!--<Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}"/>-->
-    </Style>
+    </Style>-->
     
     <Style x:Key="SkeletonShimmerStyle" TargetType="Border">
         <Setter Property="CornerRadius" Value="5" />

@@ -8,4 +8,5 @@ public class ExitPreviewResponse
     public long DurationMinutes { get; set; } = 0;
     public string TariffName { get; set; } = string.Empty;
     public decimal AmountDue { get; set; } = 0;
+    public string AmountDueDesc { get; set; } = string.Empty;
 }

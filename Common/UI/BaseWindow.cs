@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Effects;
+using icpms_client.Common.Enums;
 using icpms_client.Common.Threads;
 using icpms_client.Pages.Auth;
 using icpms_client.Pages.Layout;
@@ -25,6 +26,9 @@ public abstract class BaseWindow : Window, INotifyPropertyChanged
     private string _terminalLabel = "ICPMS";
     private bool _hasNotifications;
     private int _notificationCount;
+    
+    private AppPage _activeMenu = AppPage.Dashboard;
+
 
     public void ApplyBlur(bool enable)
     {
@@ -51,6 +55,17 @@ public abstract class BaseWindow : Window, INotifyPropertyChanged
         set
         {
             _authenticated = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    
+    public AppPage ActiveMenu
+    {
+        get => _activeMenu;
+        set
+        {
+            _activeMenu = value;
             OnPropertyChanged();
         }
     }
@@ -120,6 +135,7 @@ public abstract class BaseWindow : Window, INotifyPropertyChanged
         _pageLayout = new PageLayout();
         MainFrame.Navigate(_pageLayout);
         ChangeScreen(new HomeScreen(), terminalLabel: "Dashboard");
+        ActiveMenu = AppPage.Dashboard;
     }
 
     public void ChangeScreen(UserControl screen, string? title = null, string? terminalLabel = null)

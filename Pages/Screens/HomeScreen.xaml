@@ -74,14 +74,15 @@
                                         </Border>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
-                                        <Button Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Test"
+                                        <Button Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Clear" 
+                                                Padding="8,6"
                                                 Command="{Binding TestEntranceEntryCommand}" Margin="0,0,10,0"/>
                                         <Border Style="{DynamicResource StatusPillStyle}" VerticalAlignment="Center"
-                                                Background="{Binding ExitGateOpen, Converter={StaticResource GateStateBrushConverter}}">
+                                                Background="{Binding EntranceGateOpen, Converter={StaticResource GateStateBrushConverter}}">
                                             <StackPanel Orientation="Horizontal">
                                                 <Ellipse Style="{StaticResource LiveDotStyle}" Fill="{DynamicResource PureWhiteColor}" Margin="0,0,6,0"/>
                                                 <TextBlock FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource PureWhiteColor}"
-                                                           Text="{Binding ExitGateStateText}" />
+                                                           Text="{Binding EntranceGateStateText}" />
                                             </StackPanel>
                                         </Border>
                                         <Button Margin="10,0,0,0" Command="{Binding RefreshEntranceCameraCommand}">
@@ -151,9 +152,41 @@
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Margin="0,0,12,0">
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,12" VerticalAlignment="Center">
-                                                <Border Style="{StaticResource PlateBadgeStyle}" HorizontalAlignment="Left">
-                                                    <TextBlock Text="{Binding EntranceDetectedVehicleNo}" Style="{DynamicResource PlateBadgeTextStyle}" />
-                                                </Border>
+                                                <Button Command="{Binding OpenEntrancePlateSearchCommand}"
+                                                        IsEnabled="{Binding EntranceHasUnknownPlate}"
+                                                        Focusable="False" HorizontalAlignment="Left">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button">
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <ContentPresenter/>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Setter Property="Cursor" Value="Arrow"/>
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsEnabled" Value="True">
+                                                                    <Setter Property="Cursor" Value="Hand"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <Border HorizontalAlignment="Left">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border" BasedOn="{StaticResource PlateBadgeStyle}">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding EntranceHasUnknownPlate}" Value="True">
+                                                                        <Setter Property="Background" Value="{DynamicResource DangerChipTextColor}"/>
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource DangerChipBackgroundColor}"/>
+                                                                        <Setter Property="BorderThickness" Value="1.4"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <TextBlock Text="{Binding EntranceDetectedVehicleNo}" Style="{DynamicResource PlateBadgeTextStyle}" />
+                                                    </Border>
+                                                </Button>
                                                 <Border Style="{DynamicResource MemberChipStyle}" Margin="10,0,0,0" VerticalAlignment="Center"
                                                         Visibility="{Binding EntranceIsMember, Converter={StaticResource BoolToVisibilityConverter}}">
                                                     <TextBlock Text="Member" Style="{DynamicResource MemberChipTextStyle}" />
@@ -191,11 +224,11 @@
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <Button Grid.Column="0" Style="{DynamicResource SecondaryOutlineButtonStyle}"
-                                                        Command="{Binding OpenExitGateCommand}" Margin="0,0,0,0">
+                                                        Command="{Binding OpenEntranceGateCommand}" Margin="0,0,0,0">
                                                     <TextBlock Text="Open Gate" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
                                                 </Button>
                                                 <Button Grid.Column="1" Style="{DynamicResource SecondaryOutlineButtonStyle}"
-                                                        Command="{Binding ConfirmPaymentCommand}" Margin="4,0,0,0">
+                                                        Command="{Binding RetryEntranceVisitorSaveCommand}" Margin="4,0,0,0">
                                                     <TextBlock Text="Manual Entry" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
                                                 </Button>
                                             </Grid>
@@ -258,7 +291,8 @@
                                         </Border>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
-                                        <Button Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Test"
+                                        <Button Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Clear"
+                                                Padding="8,6"
                                                 Command="{Binding TestExitEntryCommand}" Margin="0,0,10,0" />
                                         <Border Style="{DynamicResource StatusPillStyle}" VerticalAlignment="Center"
                                                 Background="{Binding ExitGateOpen, Converter={StaticResource GateStateBrushConverter}}">
@@ -338,9 +372,41 @@
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Margin="0,0,12,0">
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center">
-                                                <Border Style="{StaticResource PlateBadgeStyle}" HorizontalAlignment="Left">
-                                                    <TextBlock Text="{Binding ExitDetectedVehicleNo}" Style="{DynamicResource PlateBadgeTextStyle}" />
-                                                </Border>
+                                                <Button Command="{Binding OpenExitPlateSearchCommand}"
+                                                        IsEnabled="{Binding ExitHasUnknownPlate}"
+                                                        Focusable="False" HorizontalAlignment="Left">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button">
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <ContentPresenter/>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Setter Property="Cursor" Value="Arrow"/>
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsEnabled" Value="True">
+                                                                    <Setter Property="Cursor" Value="Hand"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <Border HorizontalAlignment="Left">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border" BasedOn="{StaticResource PlateBadgeStyle}">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ExitHasUnknownPlate}" Value="True">
+                                                                        <Setter Property="Background" Value="{DynamicResource DangerChipTextColor}"/>
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource DangerChipBackgroundColor}"/>
+                                                                        <Setter Property="BorderThickness" Value="1.4"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <TextBlock Text="{Binding ExitDetectedVehicleNo}" Style="{DynamicResource PlateBadgeTextStyle}" />
+                                                    </Border>
+                                                </Button>
                                                 <Border Style="{DynamicResource MemberChipStyle}" Margin="10,0,0,0" VerticalAlignment="Center"
                                                         Visibility="{Binding ExitIsMember, Converter={StaticResource BoolToVisibilityConverter}}">
                                                     <TextBlock Text="Member" Style="{DynamicResource MemberChipTextStyle}" />
@@ -356,9 +422,8 @@
                                                         Visibility="{Binding ExitParkedDurationText, Converter={StaticResource NullToVisibilityConverter}}">
                                                     <StackPanel Orientation="Horizontal">
                                                         <fa:ImageAwesome Icon="ClockOutline" Width="11" Height="11" Foreground="{DynamicResource PrimaryColor}" />
-                                                        <TextBlock Text="Parked" FontSize="10.5" Margin="6,0,6,0"
-                                                                   Foreground="{DynamicResource SecondaryTextColor}" VerticalAlignment="Center" />
-                                                        <TextBlock Text="{Binding ExitParkedDurationText}" FontSize="11.5" FontWeight="SemiBold"
+                                                        
+                                                        <TextBlock Margin="8,0,0,0" Text="{Binding ExitParkedDurationText}" FontSize="11.5" FontWeight="SemiBold"
                                                                    VerticalAlignment="Center" />
                                                     </StackPanel>
                                                 </Border>
@@ -366,10 +431,9 @@
                                                 <Border Style="{DynamicResource PrimaryChipStyle}" Visibility="{Binding ExitFeeDueText, Converter={StaticResource NullToVisibilityConverter}}">
                                                     <StackPanel Orientation="Horizontal">
                                                         <fa:ImageAwesome Icon="Usd" Width="11" Height="11" Foreground="{DynamicResource PrimaryColor}" />
-                                                        <TextBlock Text="Fee" FontSize="10.5" Margin="6,0,6,0"
-                                                                   Foreground="{DynamicResource SecondaryTextColor}" VerticalAlignment="Center" />
-                                                        <TextBlock Text="{Binding ExitFeeDueText}" FontSize="13.5" FontWeight="Bold"
-                                                                   Foreground="{DynamicResource PrimaryColor}" VerticalAlignment="Center" />
+                                                        
+                                                        <TextBlock  Margin="8,0,0,0" Text="{Binding ExitFeeDueText}" FontSize="13.5" FontWeight="Bold"
+                                                                    Foreground="{DynamicResource PrimaryColor}" VerticalAlignment="Center" />
                                                     </StackPanel>
                                                 </Border>
                                             </StackPanel>
@@ -440,27 +504,7 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Recent Visitors -->
-                        <Border Grid.Column="0" Margin="0,0,8,0" Style="{StaticResource ElevatedPanelStyle}">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-
-                                <TextBlock Grid.Row="0" Text="Recent Visitors" Style="{DynamicResource SmallTitleTextStyle}"
-                                           FontSize="15" Margin="18,16,18,8" />
-
-                                <DataGrid Grid.Row="1" Style="{DynamicResource TableDataGridStyle}" Margin="12,0,12,12"
-                                          AutoGenerateColumns="False">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Plate" Width="*" />
-                                        <DataGridTextColumn Header="Gate" Width="*" />
-                                        <DataGridTextColumn Header="Time" Width="*" />
-                                        <DataGridTextColumn Header="Status" Width="*" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </Border>
+                        <sections:RecentVisitorsSection Grid.Column="0" Margin="0,0,8,0" x:Name="RecentVisitorsSection" />
 
                         <!-- Security Alerts -->
                         <Border Grid.Column="1" Margin="8,0,0,0" Style="{StaticResource ElevatedPanelStyle}">
@@ -873,6 +917,55 @@
                         Command="{Binding ConfirmPaymentModalCommand}"
                         HorizontalAlignment="Stretch" Margin="10,0,0,0" />
             </DockPanel>
+        </Grid>
+    </Border>
+</Border>
+            
+            <Border Background="#CC000000"
+        Visibility="{Binding IsPlateSearchModalOpen, Converter={StaticResource BoolToVisibilityConverter}}"
+        d:DesignHeight="0">
+    <Border Background="{DynamicResource SecondaryBackgroundColor}" CornerRadius="14"
+            BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="1"
+            Padding="24" Width="480"
+            HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,16">
+                <TextBlock DockPanel.Dock="Left" Text="Find Vehicle"
+                           Style="{DynamicResource SmallTitleTextStyle}" FontSize="16" />
+                <Button DockPanel.Dock="Right" Command="{Binding ClosePlateSearchModalCommand}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
+                            <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <fa:FontAwesome Icon="Close" />
+                </Button>
+            </DockPanel>
+
+            <input:FormSearchTextField x:Name="PlateSearchField" Grid.Row="1" Margin="0,0,0,16"
+                                       PlaceHolder="Enter plate number"
+                                       NotEmpty="False"
+                                       ContentPadding="10,8"
+                                       BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                       Color="{DynamicResource PrimaryBlackColor}"
+                                       BorderSize="1.4" />
+
+            <Button Grid.Row="3" Content="Confirm" Style="{DynamicResource PrimaryButtonStyle}"
+                    Command="{Binding ConfirmManualPlateCommand}" HorizontalAlignment="Stretch"
+                    Visibility="{Binding IsPlateSearchManualEntry, Converter={StaticResource BoolToVisibilityConverter}}" />
         </Grid>
     </Border>
 </Border>

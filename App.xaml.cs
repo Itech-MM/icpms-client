@@ -84,6 +84,7 @@ public partial class App
         services.AddTransient<HomeScreenViewModel>();
         services.AddTransient<HomeParkingAreaSummaryViewModel>();
         services.AddTransient<HomeShiftSummaryViewModel>();
+        services.AddTransient<RecentVisitorsSectionViewModel>();
 
         // Window
         services.AddTransient<MainWindow>();

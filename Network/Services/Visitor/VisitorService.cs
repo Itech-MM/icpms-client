@@ -1,13 +1,17 @@
-﻿using icpms_client.Network.DTO.ParkingSession;
+﻿using icpms_client.Network.DTO;
+using icpms_client.Network.DTO.ParkingSession;
 using icpms_client.Network.Request.Visitor;
 using icpms_client.Network.Response;
 using icpms_client.Network.Response.Visitor;
 using icpms_client.Network.Session;
+using log4net;
 
 namespace icpms_client.Network.Services.Visitor;
 
 public class VisitorService: ApiService
 {
+    private readonly ILog _log = LogManager.GetLogger(typeof(VisitorService));
+    
     public async Task<Response.Response?> SaveEntryVisitor(VisitorEntryRequest request)
     {
         try
@@ -95,6 +99,37 @@ public class VisitorService: ApiService
                 Data = ex.Message
             };
             return error;
+        }
+    }
+    
+    public async Task<Response.Response?> SearchRecentVisitors(int pageNo = 1)
+    {
+        try
+        {
+            var accessToken = UserSession.CurrentUser.CurrentAuth?.AccessToken;
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                _log.Error("Access token is null or empty");
+                return new BaseErrorResponse<string>
+                {
+                    Success = false,
+                    Message = "No active session/access token found.",
+                    Data = "No active session/access token found."
+                };
+            }
+
+            return await ApiClient.GetAsync<SearchResultDto<RecentVisitorDto>>(
+                $"visitors/recent?page={pageNo}", true, accessToken);
+        }
+        catch (Exception ex)
+        {
+            _log.Error($"SearchRecentVisitors Error: {ex.Message}");
+            return new BaseErrorResponse<string>
+            {
+                Success = false,
+                Message = ex.Message,
+                Data = ex.Message
+            };
         }
     }
 }
