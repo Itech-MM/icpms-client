@@ -15,7 +15,7 @@
     <WindowChrome.WindowChrome>
         <WindowChrome
             ResizeBorderThickness="6"
-            CaptionHeight="44"
+            CaptionHeight="36"
             GlassFrameThickness="0"
             UseAeroCaptionButtons="False"/>
     </WindowChrome.WindowChrome>
@@ -28,15 +28,15 @@
     <Setter Property="FontFamily" Value="/Assets/Fonts/#Poppins"/>
     <Setter Property="FontSize" Value="12"/>
     <Setter Property="FontWeight" Value="SemiBold"/>
-    <Setter Property="Padding" Value="12,7"/>
-    <Setter Property="Margin" Value="2,0"/>
+    <Setter Property="Padding" Value="8,4"/>
+    <Setter Property="Margin" Value="1,0"/>
     <Setter Property="Cursor" Value="Hand"/>
     <Setter Property="Template">
         <Setter.Value>
             <ControlTemplate TargetType="MenuItem">
                 <Border x:Name="Bd"
                         Background="{TemplateBinding Background}"
-                        CornerRadius="8"
+                        CornerRadius="0"
                         Padding="{TemplateBinding Padding}">
                     <Grid>
                         <ContentPresenter ContentSource="Header"
@@ -45,11 +45,11 @@
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center"/>
                         <Border x:Name="ActiveIndicator"
-                                Height="2.5"
-                                CornerRadius="2"
+                                Height="2"
+                                CornerRadius="0"
                                 Background="{DynamicResource PrimaryColor}"
                                 VerticalAlignment="Bottom"
-                                Margin="10,0,10,-9"
+                                Margin="6,0,6,-6"
                                 Opacity="0"/>
                     </Grid>
                 </Border>
@@ -95,7 +95,7 @@
                 Background="{DynamicResource PrimaryTitleBarColor}"
                 BorderBrush="{DynamicResource PrimaryBorderColor}"
                 BorderThickness="0,0,0,1"
-                Padding="16,0"
+                Padding="12,0"
                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -109,32 +109,32 @@
                             Orientation="Horizontal"
                             VerticalAlignment="Center">
                     <Image Source="Assets/Images/FlexiTech-Logo-Icon.ico"
-                           Width="20" Height="20"
+                           Width="18" Height="18"
                            VerticalAlignment="Center"
                            WindowChrome.IsHitTestVisibleInChrome="False"/>
                     <TextBlock Text="{Binding PageTitle, RelativeSource={RelativeSource AncestorType=Window}}"
                                Style="{StaticResource CompanyNameLabelTextStyle}"
                                FontSize="14"
                                VerticalAlignment="Center"
-                               Margin="10,0,0,0"/>
+                               Margin="8,0,0,0"/>
                     <TextBlock Text="{Binding TerminalLabel, RelativeSource={RelativeSource AncestorType=Window}}"
                                Style="{StaticResource CompanyNameLabelTextStyle}"
                                Foreground="{DynamicResource SecondaryTextColor}"
                                FontWeight="Normal"
                                FontSize="12"
-                               Margin="10,0,0,0"
+                               Margin="8,0,0,0"
                                VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <Menu x:Name="MainMenu"
                       Grid.Column="1"
                       Style="{StaticResource TitleBarMenuStyle}"
-                      Margin="24,0,0,0"
+                      Margin="14,0,0,0"
                       VerticalAlignment="Center"
                       WindowChrome.IsHitTestVisibleInChrome="True"
                       Visibility="{Binding Authenticated, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
                     <MenuItem Header="Dashboard" Tag="{x:Static enums:AppPage.Dashboard}" Click="MenuItem_Click" Style="{StaticResource TitleBarMenuItemStyle}"/>
-                    <MenuItem Header="Reports"   Tag="{x:Static enums:AppPage.Reports}"   Click="MenuItem_Click" Style="{StaticResource TitleBarMenuItemStyle}"/>
+                    <MenuItem Header="Visitors"   Tag="{x:Static enums:AppPage.Visitors}"   Click="MenuItem_Click" Style="{StaticResource TitleBarMenuItemStyle}"/>
                     <MenuItem Header="Members"   Tag="{x:Static enums:AppPage.Members}"   Click="MenuItem_Click" Style="{StaticResource TitleBarMenuItemStyle}"/>
                 </Menu>
 
@@ -144,7 +144,7 @@
 
                     <Border Style="{StaticResource StatusPillStyle}"
                             VerticalAlignment="Center"
-                            Margin="0,0,8,0"
+                            Margin="0,0,4,0"
                             Visibility="{Binding Authenticated, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <Ellipse Style="{StaticResource LiveDotStyle}" VerticalAlignment="Center"/>
@@ -153,7 +153,7 @@
                                        Foreground="{DynamicResource SuccessChipTextColor}"
                                        FontWeight="SemiBold"
                                        FontSize="11"
-                                       Margin="6,0,0,0"/>
+                                       Margin="4,0,0,0"/>
                         </StackPanel>
                     </Border>
 
@@ -171,7 +171,7 @@
                     RelativeSource={RelativeSource AncestorType=Window}}"/>
                     </Button>
 
-                    <Grid Margin="2,0"
+                    <Grid Margin="1,0"
                           Visibility="{Binding Authenticated, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Button x:Name="NotificationsButton"
                                 Style="{StaticResource TitleBarIconButtonStyle}"
@@ -181,16 +181,111 @@
                             <fa:FontAwesome Icon="BellOutline" Style="{StaticResource HeaderIconStyle}"/>
                         </Button>
                         <Border Background="{DynamicResource PrimaryRedColor}"
-                                CornerRadius="6"
+                                CornerRadius="50"
                                 Width="12" Height="12"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
-                                Margin="0,4,4,0"
+                                Margin="0,3,3,0"
                                 Visibility="{Binding HasNotifications, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
                             <TextBlock Text="{Binding NotificationCount, RelativeSource={RelativeSource AncestorType=Window}}"
                                        Foreground="White" FontSize="8" FontWeight="Bold"
                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
+                    </Grid>
+                    
+                    <Grid>
+                        <Button x:Name="ProfileButton"
+                                Style="{StaticResource TitleBarIconButtonStyle}"
+                                Click="ProfileButton_Click"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                ToolTip="Account"
+                                Visibility="{Binding Authenticated, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <fa:FontAwesome Icon="UserCircleOutline" Style="{StaticResource HeaderIconStyle}"/>
+                        </Button>
+
+                        <Popup x:Name="ProfilePopup"
+                               PlacementTarget="{Binding ElementName=ProfileButton}"
+                               Placement="Bottom"
+                               HorizontalOffset="-220"
+                               VerticalOffset="4"
+                               StaysOpen="False"
+                               AllowsTransparency="True"
+                               PopupAnimation="None">
+                            <Border Width="260"
+                                    Background="{DynamicResource SecondaryBackgroundColor}"
+                                    BorderBrush="{DynamicResource PrimaryBorderColor}"
+                                    BorderThickness="1">
+                                <StackPanel>
+
+                                    <!-- Operator identity -->
+                                    <Border Padding="10,8" BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="0,0,0,1">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding OperatorName, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                       FontSize="12.5" FontWeight="Bold"
+                                                       Foreground="{DynamicResource PrimaryBlackColor}"/>
+                                            <TextBlock Text="{Binding OperatorRole, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                       FontSize="10.5" Margin="0,2,0,0"
+                                                       Foreground="{DynamicResource SecondaryTextColor}"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Shift summary -->
+                                    <StackPanel Margin="10,8,10,8">
+                                        <TextBlock Text="CURRENT SHIFT" FontSize="9.5" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource SecondaryTextColor}" Margin="0,0,0,6"/>
+
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Vehicles In" FontSize="11.5" Foreground="{DynamicResource SecondaryTextColor}" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="{Binding ShiftState.VehiclesIn, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                       FontSize="11.5" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Vehicles Out" FontSize="11.5" Foreground="{DynamicResource SecondaryTextColor}" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="{Binding ShiftState.VehiclesOut, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                       FontSize="11.5" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Currently Parked" FontSize="11.5" Foreground="{DynamicResource SecondaryTextColor}" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="{Binding ShiftState.CurrentlyParked, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                       FontSize="11.5" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                        </Grid>
+
+                                        <Border Background="{DynamicResource PrimaryBackgroundColor}" Padding="8,6" Margin="0,6,0,0">
+                                            <Grid>
+                                                <TextBlock Text="Revenue Collected" FontSize="11.5" Foreground="{DynamicResource SecondaryTextColor}" HorizontalAlignment="Left"/>
+                                                <TextBlock Text="{Binding ShiftState.RevenueCollectedText, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           FontSize="13" FontWeight="Bold" Foreground="{DynamicResource PrimaryGreenColor}" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!-- Actions -->
+                                    <Border BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="0,1,0,0">
+                                        <Button Content="Sign Out"
+                                                Click="SignOutButton_Click"
+                                                HorizontalContentAlignment="Left"
+                                                Padding="10,8"
+                                                Background="Transparent" BorderThickness="0"
+                                                Foreground="{DynamicResource PrimaryRedColor}"
+                                                FontSize="12" FontWeight="SemiBold" Cursor="Hand">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                                        <ContentPresenter/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource DangerChipBackgroundColor}"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </Border>
+
+                                </StackPanel>
+                            </Border>
+                        </Popup>
                     </Grid>
 
                     <Button x:Name="SettingsButton"
@@ -202,7 +297,7 @@
                         <fa:FontAwesome Icon="SignOut" Style="{StaticResource HeaderIconStyle}"/>
                     </Button>
 
-                    <Rectangle Width="1" Height="20" Fill="{DynamicResource PrimaryBorderColor}" Margin="8,0"/>
+                    <Rectangle Width="1" Height="18" Fill="{DynamicResource PrimaryBorderColor}" Margin="6,0"/>
 
                     <Button Style="{StaticResource WindowControlButtonStyle}"
                             Click="Minimize_Click" WindowChrome.IsHitTestVisibleInChrome="True"

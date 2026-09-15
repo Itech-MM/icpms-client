@@ -1,102 +1,109 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <SolidColorBrush x:Key="PrimaryColor" Color="#0D7E86" />
+    <SolidColorBrush x:Key="PrimaryColor" Color="#0B6068" />
 
-    <SolidColorBrush x:Key="PrimaryTitleBarColor" Color="#E8EEF1"/>
-    <SolidColorBrush x:Key="WindowControlHoverColor" Color="#B9CBCF"/>
+    <SolidColorBrush x:Key="PrimaryTitleBarColor" Color="#DCE6EA"/>
+    <SolidColorBrush x:Key="WindowControlHoverColor" Color="#A2BCC2"/>
 
-    <SolidColorBrush x:Key="PrimaryBackgroundColor" Color="#F3F5F7" />
-    <SolidColorBrush x:Key="SecondaryBackgroundColor" Color="#E4E9ED" />
+    <SolidColorBrush x:Key="PrimaryBackgroundColor" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="SecondaryBackgroundColor" Color="#DBE3E8" />
 
-    <SolidColorBrush x:Key="SecondaryTextColor" Color="#5C6B7C" />
-    <SolidColorBrush x:Key="PrimaryButtonColor" Color="#0D7E86" />
-    <SolidColorBrush x:Key="SecondaryButtonColor" Color="#D6DCE1" />
-    <SolidColorBrush x:Key="MutedButtonColor" Color="#5C6B7C" />
+    <SolidColorBrush x:Key="SecondaryTextColor" Color="#3E4C5A" />
+    <SolidColorBrush x:Key="PrimaryButtonColor" Color="#0B6068" />
+    <SolidColorBrush x:Key="SecondaryButtonColor" Color="#C4CDD4" />
+    <SolidColorBrush x:Key="MutedButtonColor" Color="#3E4C5A" />
     <SolidColorBrush x:Key="PrimaryWhiteColor" Color="#FFFFFF" />
-    <SolidColorBrush x:Key="PrimaryTextBorderColor" Color="#D6DCE1" />
-    <SolidColorBrush x:Key="PrimaryTextFocusColor" Color="#3FBFC9" />
+    <SolidColorBrush x:Key="PrimaryTextBorderColor" Color="#A9B4BD" />
+    <SolidColorBrush x:Key="PrimaryTextFocusColor" Color="#0B6068" />
 
-    <SolidColorBrush x:Key="PrimaryBlackColor" Color="#1B2530" />
-    <SolidColorBrush x:Key="PrimaryRedColor" Color="#D6444C" />
-    <SolidColorBrush x:Key="PrimaryGreenColor" Color="#1FA968" />
-    <SolidColorBrush x:Key="PrimaryGreenLighterColor" Color="#8FF0C0" />
-    <SolidColorBrush x:Key="PrimaryLightColor" Color="#EEF6F6" />
-    <SolidColorBrush x:Key="PrimaryAccentColor" Color="#0D7E86" />
-    <SolidColorBrush x:Key="SecondaryAccentColor" Color="#C4501F" />
-    <SolidColorBrush x:Key="SecondaryAccentHoverColor" Color="#DE6C3B" />
-    <SolidColorBrush x:Key="PrimaryBorderColor" Color="#D6DCE1" />
-    <SolidColorBrush x:Key="SecondaryBorderColor" Color="#8A97A3" />
-    <SolidColorBrush x:Key="PrimaryDarkColor" Color="#1B2530" />
-    <SolidColorBrush x:Key="PrimaryRedLighterColor" Color="#E38086"/>
+    <SolidColorBrush x:Key="PrimaryBlackColor" Color="#10161C" />
+    <SolidColorBrush x:Key="PrimaryRedColor" Color="#B7222A" />
+    <SolidColorBrush x:Key="PrimaryGreenColor" Color="#136B44" />
+    <SolidColorBrush x:Key="PrimaryGreenLighterColor" Color="#6FD3A0" />
+    <SolidColorBrush x:Key="PrimaryLightColor" Color="#E6F2F2" />
+    <SolidColorBrush x:Key="PrimaryAccentColor" Color="#0B6068" />
+    <SolidColorBrush x:Key="SecondaryAccentColor" Color="#9C3C13" />
+    <SolidColorBrush x:Key="SecondaryAccentHoverColor" Color="#B85527" />
+    <SolidColorBrush x:Key="PrimaryBorderColor" Color="#A9B4BD" />
+    <SolidColorBrush x:Key="SecondaryBorderColor" Color="#6E7C87" />
+    <SolidColorBrush x:Key="PrimaryDarkColor" Color="#10161C" />
+    <SolidColorBrush x:Key="PrimaryRedLighterColor" Color="#CE5A60"/>
 
-    <SolidColorBrush x:Key="TableBorder" Color="#E4E9ED"/>
-    <SolidColorBrush x:Key="TableAlternatingRowBackground" Color="#F8FAFB"/>
-    <SolidColorBrush x:Key="TableColumnHeader" Color="#EEF2F4"/>
-    <SolidColorBrush x:Key="TableMouseOverColor" Color="#E3F1F2"/>
+    <SolidColorBrush x:Key="TableBorder" Color="#A9B4BD"/>
+    <SolidColorBrush x:Key="TableAlternatingRowBackground" Color="#F2F5F7"/>
+    <SolidColorBrush x:Key="TableColumnHeader" Color="#DDE4E8"/>
+    <SolidColorBrush x:Key="TableMouseOverColor" Color="#CBE7E8"/>
 
-    <SolidColorBrush x:Key="ScrollBar.Thumb.Background" Color="#D2D9DE"/>
-    <SolidColorBrush x:Key="ScrollBar.Thumb.Hover.Background" Color="#B1BAC2"/>
-    <SolidColorBrush x:Key="ScrollBar.Thumb.Pressed.Background" Color="#0D7E86"/>
+    <SolidColorBrush x:Key="ScrollBar.Thumb.Background" Color="#AEB8BF"/>
+    <SolidColorBrush x:Key="ScrollBar.Thumb.Hover.Background" Color="#8B979F"/>
+    <SolidColorBrush x:Key="ScrollBar.Thumb.Pressed.Background" Color="#0B6068"/>
 
     <SolidColorBrush x:Key="PureBlackColor" Color="#000000"/>
     <SolidColorBrush x:Key="PureWhiteColor" Color="#FFFFFF"/>
 
-    <SolidColorBrush x:Key="YesHoverBackground" Color="#E4F5EC"/>
-    <SolidColorBrush x:Key="NoHoverBackground" Color="#FBEAEB"/>
-    <SolidColorBrush x:Key="CancelHoverBackground" Color="#EEF0F2"/>
-    <SolidColorBrush x:Key="OkHoverBackground" Color="#E3F1F2"/>
+    <SolidColorBrush x:Key="YesHoverBackground" Color="#CFEDDD"/>
+    <SolidColorBrush x:Key="NoHoverBackground" Color="#F6D3D5"/>
+    <SolidColorBrush x:Key="CancelHoverBackground" Color="#E3E6E9"/>
+    <SolidColorBrush x:Key="OkHoverBackground" Color="#CBE7E8"/>
 
-    <SolidColorBrush x:Key="YesPressedBackground" Color="#CDEBDB"/>
-    <SolidColorBrush x:Key="NoPressedBackground" Color="#F5D5D7"/>
-    <SolidColorBrush x:Key="CancelPressedBackground" Color="#E1E4E7"/>
-    <SolidColorBrush x:Key="OkPressedBackground" Color="#CFE9EB"/>
+    <SolidColorBrush x:Key="YesPressedBackground" Color="#AEE0C6"/>
+    <SolidColorBrush x:Key="NoPressedBackground" Color="#EFB9BC"/>
+    <SolidColorBrush x:Key="CancelPressedBackground" Color="#D2D7DB"/>
+    <SolidColorBrush x:Key="OkPressedBackground" Color="#B4DEE0"/>
 
-    <SolidColorBrush x:Key="ErrorColor" Color="#D6444C"/>
-    <SolidColorBrush x:Key="WarningColor" Color="#C4801F"/>
-    <SolidColorBrush x:Key="QuestionColor" Color="#0D7E86"/>
-    <SolidColorBrush x:Key="InfoColor" Color="#1FA968"/>
+    <SolidColorBrush x:Key="ErrorColor" Color="#B7222A"/>
+    <SolidColorBrush x:Key="WarningColor" Color="#8F5710"/>
+    <SolidColorBrush x:Key="QuestionColor" Color="#0B6068"/>
+    <SolidColorBrush x:Key="InfoColor" Color="#136B44"/>
 
-    <SolidColorBrush x:Key="AuthHeaderBackgroundColor" Color="#123A46"/>
-    <SolidColorBrush x:Key="AuthHeaderAccentColor" Color="#1E5866"/>
-    <SolidColorBrush x:Key="AuthHeaderSubTextColor" Color="#9FBAC1"/>
+    <SolidColorBrush x:Key="AuthHeaderBackgroundColor" Color="#0D2E36"/>
+    <SolidColorBrush x:Key="AuthHeaderAccentColor" Color="#164A56"/>
+    <SolidColorBrush x:Key="AuthHeaderSubTextColor" Color="#C3D6DA"/>
 
-    <SolidColorBrush x:Key="PrimaryChipBackgroundColor" Color="#DBEEEF" />
-    <SolidColorBrush x:Key="PrimaryChipTextColor" Color="#0D7E86" />
+    <SolidColorBrush x:Key="PrimaryChipBackgroundColor" Color="#C7E6E8" />
+    <SolidColorBrush x:Key="PrimaryChipTextColor" Color="#0B6068" />
 
-    <SolidColorBrush x:Key="SecondaryChipBackgroundColor" Color="#E4E9ED" />
-    <SolidColorBrush x:Key="SecondaryChipTextColor" Color="#42505F" />
+    <SolidColorBrush x:Key="SecondaryChipBackgroundColor" Color="#D6DDE2" />
+    <SolidColorBrush x:Key="SecondaryChipTextColor" Color="#2C3944" />
 
-    <SolidColorBrush x:Key="SuccessChipBackgroundColor" Color="#D9F3E4" />
-    <SolidColorBrush x:Key="SuccessChipTextColor" Color="#1B8D5A" />
+    <SolidColorBrush x:Key="SuccessChipBackgroundColor" Color="#C3ECD5" />
+    <SolidColorBrush x:Key="SuccessChipTextColor" Color="#0F5C39" />
 
-    <SolidColorBrush x:Key="DangerChipBackgroundColor" Color="#FBE3E4" />
-    <SolidColorBrush x:Key="DangerChipTextColor" Color="#C33940" />
+    <SolidColorBrush x:Key="DangerChipBackgroundColor" Color="#F6D0D2" />
+    <SolidColorBrush x:Key="DangerChipTextColor" Color="#9C1D24" />
 
-    <SolidColorBrush x:Key="WarningChipBackgroundColor" Color="#F7E7D1" />
-    <SolidColorBrush x:Key="WarningChipTextColor" Color="#B5751B" />
+    <SolidColorBrush x:Key="WarningChipBackgroundColor" Color="#F1DBB8" />
+    <SolidColorBrush x:Key="WarningChipTextColor" Color="#7A4B0E" />
 
-    <SolidColorBrush x:Key="InfoChipBackgroundColor" Color="#D9EEEF" />
-    <SolidColorBrush x:Key="InfoChipTextColor" Color="#0D7E86" />
+    <SolidColorBrush x:Key="InfoChipBackgroundColor" Color="#C3E6E8" />
+    <SolidColorBrush x:Key="InfoChipTextColor" Color="#0B6068" />
 
-    <SolidColorBrush x:Key="MutedChipBackgroundColor" Color="#E7EBEE" />
-    <SolidColorBrush x:Key="MutedChipTextColor" Color="#5C6B7C" />
+    <SolidColorBrush x:Key="MutedChipBackgroundColor" Color="#D8DEE3" />
+    <SolidColorBrush x:Key="MutedChipTextColor" Color="#3E4C5A" />
 
-    <SolidColorBrush x:Key="MemberChipBackgroundColor" Color="#DEEAF8" />
-    <SolidColorBrush x:Key="MemberChipTextColor" Color="#2A6BAE" />
+    <SolidColorBrush x:Key="MemberChipBackgroundColor" Color="#CFE0F3" />
+    <SolidColorBrush x:Key="MemberChipTextColor" Color="#1B4E82" />
 
-    <SolidColorBrush x:Key="VipChipBackgroundColor" Color="#FBEECB" />
-    <SolidColorBrush x:Key="VipChipTextColor" Color="#8A6A0A" />
+    <SolidColorBrush x:Key="VipChipBackgroundColor" Color="#F4E4B4" />
+    <SolidColorBrush x:Key="VipChipTextColor" Color="#664F07" />
 
-    <SolidColorBrush x:Key="DataChipBackgroundColor" Color="#5C6B7C" />
+    <SolidColorBrush x:Key="DataChipBackgroundColor" Color="#3E4C5A" />
 
-    <SolidColorBrush x:Key="PlateBadgeBackgroundColor" Color="#1B2530" />
-    <SolidColorBrush x:Key="PlateBadgeBorderColor" Color="#42505F" />
-    <SolidColorBrush x:Key="PlateBadgeTextColor" Color="#F3F5F7" />
+    <SolidColorBrush x:Key="PlateBadgeBackgroundColor" Color="#10161C" />
+    <SolidColorBrush x:Key="PlateBadgeBorderColor" Color="#3E4C5A" />
+    <SolidColorBrush x:Key="PlateBadgeTextColor" Color="#FFFFFF" />
 
     <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF" />
-    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#1B2530" />
-    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#5C6B7C" />
-    <SolidColorBrush x:Key="PrimaryRedHoverColor" Color="#C33940" />
-    
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#10161C" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#3E4C5A" />
+    <SolidColorBrush x:Key="PrimaryRedHoverColor" Color="#9C1D24" />
+
+    <!-- New: explicit border thickness/emphasis tokens for medium-high contrast mode -->
+    <sys:Double xmlns:sys="clr-namespace:System;assembly=mscorlib" x:Key="StandardBorderThickness">1.5</sys:Double>
+    <SolidColorBrush x:Key="CardBorderColor" Color="#A9B4BD" />
+    <SolidColorBrush x:Key="InputBorderColor" Color="#A9B4BD" />
+    <SolidColorBrush x:Key="InputBorderFocusColor" Color="#0B6068" />
+    <SolidColorBrush x:Key="DividerColor" Color="#A9B4BD" />
+
 </ResourceDictionary>

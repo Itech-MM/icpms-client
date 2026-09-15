@@ -20,7 +20,7 @@ public class ApiClient
     {
         _httpClient = new HttpClient();
         _httpClient.BaseAddress = new Uri(apiConstant.BaseUrl);
-        _httpClient.Timeout = TimeSpan.FromSeconds(40);
+        _httpClient.Timeout = TimeSpan.FromSeconds(90);
     }
 
     private void ApplyRequestHeaders(HttpRequestMessage request, bool requiresAuth, string token)

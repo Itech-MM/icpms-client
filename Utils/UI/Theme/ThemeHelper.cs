@@ -27,7 +27,7 @@ public class ThemeHelper
         dictionaries.Add(new ResourceDictionary { Source = themeUri });
 
         // Force UI refresh
-        InvalidateVisuals(app.MainWindow);
+        // InvalidateVisuals(app.MainWindow);
     }
 
     private static void InvalidateVisuals(Window? window)

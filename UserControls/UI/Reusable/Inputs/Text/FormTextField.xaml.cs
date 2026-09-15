@@ -25,7 +25,7 @@ namespace icpms_client.UserControls.UI.Reusable.Inputs.Text
                 return;
             }
             InitializeComponent();
-            DataContext = this;
+            
         }
 
         // Event for text changes
@@ -36,12 +36,12 @@ namespace icpms_client.UserControls.UI.Reusable.Inputs.Text
         private void txtBox_onChanged(object sender, TextChangedEventArgs e)
         {
             TxtBlock.Visibility =
-                string.IsNullOrEmpty(TxtBox.Text) ? Visibility.Visible : Visibility.Hidden; // Toggle placeholder
+                string.IsNullOrEmpty(TxtBox.Text) ? Visibility.Visible : Visibility.Hidden;
             if (!Readonly)
             {
-                Value = TxtBox.Text;
+                SetCurrentValue(ValueProperty, TxtBox.Text);
             }
-
+        
             OnTextChanged?.Invoke(TxtBox.Text);
             TextChanged = true;
         }

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using icpms_client.Common.UI;
 using icpms_client.Network.DTO;
 using icpms_client.Network.DTO.ParkingSession;
 using icpms_client.Network.Response;
@@ -10,7 +11,7 @@ using log4net;
 
 namespace icpms_client.Pages.Screens.Sections.ViewModels;
 
-public class RecentVisitorsSectionViewModel : INotifyPropertyChanged
+public class RecentVisitorsSectionViewModel : ScreenViewModelBase
 {
     private readonly ILog _log = LogManager.GetLogger(nameof(RecentVisitorsSectionViewModel));
     private readonly VisitorService _recentVisitorService;
@@ -203,7 +204,4 @@ public class RecentVisitorsSectionViewModel : INotifyPropertyChanged
         return -1;
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }

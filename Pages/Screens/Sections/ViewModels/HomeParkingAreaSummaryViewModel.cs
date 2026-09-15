@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using icpms_client.Common.UI;
 using icpms_client.Network.DTO.ParkingArea;
 using icpms_client.Network.Response;
 using icpms_client.Network.Services.ParkingArea;
@@ -13,15 +12,13 @@ public enum CapacityChipStatus
     Danger
 }
 
-public class HomeParkingAreaSummaryViewModel: INotifyPropertyChanged
+public class HomeParkingAreaSummaryViewModel : ScreenViewModelBase
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-    
-    private readonly ParkingAreaService _parkingAreaService = new();
-    
+    private readonly ParkingAreaService _parkingAreaService;
+
     private bool _isParkingAreaLoading = true;
     private string? _parkingAreaLoadError;
-    
+
     private int _areaCapacityPercentage;
     private int _totalSlot;
     private int _totalAvailableSlot;
@@ -30,10 +27,15 @@ public class HomeParkingAreaSummaryViewModel: INotifyPropertyChanged
     private int _normalSlot;
     private int _totalAvailableNormalSlot;
 
+    public HomeParkingAreaSummaryViewModel(ParkingAreaService parkingAreaService)
+    {
+        _parkingAreaService = parkingAreaService;
+    }
+
     public async Task LoadParkingAreaSummaryAsync()
     {
         ParkingAreaLoadError = null;
-        
+
         IsParkingAreaLoading = true;
 
         var preloadTask = LoadParkingAreaAsync();
@@ -67,7 +69,7 @@ public class HomeParkingAreaSummaryViewModel: INotifyPropertyChanged
         OnPropertyChanged(nameof(VipSlotSummaryText));
         OnPropertyChanged(nameof(AreaCapacityStatus));
     }
-    
+
     private async Task LoadParkingAreaAsync()
     {
         try
@@ -92,7 +94,7 @@ public class HomeParkingAreaSummaryViewModel: INotifyPropertyChanged
             IsParkingAreaLoading = false;
         }
     }
-    
+
     public bool IsParkingAreaLoading
     {
         get => _isParkingAreaLoading;
@@ -104,7 +106,7 @@ public class HomeParkingAreaSummaryViewModel: INotifyPropertyChanged
         get => _parkingAreaLoadError;
         private set { _parkingAreaLoadError = value; OnPropertyChanged(); }
     }
-    
+
     public int AreaCapacityPercentage
     {
         get => _areaCapacityPercentage;
@@ -159,9 +161,4 @@ public class HomeParkingAreaSummaryViewModel: INotifyPropertyChanged
         AreaCapacityPercentage >= 100 ? CapacityChipStatus.Danger :
         AreaCapacityPercentage >= 70 ? CapacityChipStatus.Warning :
         CapacityChipStatus.Success;
-    
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }

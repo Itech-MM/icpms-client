@@ -1,13 +1,18 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using FlexiStream.Player;
+using FlexiStream.Player.Core;
 using icpms_client.Common.Command;
 using icpms_client.Common.Constants;
 using icpms_client.Common.ContextData;
+using icpms_client.Common.Logs;
 using icpms_client.Common.UI;
 using icpms_client.Network.DTO;
 using icpms_client.Network.DTO.AuditLogs;
@@ -29,11 +34,13 @@ using icpms_client.Services.ExternalServices;
 using icpms_client.Services.UIServices;
 using icpms_client.Tools.VideoPlayer;
 using log4net;
+using log4net.Plugin;
 using VehicleDetection.Contracts;
+using Vlc.DotNet.Wpf;
 
 namespace icpms_client.Pages.Screens.ViewModels;
 
-public class HomeScreenViewModel : INotifyPropertyChanged
+public class HomeScreenViewModel : ScreenViewModelBase
 {
     private readonly ILog _log = LogManager.GetLogger(nameof(HomeScreenViewModel));
 
@@ -61,10 +68,10 @@ public class HomeScreenViewModel : INotifyPropertyChanged
     private bool _isReadyToConfirmPayment;
     private bool _isPaymentComplete;
 
-    private RtspPlayer? _entranceAnprPlayer;
-    private RtspPlayer? _entranceCctvPlayer;
-    private RtspPlayer? _exitAnprPlayer;
-    private RtspPlayer? _exitCctvPlayer;
+    private RtspStreamPlayer? _entranceAnprPlayer;
+    private RtspStreamPlayer? _entranceCctvPlayer;
+    private RtspStreamPlayer? _exitAnprPlayer;
+    private RtspStreamPlayer? _exitCctvPlayer;
 
     private string? _entranceAnprUrl;
     private string? _entranceCctvUrl;
@@ -132,14 +139,27 @@ public class HomeScreenViewModel : INotifyPropertyChanged
 
     private bool _isPlateSearchModalOpen;
     private PlateSearchMode _plateSearchMode;
+    
+    private readonly VehicleDetectionRealtimeService _vehicleDetectionRealtimeService;
 
+
+    private readonly IPluginConstants? _pluginsConstants;
+
+    private readonly IStreamLogger _streamLogger;
+    
     public HomeScreenViewModel(HomeScreenService homeScreenService, VehicleDetectionRealtimeService vehicleDetectionRealtimeService,
         VehicleService vehicleService, VisitorService visitorService, VehicleAlertRealtimeService alertService,
-        VehicleAlertLogService vehicleAlertLogService)
+        VehicleAlertLogService vehicleAlertLogService, IPluginConstants pluginConstants)
     {
+
+        _streamLogger = new FileStreamLogger();
+        
         _homeScreenService = homeScreenService;
 
-        vehicleDetectionRealtimeService.VehicleDetected += OnVehicleDetected;
+        _vehicleDetectionRealtimeService = vehicleDetectionRealtimeService;
+        _vehicleDetectionRealtimeService.VehicleDetected += OnVehicleDetected;
+
+        _pluginsConstants = pluginConstants;
 
         _vehicleService = vehicleService;
 
@@ -167,7 +187,7 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         OpenEntranceSnapshotCommand = new RelayCommand(_ => OpenSnapshotModal(SnapshotSide.Entrance), _ => EntranceHasSnapshot);
         OpenExitSnapshotCommand = new RelayCommand(_ => OpenSnapshotModal(SnapshotSide.Exit), _ => ExitHasSnapshot);
         CloseSnapshotModalCommand = new RelayCommand(_ => CloseSnapshotModal());
-        RecaptureSnapshotCommand = new RelayCommand(_ => RecaptureActiveSnapshot());
+        RecaptureSnapshotCommand = new RelayCommand(_ => RecaptureActiveSnapshotAsync());
 
         RetryEntranceVisitorSaveCommand = new RelayCommand( void (_) =>  OpenPlateSearchModal(PlateSearchMode.Entrance), _ => EntranceManualEntryRequired);
         DismissEntranceManualEntryCommand = new RelayCommand(_ => DismissEntranceManualEntry(), _ => EntranceManualEntryRequired);
@@ -665,25 +685,25 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         private set { _entranceManualEntryReason = value; OnPropertyChanged(); }
     }
 
-    public RtspPlayer? EntranceAnprPlayer
+    public RtspStreamPlayer? EntranceAnprPlayer
     {
         get => _entranceAnprPlayer;
         private set { _entranceAnprPlayer = value; OnPropertyChanged(); }
     }
 
-    public RtspPlayer? EntranceCctvPlayer
+    public RtspStreamPlayer? EntranceCctvPlayer
     {
         get => _entranceCctvPlayer;
         private set { _entranceCctvPlayer = value; OnPropertyChanged(); }
     }
 
-    public RtspPlayer? ExitAnprPlayer
+    public RtspStreamPlayer? ExitAnprPlayer
     {
         get => _exitAnprPlayer;
         private set { _exitAnprPlayer = value; OnPropertyChanged(); }
     }
 
-    public RtspPlayer? ExitCctvPlayer
+    public RtspStreamPlayer? ExitCctvPlayer
     {
         get => _exitCctvPlayer;
         private set { _exitCctvPlayer = value; OnPropertyChanged(); }
@@ -713,29 +733,10 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         set { _exitCctvName = value; OnPropertyChanged(); }
     }
 
-    public void InitializeEntranceAnprCamera(RtspPlayer player)
-    {
-        EntranceAnprPlayer = player;
-        if (!string.IsNullOrWhiteSpace(_entranceAnprUrl)) player.Play(_entranceAnprUrl);
-    }
-
-    public void InitializeEntranceCctvCamera(RtspPlayer player)
-    {
-        EntranceCctvPlayer = player;
-        if (!string.IsNullOrWhiteSpace(_entranceCctvUrl)) player.Play(_entranceCctvUrl);
-    }
-
-    public void InitializeExitAnprCamera(RtspPlayer player)
-    {
-        ExitAnprPlayer = player;
-        if (!string.IsNullOrWhiteSpace(_exitAnprUrl)) player.Play(_exitAnprUrl);
-    }
-
-    public void InitializeExitCctvCamera(RtspPlayer player)
-    {
-        ExitCctvPlayer = player;
-        if (!string.IsNullOrWhiteSpace(_exitCctvUrl)) player.Play(_exitCctvUrl);
-    }
+    public void InitializeEntranceAnprCamera(RtspStreamPlayer control) => EntranceAnprPlayer = control;
+    public void InitializeEntranceCctvCamera(RtspStreamPlayer control) => EntranceCctvPlayer = control;
+    public void InitializeExitAnprCamera(RtspStreamPlayer control) => ExitAnprPlayer = control;
+    public void InitializeExitCctvCamera(RtspStreamPlayer control) => ExitCctvPlayer = control;
 
     public RelayCommand OpenExitGateCommand { get; }
     public RelayCommand ConfirmPaymentCommand { get; }
@@ -832,11 +833,61 @@ public class HomeScreenViewModel : INotifyPropertyChanged
 
         PaymentMethods = new ObservableCollection<CommonObject>(data.PaymentMethods);
 
+        if (!string.IsNullOrWhiteSpace(_entranceAnprUrl) && EntranceAnprPlayer != null)
+        {
+            EntranceAnprPlayer.Start(new RtspStreamConfig
+            {
+                Name = string.Empty,
+                Url = _entranceAnprUrl,
+                ShowPlayPauseButton = false,
+                ShowStopButton = false,
+                ShowRefreshButton = true,
+                Mute = true,
+                EnableHardwareDecode = false
+            }, _streamLogger);
+        }
 
-        if (!string.IsNullOrWhiteSpace(_entranceAnprUrl)) EntranceAnprPlayer?.Play(_entranceAnprUrl);
-        if (!string.IsNullOrWhiteSpace(_entranceCctvUrl)) EntranceCctvPlayer?.Play(_entranceCctvUrl);
-        if (!string.IsNullOrWhiteSpace(_exitAnprUrl)) ExitAnprPlayer?.Play(_exitAnprUrl);
-        if (!string.IsNullOrWhiteSpace(_exitCctvUrl)) ExitCctvPlayer?.Play(_exitCctvUrl);
+        if (!string.IsNullOrWhiteSpace(_entranceCctvUrl) && EntranceCctvPlayer != null)
+        {
+            EntranceCctvPlayer.Start(new RtspStreamConfig
+            {
+                Name =  string.Empty,
+                Url = _entranceCctvUrl,
+                ShowPlayPauseButton = false,
+                ShowStopButton = false,
+                ShowRefreshButton = true,
+                Mute = true,
+                EnableHardwareDecode = false
+            }, _streamLogger);
+        }
+
+        if (!string.IsNullOrWhiteSpace(_exitAnprUrl) && ExitAnprPlayer != null)
+        {
+            ExitAnprPlayer.Start(new RtspStreamConfig
+            {
+                Name =  string.Empty,
+                Url = _exitAnprUrl,
+                ShowPlayPauseButton = false,
+                ShowStopButton = false,
+                ShowRefreshButton = true,
+                Mute = true,
+                EnableHardwareDecode = false
+            }, _streamLogger);
+        }
+
+        if (!string.IsNullOrWhiteSpace(_exitCctvUrl) && ExitCctvPlayer != null)
+        {
+            ExitCctvPlayer.Start(new RtspStreamConfig
+            {
+                Name =  string.Empty,
+                Url = _exitCctvUrl,
+                ShowPlayPauseButton = false,
+                ShowStopButton = false,
+                ShowRefreshButton = true,
+                Mute = true,
+                EnableHardwareDecode = false
+            }, _streamLogger);
+        }
     }
 
     private void OpenPaymentModal()
@@ -922,16 +973,14 @@ public class HomeScreenViewModel : INotifyPropertyChanged
 
     private void RefreshEntranceCamera()
     {
-        if (EntranceAnprPlayer != null && !string.IsNullOrWhiteSpace(_entranceAnprUrl)) _ = EntranceAnprPlayer.RefreshAsync(_entranceAnprUrl);
-        if (EntranceCctvPlayer != null && !string.IsNullOrWhiteSpace(_entranceCctvUrl)) _ = EntranceCctvPlayer.RefreshAsync(_entranceCctvUrl);
+        EntranceAnprPlayer?.Refresh();
+        EntranceCctvPlayer?.Refresh();
     }
 
     private void RefreshExitCamera()
     {
-        if (ExitAnprPlayer != null && !string.IsNullOrWhiteSpace(_exitAnprUrl))
-            _ = ExitAnprPlayer.RefreshAsync(_exitAnprUrl);
-        if (ExitCctvPlayer != null && !string.IsNullOrWhiteSpace(_exitCctvUrl))
-            _ = ExitCctvPlayer.RefreshAsync(_exitCctvUrl);
+        ExitAnprPlayer?.Refresh();
+        ExitCctvPlayer?.Refresh();
     }
 
     private void TestEntranceEntry()
@@ -944,21 +993,21 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         ResetExitData();
     }
 
-    private static ImageSource? CaptureSnapshotImage(RtspPlayer? player)
+    private static async Task<ImageSource?> CaptureSnapshotImageAsync(RtspStreamPlayer? player)
     {
         if (player == null) return null;
 
-        var tempFile = Path.Combine(Path.GetTempPath(), $"icpms_snapshot_{Guid.NewGuid():N}.png");
-        var file = new FileInfo(tempFile);
-
         try
         {
-            if (!player.Snapshot(file) || !File.Exists(tempFile)) return null;
+            var bytes = await player.CaptureSnapshotAsync(ImageFormat.Png);
+            if (bytes == null || bytes.Length == 0) return null;
+
+            using var ms = new MemoryStream(bytes);
 
             var bitmap = new BitmapImage();
             bitmap.BeginInit();
             bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            bitmap.UriSource = new Uri(tempFile);
+            bitmap.StreamSource = ms;
             bitmap.EndInit();
             bitmap.Freeze();
 
@@ -968,26 +1017,18 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         {
             return null;
         }
-        finally
-        {
-            try { if (File.Exists(tempFile)) File.Delete(tempFile); }
-            catch
-            {
-                // ignored
-            }
-        }
     }
 
-    private void CaptureEntranceSnapshot()
+    private async Task CaptureEntranceSnapshotAsync()
     {
-        var captured = CaptureSnapshotImage(EntranceAnprPlayer);
+        var captured = await CaptureSnapshotImageAsync(EntranceAnprPlayer);
         EntranceSnapshotImage = captured;
         EntranceHasSnapshot = captured != null;
     }
 
-    private void CaptureExitSnapshot()
+    private async Task CaptureExitSnapshotAsync()
     {
-        var captured = CaptureSnapshotImage(ExitAnprPlayer);
+        var captured = await CaptureSnapshotImageAsync(ExitAnprPlayer);
         ExitSnapshotImage = captured;
         ExitHasSnapshot = captured != null;
     }
@@ -1005,16 +1046,16 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         IsSnapshotModalOpen = false;
     }
 
-    private void RecaptureActiveSnapshot()
+    private async Task RecaptureActiveSnapshotAsync()
     {
         if (_activeSnapshotSide == SnapshotSide.Entrance)
         {
-            CaptureEntranceSnapshot();
+            await CaptureEntranceSnapshotAsync();
             ModalSnapshotImage = EntranceSnapshotImage;
         }
         else
         {
-            CaptureExitSnapshot();
+            await CaptureExitSnapshotAsync();
             ModalSnapshotImage = ExitSnapshotImage;
         }
     }
@@ -1039,14 +1080,14 @@ public class HomeScreenViewModel : INotifyPropertyChanged
     {
         var mySeq = ++_entranceRequestSeq;
 
-        Application.Current.Dispatcher.Invoke(() =>
+        Application.Current.Dispatcher.Invoke(async () =>
         {
             ToastService.ShowInfo("Entrance vehicle detected.");
             EntranceDetectedVehicleNo = evt.LicensePlate;
             EntranceManualEntryRequired = false;
             EntranceManualEntryReason = null;
             EntranceHasUnknownPlate = false;
-            CaptureEntranceSnapshot();
+            await CaptureEntranceSnapshotAsync();
         });
 
         Response? response;
@@ -1158,13 +1199,13 @@ public class HomeScreenViewModel : INotifyPropertyChanged
     {
         var mySeq = ++_exitRequestSeq;
 
-        Application.Current.Dispatcher.Invoke(() =>
+        Application.Current.Dispatcher.InvokeAsync(async () =>
         {
             ExitDetectedVehicleNo = evt.LicensePlate;
             ExitParkedDurationText = null;
             ExitFeeDueText = null;
             ExitHasUnknownPlate = false;
-            CaptureExitSnapshot();
+            await CaptureExitSnapshotAsync();
         });
 
         Response? response;
@@ -1321,7 +1362,18 @@ public class HomeScreenViewModel : INotifyPropertyChanged
         Exit
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    protected override void OnDispose()
+    {
+        _vehicleDetectionRealtimeService.VehicleDetected -= OnVehicleDetected;
+        _alertService.AlertReceived -= OnAlertReceived;
+
+        OnVisitorSaved = null;
+        OnExitVisitorSaved = null;
+    }
+
+    protected override async Task OnDisposeAsync()
+    {
+        var players = new[] { EntranceAnprPlayer, EntranceCctvPlayer, ExitAnprPlayer, ExitCctvPlayer };
+        await Task.WhenAll(players.Where(p => p != null).Select(p => p!.DisposeAsync()));
+    }
 }

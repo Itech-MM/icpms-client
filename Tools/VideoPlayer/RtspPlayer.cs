@@ -122,8 +122,8 @@ namespace icpms_client.Tools.VideoPlayer
         /// </summary>
         public void Dispose()
         {
-            _vlcControl.SourceProvider.MediaPlayer?.Stop();
-            _vlcControl.SourceProvider.MediaPlayer?.Dispose();
+            ThreadPool.QueueUserWorkItem(_=> _vlcControl.SourceProvider.MediaPlayer?.Stop());
+            ThreadPool.QueueUserWorkItem(_=> _vlcControl.SourceProvider.MediaPlayer?.Dispose());
         }
     }
 }

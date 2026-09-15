@@ -2,5 +2,5 @@
 
 public class ThemeSettings
 {
-    public string Mode { get; set; }
+    public string Mode { get; set; } = "Light";
 }

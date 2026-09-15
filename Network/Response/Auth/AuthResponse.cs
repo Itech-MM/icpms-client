@@ -8,7 +8,12 @@ public class AuthResponse
     public string AccessToken { get; set; } = string.Empty;
     public string RefreshToken { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
-    public List<string> Roles { get; set; } = new();
+
+    public string OperatorName { get; set; } = string.Empty;
+    
+    public long OperatorId { get; set; } = -1;
+    
+    public List<string> Roles { get; set; } = [];
     public long ExpiresIn { get; set; }
     public bool StartShift { get; set; }
     

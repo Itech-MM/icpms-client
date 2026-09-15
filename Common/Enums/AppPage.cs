@@ -3,6 +3,6 @@
 public enum AppPage
 {
     Dashboard,
-    Reports,
+    Visitors,
     Members
 }

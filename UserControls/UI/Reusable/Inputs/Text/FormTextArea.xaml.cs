@@ -23,7 +23,6 @@ namespace icpms_client.UserControls.UI.Reusable.Inputs.Text
                 return;
             }
             InitializeComponent();
-            DataContext = this;
         }
 
         public event Action<string?>? OnTextChanged;
@@ -37,7 +36,7 @@ namespace icpms_client.UserControls.UI.Reusable.Inputs.Text
                 
             if (!Readonly)
             {
-                Value = TxtBox.Text;
+                SetCurrentValue(ValueProperty, TxtBox.Text);
             }
 
             OnTextChanged?.Invoke(TxtBox.Text);

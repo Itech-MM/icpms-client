@@ -19,7 +19,7 @@
                                 <Border BorderBrush="{StaticResource PrimaryBorderColor}"
                                         BorderThickness="2"
                                         Background="White"
-                                        CornerRadius="5"
+                                        CornerRadius="2"
                                         Margin="10">
                                     <Border.Effect>
                                         <DropShadowEffect Color="Black"

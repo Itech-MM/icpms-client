@@ -1,0 +1,228 @@
+﻿<UserControl x:Class="icpms_client.Pages.Screens.ParkingSessionSearchScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:conv="clr-namespace:icpms_client.Common.Converters"
+             xmlns:input="clr-namespace:icpms_client.UserControls.UI.Reusable.Inputs.Text"
+             mc:Ignorable="d"
+             d:DesignHeight="820" d:DesignWidth="1440">
+
+    <UserControl.Resources>
+        <conv:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+
+        <!-- Shared column divider so header + rows line up -->
+        <Style x:Key="TableColumnDividerStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource TableBorder}" />
+            <Setter Property="BorderThickness" Value="0,0,1,0" />
+        </Style>
+    </UserControl.Resources>
+
+    <Border Background="{DynamicResource PrimaryBackgroundColor}" Padding="18">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Visitors Search" Style="{DynamicResource SmallTitleTextStyle}"
+                       FontSize="18" Margin="0,0,0,14" />
+
+            <Border Grid.Row="1" Style="{StaticResource ElevatedPanelStyle}" Padding="18" Margin="0,0,0,14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MinWidth="200" />
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="Plate Number" FontSize="11.5" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SecondaryTextColor}" Margin="0,0,0,6" />
+                        <input:FormTextField Value="{Binding PlateNumber, UpdateSourceTrigger=PropertyChanged}"
+                                             PlaceHolder="Enter plate number"
+                                             
+                                             ContentPadding="10,6"
+                                             BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                             Color="{DynamicResource PrimaryBlackColor}"
+                                             BorderSize="1.4" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                        <TextBlock Text="Status" FontSize="11.5" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SecondaryTextColor}" Margin="0,0,0,6" />
+                        <input:FormComboBoxField Items="{Binding StatusOptions}"
+                                                  Selected="{Binding SelectedStatus, Mode=TwoWay}"
+                                                  
+                                                  ContentPadding="10,8"
+                                                  BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                  Color="{DynamicResource PrimaryBlackColor}"
+                                                  BorderSize="1.4" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                        <TextBlock Text="From Date" FontSize="11.5" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SecondaryTextColor}" Margin="0,0,0,6" />
+                        <input:FormDateField SelectedDate="{Binding FromDate, Mode=TwoWay}"
+                                             
+                                             ContentPadding="3"
+                                             BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                             Color="{DynamicResource PrimaryBlackColor}"
+                                             BorderSize="1.4" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="3" Margin="0,0,10,0">
+                        <TextBlock Text="To Date" FontSize="11.5" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SecondaryTextColor}" Margin="0,0,0,6" />
+                        <input:FormDateField SelectedDate="{Binding ToDate, Mode=TwoWay}"
+                                             ContentPadding="3"
+                                             BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                             Color="{DynamicResource PrimaryBlackColor}"
+                                             BorderSize="1.4" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="Reset" Style="{StaticResource SecondaryOutlineButtonStyle}"
+                                Command="{Binding ResetCommand}"  Padding="14,8" Margin="0,14,8,0" />
+                        <Button Content="Search" Style="{StaticResource PrimaryButtonStyle}"
+                                Command="{Binding SearchCommand}" Padding="14,8" Margin="0,14,0,0" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Results table: solid bordered frame, matching RecentVisitorsSection -->
+            <Border Grid.Row="2"
+                    BorderBrush="{DynamicResource TableBorder}" BorderThickness="1" CornerRadius="8"
+                    Background="{DynamicResource SurfaceBrush}" ClipToBounds="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="{DynamicResource TableColumnHeader}" Padding="14,10"
+                            BorderBrush="{DynamicResource TableBorder}" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.2*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1.3*" />
+                                <ColumnDefinition Width="1.3*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="0.8*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Style="{StaticResource TableColumnDividerStyle}">
+                                <TextBlock Text="Plate" FontWeight="SemiBold" FontSize="11.5" Foreground="{DynamicResource SecondaryTextColor}" />
+                            </Border>
+                            <Border Grid.Column="1" Style="{StaticResource TableColumnDividerStyle}">
+                                <TextBlock Text="Entry Gate" FontWeight="SemiBold" FontSize="11.5" Margin="8,0,0,0" Foreground="{DynamicResource SecondaryTextColor}" />
+                            </Border>
+                            <Border Grid.Column="2" Style="{StaticResource TableColumnDividerStyle}">
+                                <TextBlock Text="Exit Gate" FontWeight="SemiBold" FontSize="11.5" Margin="8,0,0,0" Foreground="{DynamicResource SecondaryTextColor}" />
+                            </Border>
+                            <Border Grid.Column="3" Style="{StaticResource TableColumnDividerStyle}">
+                                <TextBlock Text="Entry Time" FontWeight="SemiBold" FontSize="11.5" Margin="8,0,0,0" Foreground="{DynamicResource SecondaryTextColor}" />
+                            </Border>
+                            <Border Grid.Column="4" Style="{StaticResource TableColumnDividerStyle}">
+                                <TextBlock Text="Exit Time" FontWeight="SemiBold" FontSize="11.5" Margin="8,0,0,0" Foreground="{DynamicResource SecondaryTextColor}" />
+                            </Border>
+                            <Border Grid.Column="5" Style="{StaticResource TableColumnDividerStyle}">
+                                <TextBlock Text="Amount" FontWeight="SemiBold" FontSize="11.5" Margin="8,0,0,0" Foreground="{DynamicResource SecondaryTextColor}" />
+                            </Border>
+                            <TextBlock Grid.Column="6" Text="Status" FontWeight="SemiBold" FontSize="11.5" Margin="8,0,0,0" Foreground="{DynamicResource SecondaryTextColor}" />
+                        </Grid>
+                    </Border>
+
+                    <Grid Grid.Row="1">
+                        <TextBlock Text="No parking sessions found" FontSize="12.5" HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" Margin="0,40,0,0"
+                                   Foreground="{DynamicResource SecondaryTextColor}"
+                                   Visibility="{Binding HasResults, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      Visibility="{Binding HasResults, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <ItemsControl ItemsSource="{Binding Results}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource TableBorder}"
+                                                Padding="14,12">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1.2*" />
+                                                    <ColumnDefinition Width="1*" />
+                                                    <ColumnDefinition Width="1*" />
+                                                    <ColumnDefinition Width="1.3*" />
+                                                    <ColumnDefinition Width="1.3*" />
+                                                    <ColumnDefinition Width="1*" />
+                                                    <ColumnDefinition Width="0.8*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{Binding PlateNumber}" FontWeight="SemiBold"
+                                                           FontFamily="Consolas" FontSize="12.5" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{Binding EntryGateName}" FontSize="12" Margin="8,0,0,0"
+                                                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Column="2" Text="{Binding ExitGateName}" FontSize="12" Margin="8,0,0,0"
+                                                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Column="3" Text="{Binding EntryTime}" FontSize="12" Margin="8,0,0,0"
+                                                           VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="4" Text="{Binding ExitTime}" FontSize="12" Margin="8,0,0,0"
+                                                           VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="5" Text="{Binding TotalAmount, StringFormat='{}{0:N2}'}" Margin="8,0,0,0"
+                                                           FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" />
+
+                                                <Border Grid.Column="6" CornerRadius="10" Padding="8,3" Margin="8,0,0,0"
+                                                        HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Background" Value="{DynamicResource MutedButtonColor}" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Status}" Value="1">
+                                                                    <Setter Property="Background" Value="{DynamicResource PrimaryGreenColor}" />
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Status}" Value="3">
+                                                                    <Setter Property="Background" Value="{DynamicResource PrimaryRedColor}" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <TextBlock Text="{Binding StatusDesc}" FontSize="9.5" FontWeight="SemiBold"
+                                                               Foreground="{DynamicResource PureWhiteColor}" />
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+
+                        <Border Background="{DynamicResource PrimaryBackgroundColor}" Opacity="0.7"
+                                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="Loading..." FontSize="12.5" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" Foreground="{DynamicResource SecondaryTextColor}" />
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <DockPanel Grid.Row="3" LastChildFill="False" Margin="0,14,0,0">
+                <TextBlock DockPanel.Dock="Left" Text="{Binding TotalRecords, StringFormat='{}{0} records found'}"
+                           FontSize="11.5" Foreground="{DynamicResource SecondaryTextColor}"
+                           VerticalAlignment="Center" />
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button Content="&lt;&lt;" Style="{StaticResource SecondaryOutlineButtonStyle}"
+                            Command="{Binding PrevPageCommand}" Padding="12,7" Margin="0,0,8,0" />
+                    <TextBlock Text="{Binding PageInfoText}" FontSize="12" VerticalAlignment="Center"
+                               Margin="0,0,8,0"  />
+                    <Button Content="&gt;&gt;" Style="{StaticResource SecondaryOutlineButtonStyle}"
+                            Command="{Binding NextPageCommand}" Padding="12,7" />
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+    </Border>
+</UserControl>

@@ -26,6 +26,7 @@ public partial class HomeScreen
         PlateSearchField.OnValueChanged += OnPlateSearchValueChanged;
         
         Loaded += HomeScreen_Loaded;
+        Unloaded += HomeScreen_Unloaded;
     }
 
     private void OnExitVisitorSaved(bool obj)
@@ -44,13 +45,20 @@ public partial class HomeScreen
 
     private async void HomeScreen_Loaded(object sender, RoutedEventArgs e)
     {
-        _viewModel.InitializeEntranceAnprCamera(new RtspPlayer(EntranceAnprControl));
-        _viewModel.InitializeEntranceCctvCamera(new RtspPlayer(EntranceCctvControl));
-        _viewModel.InitializeExitAnprCamera(new RtspPlayer(ExitAnprControl));
-        _viewModel.InitializeExitCctvCamera(new RtspPlayer(ExitCctvControl));
-
+        _viewModel.InitializeEntranceAnprCamera(EntranceAnprControl);
+        _viewModel.InitializeEntranceCctvCamera(EntranceCctvControl);
+        _viewModel.InitializeExitAnprCamera(ExitAnprControl);
+        _viewModel.InitializeExitCctvCamera(ExitCctvControl);
+        
         await _viewModel.InitializeAsync();
         
+    }
+    
+    private void HomeScreen_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _viewModel.OnVisitorSaved -= OnVisitorSaved;
+        _viewModel.OnExitVisitorSaved -= OnExitVisitorSaved;
+        _viewModel.Dispose();
     }
 
     private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)

@@ -49,7 +49,7 @@
                 Padding="32,28"
                 Margin="20"
                 MinWidth="180"
-                Background="{DynamicResource PrimaryBackgroundColor}"
+                Background="Transparent"
                 RenderTransformOrigin="0.5,0.5">
             <Border.RenderTransform>
                 <ScaleTransform x:Name="CardScale" ScaleX="0.9" ScaleY="0.9"/>
@@ -59,13 +59,7 @@
                     <BeginStoryboard Storyboard="{StaticResource Entrance}"/>
                 </EventTrigger>
             </Border.Triggers>
-            <Border.Effect>
-                <DropShadowEffect Color="Black"
-                                   Direction="270"
-                                   ShadowDepth="6"
-                                   BlurRadius="28"
-                                   Opacity="0.22" />
-            </Border.Effect>
+            
             <Border.OpacityMask>
                 <SolidColorBrush Color="White"/>
             </Border.OpacityMask>
@@ -95,8 +89,8 @@
                               RenderTransformOrigin="0.5,0.5">
                             <Path.OpacityMask>
                                 <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
-                                    <GradientStop Color="Transparent" Offset="0"/>
-                                    <GradientStop Color="White" Offset="1"/>
+                                    <GradientStop Color="White" Offset="0"/>
+                                    <GradientStop Color="Transparent" Offset="1"/>
                                 </LinearGradientBrush>
                             </Path.OpacityMask>
                             <Path.RenderTransform>

@@ -3,23 +3,20 @@
                     xmlns:fa="http://schemas.fontawesome.io/icons/"
                     xmlns:conv="clr-namespace:icpms_client.Common.Converters"
                     xmlns:sys="clr-namespace:System.Windows.Controls;assembly=PresentationFramework">
-    <!--<ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="Assets/Styles/LightTheme.xaml"/>
-    </ResourceDictionary.MergedDictionaries>-->
     <sys:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     <conv:ActiveMenuConverter x:Key="ActiveMenuConverter"/>
     <Style TargetType="Window">
         <Setter Property="FontFamily" Value="/Assets/Fonts/#Poppins" />
         <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}" />
     </Style>
-    
+
     <!--Chips-->
 
 <!-- Primary -->
 <Style x:Key="PrimaryChipStyle" TargetType="Border">
     <Setter Property="Background" Value="{DynamicResource PrimaryChipBackgroundColor}" />
-    <Setter Property="CornerRadius" Value="5" />
-    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="CornerRadius" Value="2" />
+    <Setter Property="Padding" Value="6,1" />
 </Style>
 <Style x:Key="PrimaryChipTextStyle" TargetType="TextBlock">
     <Setter Property="FontSize" Value="9" />
@@ -30,8 +27,8 @@
 <!-- Secondary / Neutral -->
 <Style x:Key="SecondaryChipStyle" TargetType="Border">
     <Setter Property="Background" Value="{DynamicResource SecondaryChipBackgroundColor}" />
-    <Setter Property="CornerRadius" Value="5" />
-    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="CornerRadius" Value="2" />
+    <Setter Property="Padding" Value="6,1" />
 </Style>
 <Style x:Key="SecondaryChipTextStyle" TargetType="TextBlock">
     <Setter Property="FontSize" Value="9" />
@@ -42,8 +39,8 @@
 <!-- Success -->
 <Style x:Key="SuccessChipStyle" TargetType="Border">
     <Setter Property="Background" Value="{DynamicResource SuccessChipBackgroundColor}" />
-    <Setter Property="CornerRadius" Value="5" />
-    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="CornerRadius" Value="2" />
+    <Setter Property="Padding" Value="6,1" />
 </Style>
 <Style x:Key="SuccessChipTextStyle" TargetType="TextBlock">
     <Setter Property="FontSize" Value="9" />
@@ -54,8 +51,8 @@
 <!-- Danger -->
 <Style x:Key="DangerChipStyle" TargetType="Border">
     <Setter Property="Background" Value="{DynamicResource DangerChipBackgroundColor}" />
-    <Setter Property="CornerRadius" Value="5" />
-    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="CornerRadius" Value="2" />
+    <Setter Property="Padding" Value="6,1" />
 </Style>
 <Style x:Key="DangerChipTextStyle" TargetType="TextBlock">
     <Setter Property="FontSize" Value="9" />
@@ -66,8 +63,8 @@
 <!-- Warning -->
 <Style x:Key="WarningChipStyle" TargetType="Border">
     <Setter Property="Background" Value="{DynamicResource WarningChipBackgroundColor}" />
-    <Setter Property="CornerRadius" Value="5" />
-    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="CornerRadius" Value="2" />
+    <Setter Property="Padding" Value="6,1" />
 </Style>
 <Style x:Key="WarningChipTextStyle" TargetType="TextBlock">
     <Setter Property="FontSize" Value="9" />
@@ -78,8 +75,8 @@
 <!-- Info -->
 <Style x:Key="InfoChipStyle" TargetType="Border">
     <Setter Property="Background" Value="{DynamicResource InfoChipBackgroundColor}" />
-    <Setter Property="CornerRadius" Value="5" />
-    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="CornerRadius" Value="2" />
+    <Setter Property="Padding" Value="6,1" />
 </Style>
 <Style x:Key="InfoChipTextStyle" TargetType="TextBlock">
     <Setter Property="FontSize" Value="9" />
@@ -90,8 +87,8 @@
 <!-- Muted -->
 <Style x:Key="MutedChipStyle" TargetType="Border">
     <Setter Property="Background" Value="{DynamicResource MutedChipBackgroundColor}" />
-    <Setter Property="CornerRadius" Value="5" />
-    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="CornerRadius" Value="2" />
+    <Setter Property="Padding" Value="6,1" />
 </Style>
 <Style x:Key="MutedChipTextStyle" TargetType="TextBlock">
     <Setter Property="FontSize" Value="9" />
@@ -102,8 +99,8 @@
 <!-- Member -->
 <Style x:Key="MemberChipStyle" TargetType="Border">
     <Setter Property="Background" Value="{DynamicResource MemberChipBackgroundColor}" />
-    <Setter Property="CornerRadius" Value="5" />
-    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="CornerRadius" Value="2" />
+    <Setter Property="Padding" Value="6,1" />
 </Style>
 <Style x:Key="MemberChipTextStyle" TargetType="TextBlock">
     <Setter Property="FontSize" Value="9" />
@@ -114,8 +111,8 @@
 <!-- VIP -->
 <Style x:Key="VipChipStyle" TargetType="Border">
     <Setter Property="Background" Value="{DynamicResource VipChipBackgroundColor}" />
-    <Setter Property="CornerRadius" Value="5" />
-    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="CornerRadius" Value="2" />
+    <Setter Property="Padding" Value="6,1" />
 </Style>
 <Style x:Key="VipChipTextStyle" TargetType="TextBlock">
     <Setter Property="FontSize" Value="9" />
@@ -126,23 +123,23 @@
 <!-- Data pill (icon + label + value) -->
 <Style x:Key="InfoChipBorderStyle" TargetType="Border">
     <Setter Property="Background" Value="{DynamicResource DataChipBackgroundColor}" />
-    <Setter Property="CornerRadius" Value="6" />
-    <Setter Property="Padding" Value="10,6" />
+    <Setter Property="CornerRadius" Value="2" />
+    <Setter Property="Padding" Value="6,4" />
 </Style>
-    
+
     <Style x:Key="WindowControlButtonStyle" TargetType="Button">
     <Setter Property="Background" Value="Transparent"/>
     <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}"/>
     <Setter Property="BorderThickness" Value="0"/>
-    <Setter Property="Width" Value="42"/>
-    <Setter Property="Height" Value="32"/>
+    <Setter Property="Width" Value="36"/>
+    <Setter Property="Height" Value="28"/>
     <Setter Property="Cursor" Value="Hand"/>
     <Setter Property="Template">
         <Setter.Value>
             <ControlTemplate TargetType="Button">
                 <Border x:Name="Bd"
                         Background="{TemplateBinding Background}"
-                        CornerRadius="8">
+                        CornerRadius="0">
                     <ContentPresenter HorizontalAlignment="Center"
                                       VerticalAlignment="Center"
                                       TextElement.Foreground="{TemplateBinding Foreground}"/>
@@ -167,26 +164,23 @@
 </Style>
 
 <Style x:Key="TitleBarIconButtonStyle" TargetType="Button" BasedOn="{StaticResource WindowControlButtonStyle}">
-    <Setter Property="Width" Value="34"/>
-    <Setter Property="Height" Value="34"/>
-    <Setter Property="Margin" Value="2,0"/>
+    <Setter Property="Width" Value="30"/>
+    <Setter Property="Height" Value="30"/>
+    <Setter Property="Margin" Value="1,0"/>
 </Style>
 
 <Style x:Key="HeaderIconStyle" TargetType="fa:FontAwesome">
     <Setter Property="FontSize" Value="14"/>
-    <Setter Property="Opacity" Value="0.85"/>
+    <Setter Property="Opacity" Value="0.9"/>
 </Style>
 
 <Style x:Key="StatusPillStyle" TargetType="Border">
     <Setter Property="Background" Value="{DynamicResource SuccessChipBackgroundColor}"/>
-    <Setter Property="CornerRadius" Value="12"/>
-    <Setter Property="Padding" Value="10,5"/>
+    <Setter Property="CornerRadius" Value="2"/>
+    <Setter Property="Padding" Value="6,3"/>
 </Style>
 
 
-
-
-    
     <Style x:Key="IconButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -278,13 +272,13 @@
     <!--BorderStyle-->
     <Style x:Key="RoundedBorderStyle" TargetType="Border">
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderColor}" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="2" />
         <Setter Property="BorderThickness" Value="1" />
     </Style>
 
     <Style x:Key="ElevatedPanelStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundColor}" />
-        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="CornerRadius" Value="2" />
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
     </Style>
@@ -297,17 +291,17 @@
 
     <Style x:Key="LaneAccentBarStyle" TargetType="Border">
         <Setter Property="Width" Value="3" />
-        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="CornerRadius" Value="0" />
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
     </Style>
 
     <Style x:Key="PlateBadgeStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource PlateBadgeBackgroundColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource PlateBadgeBorderColor}" />
-        <Setter Property="BorderThickness" Value="1.5" />
-        <Setter Property="CornerRadius" Value="4" />
-        <Setter Property="Padding" Value="16,9" />
-        
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="Padding" Value="10,6" />
+
     </Style>
 
     <Style x:Key="PlateBadgeTextStyle" TargetType="TextBlock">
@@ -315,13 +309,13 @@
         <Setter Property="FontSize" Value="22" />
         <Setter Property="Foreground" Value="{DynamicResource PlateBadgeTextColor}" />
     </Style>
-    
+
     <!-- Primary Button Style -->
     <Style x:Key="PrimaryButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource PrimaryButtonColor}" />
-        <Setter Property="TextElement.Foreground" Value="{DynamicResource PrimaryDarkColor}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource SurfaceBrush}" />
         <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="Padding" Value="16,9" />
+        <Setter Property="Padding" Value="10,5" />
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryButtonColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalAlignment" Value="Center" />
@@ -333,12 +327,12 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             Padding="{TemplateBinding Padding}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="7">
+                            CornerRadius="2">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
                             <ContentPresenter.Resources>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextElement.FontFamily" Value="/Assets/Fonts/#Poppins" />
-                                    <Setter Property="TextElement.Foreground" Value="{DynamicResource PrimaryDarkColor}"/>
+                                    <Setter Property="TextElement.Foreground" Value="{DynamicResource SurfaceBrush}"/>
                                 </Style>
                             </ContentPresenter.Resources>
                         </ContentPresenter>
@@ -356,9 +350,9 @@
 
     <Style x:Key="InfoButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource PrimaryGreenColor}" /> <!-- Blue color -->
-        <Setter Property="TextElement.Foreground" Value="{DynamicResource PureBlackColor}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource SurfaceBrush}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Padding" Value="15,8" />
+        <Setter Property="Padding" Value="10,5" />
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryGreenLighterColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalAlignment" Value="Center" />
@@ -370,13 +364,13 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             Padding="{TemplateBinding Padding}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="5">
+                            CornerRadius="2">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center">
                             <ContentPresenter.Resources>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextElement.FontFamily" Value="/Assets/Fonts/#Poppins" />
-                                    <Setter Property="Foreground" Value="#333333"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource SurfaceBrush}"/>
                                 </Style>
                             </ContentPresenter.Resources>
                         </ContentPresenter>
@@ -387,7 +381,6 @@
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource PrimaryGreenLighterColor}" />
-                <!-- Darker Blue -->
                 <Setter Property="Cursor" Value="Hand" />
             </Trigger>
         </Style.Triggers>
@@ -398,7 +391,7 @@
         <Setter Property="Background" Value="{DynamicResource SecondaryButtonColor}" /> <!-- Light Gray -->
         <Setter Property="TextElement.Foreground" Value="{DynamicResource PureBlackColor}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Padding" Value="15,8" />
+        <Setter Property="Padding" Value="10,5" />
         <Setter Property="BorderBrush" Value="#B0B0B0" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalAlignment" Value="Center" />
@@ -410,7 +403,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}"
-                            CornerRadius="5">
+                            CornerRadius="2">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center">
                             <ContentPresenter.Resources>
@@ -419,7 +412,7 @@
                                     <Setter Property="Foreground" Value="#333333"/>
                                 </Style>
                             </ContentPresenter.Resources>
-                            
+
                         </ContentPresenter>
                     </Border>
                 </ControlTemplate>
@@ -434,7 +427,7 @@
     </Style>
 
     <Style x:Key="SecondaryDeviceButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
-        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="Padding" Value="8,4" />
     </Style>
 
     <!--Outline Primary Button-->
@@ -442,7 +435,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Padding" Value="16,9" />
+        <Setter Property="Padding" Value="10,5" />
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalAlignment" Value="Center" />
@@ -454,7 +447,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}"
-                            CornerRadius="5">
+                            CornerRadius="2">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                     </Border>
@@ -472,7 +465,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Padding" Value="16,9" />
+        <Setter Property="Padding" Value="10,5" />
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalAlignment" Value="Center" />
@@ -484,7 +477,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}"
-                            CornerRadius="5">
+                            CornerRadius="2">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                     </Border>
@@ -513,7 +506,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}"
-                            CornerRadius="5">
+                            CornerRadius="2">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                     </Border>
@@ -533,7 +526,7 @@
         <Setter Property="Background" Value="{DynamicResource SecondaryAccentColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Padding" Value="13,6" />
+        <Setter Property="Padding" Value="8,4" />
         <Setter Property="BorderBrush" Value="{DynamicResource SecondaryAccentHoverColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalAlignment" Value="Center" />
@@ -545,7 +538,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             Padding="{TemplateBinding Padding}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="5">
+                            CornerRadius="2">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                     </Border>
@@ -577,7 +570,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             Padding="{TemplateBinding Padding}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="5">
+                            CornerRadius="2">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                     </Border>
@@ -597,7 +590,7 @@
         <Setter Property="Background" Value="{DynamicResource MutedButtonColor}" /> <!-- Light Gray -->
         <Setter Property="Foreground" Value="{DynamicResource PureWhiteColor}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="Padding" Value="8,3" />
         <Setter Property="BorderBrush" Value="#B0B0B0" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalAlignment" Value="Center" />
@@ -609,8 +602,8 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}"
-                            
-                            CornerRadius="5">
+
+                            CornerRadius="2">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center" TextElement.Foreground="{TemplateBinding Foreground}"/>
                     </Border>
@@ -624,11 +617,11 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <Style x:Key="LogoutButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
-        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="Padding" Value="8,3" />
         <Setter Property="FontSize" Value="10" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="FontFamily" Value="{DynamicResource PrimaryFontFamily}" />
@@ -643,7 +636,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}"
-                            CornerRadius="5">
+                            CornerRadius="2">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                     </Border>
@@ -657,7 +650,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!--Small Dark Button-->
     <Style x:Key="DeviceSettingButtonStyle" TargetType="Button" BasedOn="{StaticResource LogoutButtonStyle}">
         <Style.Triggers>
@@ -668,15 +661,15 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <Style x:Key="SmallPrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
-        <Setter Property="Padding" Value="8,4"/>
+        <Setter Property="Padding" Value="6,3"/>
     </Style>
     <Style x:Key="SmallSecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
-        <Setter Property="Padding" Value="8,4"/>
+        <Setter Property="Padding" Value="6,3"/>
     </Style>
     <Style x:Key="SmallInfoButtonStyle" TargetType="Button" BasedOn="{StaticResource InfoButtonStyle}">
-        <Setter Property="Padding" Value="8,4"/>
+        <Setter Property="Padding" Value="6,3"/>
     </Style>
 
     <!-- Light Menu Style -->
@@ -691,7 +684,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Menu">
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="0,0,0,2">
+                            BorderThickness="0,0,0,1">
                         <ItemsPresenter />
                     </Border>
                 </ControlTemplate>
@@ -703,7 +696,7 @@
     <Style TargetType="MenuItem">
         <Setter Property="Foreground" Value="Black" />
         <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}" />
-        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="Padding" Value="8,4" />
         <Setter Property="FontSize" Value="10" />
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBackgroundColor}" />
@@ -756,7 +749,7 @@
     <Style x:Key="SubMenuItemStyle" TargetType="MenuItem">
         <Setter Property="Foreground" Value="Black" />
         <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundColor}" />
-        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="Padding" Value="8,4" />
         <Setter Property="FontSize" Value="10" />
         <Setter Property="Width" Value="150" />
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBackgroundColor}" />
@@ -811,7 +804,7 @@
     <Style TargetType="TabItem">
         <Setter Property="Background" Value="{DynamicResource PrimaryWhiteColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
-        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="Padding" Value="8,3" />
         <Setter Property="FontSize" Value="10" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="FontFamily" Value="{DynamicResource PrimaryFontFamily}" />
@@ -833,7 +826,7 @@
                             ContentSource="Header"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            TextElement.Foreground="{TemplateBinding Foreground}" 
+                            TextElement.Foreground="{TemplateBinding Foreground}"
                             Cursor="Hand"
                             />
                     </Border>
@@ -842,7 +835,6 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Border" Property="Background"
                                     Value="{DynamicResource SecondaryBackgroundColor}" />
-                            <!--<Setter Property="Cursor" Value="Hand" />-->
                         </Trigger>
                         <!-- Selected Tab -->
                         <Trigger Property="IsSelected" Value="True">
@@ -880,7 +872,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border CornerRadius="{TemplateBinding Width}">
+                    <Border CornerRadius="0">
                         <ContentPresenter
                             ContentSource="Content"
                             HorizontalAlignment="Center"
@@ -905,7 +897,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border CornerRadius="{TemplateBinding Width}">
+                    <Border CornerRadius="0">
                         <ContentPresenter
                             ContentSource="Content"
                             HorizontalAlignment="Center"
@@ -933,7 +925,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border CornerRadius="{TemplateBinding Width}">
+                    <Border CornerRadius="0">
                         <ContentPresenter
                             ContentSource="Content"
                             HorizontalAlignment="Center"
@@ -949,58 +941,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-
-    <!--Default Scroll Bar-->
-    <!--<Style TargetType="ScrollBar">
-        <Setter Property="Width" Value="8" />
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryBorderColor}" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Orientation" Value="Vertical" />
-
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="ScrollBar">
-                    <Grid Background="{TemplateBinding Background}">
-                        ~1~ Track @1@
-                        <Track Name="PART_Track" IsDirectionReversed="True">
-                            ~1~ Decrease button (up arrow) @1@
-                            <Track.DecreaseRepeatButton>
-                                <RepeatButton Style="{DynamicResource ScrollBarButton}"
-                                              Command="ScrollBar.LineUpCommand"
-                                              VerticalAlignment="Top" />
-                            </Track.DecreaseRepeatButton>
-
-                            ~1~ Thumb (Draggable part of the scrollbar) @1@
-                            <Track.Thumb>
-                                <Thumb Name="PART_Thumb"
-                                       Background="{DynamicResource PrimaryBorderColor}"
-                                       BorderBrush="Transparent"
-                                       BorderThickness="0"
-                                       Width="8"
-                                       MinHeight="30" /> ~1~ Ensure the thumb is visible with a minimum height @1@
-                            </Track.Thumb>
-
-                            ~1~ Increase button (down arrow) @1@
-                            <Track.IncreaseRepeatButton>
-                                <RepeatButton Style="{DynamicResource ScrollBarButton}"
-                                              Command="ScrollBar.LineDownCommand"
-                                              VerticalAlignment="Bottom" />
-                            </Track.IncreaseRepeatButton>
-                        </Track>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{DynamicResource PrimaryBackgroundColor}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-    -->
-
 
     <!--Vertical Scroll Bar-->
     <Style x:Key="VerticalScroll" TargetType="ScrollBar">
@@ -1039,13 +979,11 @@
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryBackgroundColor}" />
-                <!-- Slightly lighter accent when hovered -->
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <Style x:Key="RoundedCheckBoxStyle" TargetType="CheckBox">
-        <!-- Define a custom ControlTemplate to make the CheckBox rounded -->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
@@ -1055,16 +993,14 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <!-- Rounded Border for CheckBox -->
                         <Border x:Name="Border"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="2"
-                                CornerRadius="7.5"
+                                CornerRadius="0"
                                 Width="15"
                                 Height="15" />
 
-                        <!-- The checkmark -->
                         <Path x:Name="CheckMark"
                               Grid.Column="0"
                               Stroke="{TemplateBinding BorderBrush}"
@@ -1074,7 +1010,6 @@
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center" />
 
-                        <!-- Content Presenter for the checkbox label -->
                         <ContentPresenter Margin="5,0,0,0"
                                           Grid.Column="1"
                                           HorizontalAlignment="Left"
@@ -1082,16 +1017,13 @@
                                           RecognizesAccessKey="True" />
                     </Grid>
 
-                    <!-- ControlTemplate Triggers -->
                     <ControlTemplate.Triggers>
-                        <!-- When Checked -->
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="Border" Property="Background" Value="DodgerBlue" />
                             <Setter TargetName="Border" Property="BorderBrush" Value="DodgerBlue" />
                             <Setter TargetName="CheckMark" Property="Stroke" Value="White" />
                         </Trigger>
 
-                        <!-- When Disabled -->
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="Border" Property="Background" Value="Gray" />
                             <Setter TargetName="Border" Property="BorderBrush" Value="DarkGray" />
@@ -1102,7 +1034,6 @@
             </Setter.Value>
         </Setter>
 
-        <!-- Other properties for the CheckBox -->
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Background" Value="Transparent" />
@@ -1139,13 +1070,13 @@
 
     <!--Table-->
     <Style x:Key="TableDataGridStyle" TargetType="DataGrid">
-        <!-- Existing setters -->
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{DynamicResource TableBorder}" />
-        <Setter Property="GridLinesVisibility" Value="None" /> <!-- Remove all grid lines -->
+        <Setter Property="GridLinesVisibility" Value="Horizontal" />
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource TableBorder}" />
         <Setter Property="HeadersVisibility" Value="Column" />
-        <Setter Property="RowHeight" Value="35" />
-        <Setter Property="ColumnHeaderHeight" Value="30" />
+        <Setter Property="RowHeight" Value="30" />
+        <Setter Property="ColumnHeaderHeight" Value="28" />
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="CanUserResizeColumns" Value="True" />
@@ -1156,7 +1087,6 @@
         <Setter Property="RowBackground" Value="{DynamicResource PrimaryBackgroundColor}" />
         <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}" />
         <Setter Property="AlternatingRowBackground" Value="{DynamicResource TableAlternatingRowBackground}"/>
-        <!-- New properties to disable editing -->
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="CanUserAddRows" Value="False" />
         <Setter Property="CanUserDeleteRows" Value="False" />
@@ -1164,12 +1094,11 @@
         <Setter Property="ColumnHeaderStyle">
             <Setter.Value>
                 <Style TargetType="DataGridColumnHeader">
-                    <!-- Existing header style -->
                     <Setter Property="Background" Value="{DynamicResource TableColumnHeader}" />
                     <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
                     <Setter Property="FontWeight" Value="Bold" />
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    <Setter Property="Padding" Value="5" />
+                    <Setter Property="Padding" Value="5,3" />
                 </Style>
             </Setter.Value>
         </Setter>
@@ -1190,7 +1119,6 @@
             </Setter.Value>
         </Setter>
 
-        <!-- Add CellStyle for vertical centering -->
         <Setter Property="CellStyle">
             <Setter.Value>
                 <Style TargetType="DataGridCell">
@@ -1216,49 +1144,35 @@
         <Setter Property="FontSize" Value="12" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Padding" Value="5" />
-        <Setter Property="Margin" Value="4" />
+        <Setter Property="Margin" Value="2" />
         <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Height" Value="50" />
-        <Setter Property="Width" Value="50" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="Width" Value="48" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid>
-                        <!-- Button Background -->
                         <Border x:Name="border"
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="8"
+                                CornerRadius="2"
                                 Height="{TemplateBinding Height}"
-                                Width="{TemplateBinding Width}">
-                            <Border.Effect>
-                                <DropShadowEffect Color="#222" Opacity="0.3" BlurRadius="8" />
-                            </Border.Effect>
-                        </Border>
+                                Width="{TemplateBinding Width}" />
 
-                        <!-- Button Content -->
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
 
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <!-- Hover Effect -->
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="border" Property="Background" Value="{DynamicResource SecondaryBackgroundColor}" />
                         </Trigger>
 
-                        <!-- Pressed Effect -->
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryTextFocusColor}" />
-                            <Setter TargetName="border" Property="RenderTransform">
-                                <Setter.Value>
-                                    <ScaleTransform ScaleX="0.95" ScaleY="0.95" />
-                                </Setter.Value>
-                            </Setter>
                         </Trigger>
 
-                        <!-- Disabled Effect -->
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="border" Property="Background" Value="#777" />
                             <Setter Property="Foreground" Value="#bbb" />
@@ -1270,7 +1184,7 @@
     </Style>
 
     <Style x:Key="ThemeToggleButtonStyle" TargetType="Button" BasedOn="{StaticResource LogoutButtonStyle}">
-        <Setter Property="Padding" Value="8"/>
+        <Setter Property="Padding" Value="6"/>
         <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
@@ -1279,7 +1193,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <Style TargetType="{x:Type ScrollBar}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
@@ -1289,24 +1203,24 @@
                     <Grid x:Name="GridRoot">
                         <Border x:Name="BackBorder"
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="2"/>
-                        
+                                CornerRadius="0"/>
+
                         <Track x:Name="PART_Track"
                                IsDirectionReversed="true">
                             <Track.DecreaseRepeatButton>
                                 <RepeatButton Style="{DynamicResource ScrollBarButton}"/>
                             </Track.DecreaseRepeatButton>
-                            
+
                             <Track.IncreaseRepeatButton>
                                 <RepeatButton Style="{DynamicResource ScrollBarButton}"/>
                             </Track.IncreaseRepeatButton>
-                            
+
                             <Track.Thumb>
                                 <Thumb>
                                     <Thumb.Template>
                                         <ControlTemplate TargetType="{x:Type Thumb}">
                                             <Border x:Name="ThumbBorder"
-                                                    CornerRadius="2"
+                                                    CornerRadius="0"
                                                     Background="{DynamicResource ScrollBar.Thumb.Background}">
                                                 <VisualStateManager.VisualStateGroups>
                                                     <VisualStateGroup x:Name="CommonStates">
@@ -1349,8 +1263,8 @@
                             <Grid x:Name="GridRoot">
                                 <Border x:Name="BackBorder"
                                         Background="{TemplateBinding Background}"
-                                        CornerRadius="2"/>
-                                
+                                        CornerRadius="0"/>
+
                                 <Track x:Name="PART_Track"
                                        IsDirectionReversed="true">
                                     <Track.DecreaseRepeatButton>
@@ -1358,21 +1272,21 @@
                                                       Command="{x:Static ScrollBar.PageUpCommand}"
                                                       Content=" " />
                                     </Track.DecreaseRepeatButton>
-                                    
+
                                     <Track.IncreaseRepeatButton>
                                         <RepeatButton Style="{DynamicResource ScrollBarButton}"
                                                       Command="{x:Static ScrollBar.PageDownCommand}"
                                                       Content=" " />
                                     </Track.IncreaseRepeatButton>
-                                    
+
                                     <Track.Thumb>
                                         <Thumb>
                                             <Thumb.Template>
                                                 <ControlTemplate TargetType="{x:Type Thumb}">
                                                     <Border x:Name="ThumbBorder"
-                                                            CornerRadius="2"
+                                                            CornerRadius="0"
                                                             Background="{DynamicResource ScrollBar.Thumb.Background}"
-                                                            Margin="0,2,0,2">
+                                                            Margin="0,1,0,1">
                                                         <VisualStateManager.VisualStateGroups>
                                                             <!-- Same visual states as horizontal -->
                                                         </VisualStateManager.VisualStateGroups>
@@ -1413,39 +1327,12 @@
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderColor}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="0"/>
-    
-        <!-- Menu Item Style -->
-        <!--<Setter Property="ItemContainerStyle">
-            <Setter.Value>
-                <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Padding" Value="10,5"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource PrimaryAccentColor}"/>
-                            <Setter Property="Foreground" Value="{DynamicResource PrimaryWhiteColor}"/>
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource PrimaryAccentColor}"/>
-                            <Setter Property="Opacity" Value="0.8"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Setter.Value>
-        </Setter>-->
     </Style>
-    <!--<Style x:Key="StatusPillStyle" TargetType="Border">
-        <Setter Property="Background" Value="{DynamicResource SuccessChipBackgroundColor}"/>
-        <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="Padding" Value="10,4"/>
-    </Style>-->
 
     <Style x:Key="StopButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
         <Setter Property="Background" Value="{DynamicResource PrimaryRedColor}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryRedColor}"/>
-        <Setter Property="Padding" Value="14,6"/>
+        <Setter Property="Padding" Value="10,5"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource PrimaryRedHoverColor}"/>
@@ -1453,12 +1340,8 @@
         </Style.Triggers>
     </Style>
 
-    <!--<Style x:Key="HeaderIconStyle" TargetType="fa:FontAwesome">
-        <Setter Property="FontSize" Value="16"/>
-    </Style>-->
-    
     <Style x:Key="SkeletonShimmerStyle" TargetType="Border">
-        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="CornerRadius" Value="0" />
         <Setter Property="ClipToBounds" Value="True" />
         <Setter Property="Background">
             <Setter.Value>
@@ -1489,5 +1372,5 @@
             </EventTrigger>
         </Style.Triggers>
     </Style>
-    
+
 </ResourceDictionary>

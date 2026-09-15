@@ -13,6 +13,7 @@ using icpms_client.Network.Services.Shift;
 using icpms_client.Network.Session;
 using icpms_client.Pages.Screens;
 using icpms_client.Services.UIServices;
+using icpms_client.State;
 using icpms_client.Utils.Storage;
 using icpms_client.Utils.UI.Theme;
 using log4net;
@@ -28,10 +29,15 @@ public partial class MainWindow
     private readonly ShiftService _shiftService = new();
 
     private bool _isLoading;
-    
+
     private bool _isDarkTheme;
-    
+
     private ThemeManager? _themeManager;
+
+    private ShiftSummaryState? _shiftSummaryState;
+
+    private string _operatorName = string.Empty;
+    private string _operatorRole = string.Empty;
 
     public MainWindow()
     {
@@ -46,6 +52,7 @@ public partial class MainWindow
         {
             _themeManager = App.ServiceProvider.GetRequiredService<ThemeManager>();
             _isDarkTheme = _themeManager.CurrentTheme.Mode == "Dark";
+            _shiftSummaryState = App.ServiceProvider.GetRequiredService<ShiftSummaryState>();
         }
     }
 
@@ -58,7 +65,7 @@ public partial class MainWindow
             OnPropertyChanged();
         }
     }
-    
+
     public bool IsDarkTheme
     {
         get => _isDarkTheme;
@@ -67,6 +74,27 @@ public partial class MainWindow
             _isDarkTheme = value;
             OnPropertyChanged();
         }
+    }
+
+    public ShiftSummaryState? ShiftState => _shiftSummaryState;
+
+    public new string OperatorName
+    {
+        get => _operatorName;
+        set { _operatorName = value; OnPropertyChanged(); }
+    }
+
+    public new string OperatorRole
+    {
+        get => _operatorRole;
+        set { _operatorRole = value; OnPropertyChanged(); }
+    }
+
+    private new void ApplyOperatorInfo()
+    {
+        var auth = UserSession.CurrentUser.CurrentAuth;
+        OperatorName = auth?.OperatorName ?? string.Empty;
+        OperatorRole = auth?.Roles is { Count: > 0 } roles ? string.Join(", ", roles) : string.Empty;
     }
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -88,42 +116,44 @@ public partial class MainWindow
                 if (response is { Success: true })
                 {
                     var auth = (BaseResponse<AuthResponse>)response;
-                    
+
                     if (auth.Data is { StartShift: false })
                     {
-                        
+
                         Authenticated = true;
                         _log.Info("User is already logged in.");
                         UserSession.CurrentUser = session;
                         UserSession.CurrentShift = auth.Data!.ActiveShift!;
 
-                        NavigateToMainPage();
+                        ApplyOperatorInfo();
+
+                        await NavigateToMainPageAsync();
                     }
                     else
                     {
                         _log.Warn("Token is valid but shift not start yet.");
-                        InitializeLoginPage();
+                        await InitializeLoginPageAsync();
                         Authenticated = false;
                     }
                 }
                 else
                 {
                     _log.Warn("Token validation failed. Redirecting to login.");
-                    InitializeLoginPage();
+                    await InitializeLoginPageAsync();
                     Authenticated = false;
                 }
             }
             else
             {
                 _log.Warn("No user session found. Redirecting to login.");
-                InitializeLoginPage();
+                await InitializeLoginPageAsync();
                 Authenticated = false;
             }
         }
         catch (Exception ex)
         {
             _log.Error($"Error loading user session: {ex.Message}, StackTrace: {ex.StackTrace}");
-            InitializeLoginPage();
+            await InitializeLoginPageAsync();
             Authenticated = false;
         }
         finally
@@ -132,26 +162,26 @@ public partial class MainWindow
         }
     }
 
-    private void MenuItem_Click(object sender, RoutedEventArgs e)
+    private async void MenuItem_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is not MenuItem { Tag: AppPage page } menuItem) return;
+        if (sender is not MenuItem { Tag: AppPage page }) return;
 
         ActiveMenu = page;
 
         switch (page)
         {
             case AppPage.Dashboard:
-                ChangeScreen(new HomeScreen(), terminalLabel: "Dashboard");
+                await ChangeScreenAsync(new HomeScreen(), terminalLabel: "Dashboard");
                 break;
-            case AppPage.Reports:
-                /*ChangeScreen(new ReportsScreen(), terminalLabel: "Reports");*/
+            case AppPage.Visitors:
+                await ChangeScreenAsync(new ParkingSessionSearchScreen(), terminalLabel: "Visitors");
                 break;
             case AppPage.Members:
-                /*ChangeScreen(new MembersScreen(), terminalLabel: "Members");*/
+                await ChangeScreenAsync(new MemberScreen(), terminalLabel: "Members");
                 break;
         }
     }
-    
+
     private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton != MouseButton.Left) return;
@@ -202,17 +232,24 @@ public partial class MainWindow
             _themeManager.ToggleTheme(!IsDarkTheme);
             IsDarkTheme = !IsDarkTheme;
         }
-        
+
     }
 
     private void NotificationsButton_Click(object sender, RoutedEventArgs e)
     {
     }
 
+    private void ProfileButton_Click(object sender, RoutedEventArgs e)
+    {
+        ProfilePopup.IsOpen = !ProfilePopup.IsOpen;
+    }
+
     private void SignOutButton_Click(object sender, RoutedEventArgs e)
     {
+        ProfilePopup.IsOpen = false;
+
         var result = DialogService.ShowQuestionDialog("Do you want to end shift?", "Sign Out");
-        
+
         if (result == MessageBoxResult.Yes)
         {
             DialogService.ShowStartShiftDialog(async void (data) =>
@@ -229,25 +266,25 @@ public partial class MainWindow
                     var response = await _shiftService.EndShift(request);
 
                     _log.Info($"EndShift response: {JsonConvert.SerializeObject(response)}");
-                    
+
                     DialogService.HideLoading(this);
                     if (response is { Success: true })
                     {
                         UserSessionStorage.ClearSession();
                         Authenticated = false;
-                        InitializeLoginPage();
+                        await InitializeLoginPageAsync();
                     }
                     else
                     {
                         DialogService.ShowErrorDialog("Failed to end shift!");
                     }
-                    
+
                 }
             }, "End Shift");
         }else if(result == MessageBoxResult.No){
             UserSessionStorage.ClearSession();
             Authenticated = false;
-            InitializeLoginPage();
+            _ = InitializeLoginPageAsync();
         }
     }
 
@@ -271,13 +308,13 @@ public partial class MainWindow
 
     private void WmGetMinMaxInfo(IntPtr hwnd, IntPtr lParam)
     {
-        var mmi = Marshal.PtrToStructure<MINMAXINFO>(lParam);
-        var monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+        var mmi = Marshal.PtrToStructure<Minmaxinfo>(lParam);
+        var monitor = MonitorFromWindow(hwnd, MonitorDefaulttonearest);
 
         if (monitor != IntPtr.Zero)
         {
-            var monitorInfo = new MONITORINFO();
-            monitorInfo.cbSize = Marshal.SizeOf(typeof(MONITORINFO));
+            var monitorInfo = new Monitorinfo();
+            monitorInfo.cbSize = Marshal.SizeOf(typeof(Monitorinfo));
 
             GetMonitorInfo(monitor, ref monitorInfo);
 
@@ -295,37 +332,37 @@ public partial class MainWindow
     [DllImport("user32.dll")]
     private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint flags);
     [DllImport("user32.dll")]
-    private static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
+    private static extern bool GetMonitorInfo(IntPtr hMonitor, ref Monitorinfo lpmi);
 
-    private const uint MONITOR_DEFAULTTONEAREST = 0x00000002;
+    private const uint MonitorDefaulttonearest = 0x00000002;
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct MINMAXINFO
+    public struct Minmaxinfo
     {
-        public POINT ptReserved;
-        public POINT ptMaxSize;
-        public POINT ptMaxPosition;
-        public POINT ptMinTrackSize;
-        public POINT ptMaxTrackSize;
+        public Point ptReserved;
+        public Point ptMaxSize;
+        public Point ptMaxPosition;
+        public Point ptMinTrackSize;
+        public Point ptMaxTrackSize;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct MONITORINFO
+    public struct Monitorinfo
     {
         public int cbSize;
-        public RECT rcMonitor;
-        public RECT rcWork;
+        public Rect rcMonitor;
+        public Rect rcWork;
         public uint dwFlags;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct RECT
+    public struct Rect
     {
         public int left, top, right, bottom;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct POINT
+    public struct Point
     {
         public int x, y;
     }

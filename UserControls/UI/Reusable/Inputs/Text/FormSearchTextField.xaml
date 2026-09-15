@@ -104,6 +104,7 @@
                         Value="{Binding Selected.Label, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
                         x:Name="SearchField"
                         Color="{Binding Color, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        
                         VerticalAlignment="Center"
                         Length="{Binding Length,RelativeSource={RelativeSource AncestorType=UserControl}}"
                         BorderSize="0"

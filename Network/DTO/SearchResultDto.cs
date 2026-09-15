@@ -5,7 +5,7 @@ namespace icpms_client.Network.DTO;
 
 public class SearchResultDto<T>
 {
-    public int? PageNo { get; set; }
+    public int? PageNo { get; set; } // current page need to + 1 for next page
     
     public int? Limit { get; set; } = CommonConstants.RowPerPage; 
     

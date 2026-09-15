@@ -1,5 +1,6 @@
 ﻿using icpms_client.Network.DTO;
 using icpms_client.Network.DTO.ParkingSession;
+using icpms_client.Network.Request.ParkingSession;
 using icpms_client.Network.Request.Visitor;
 using icpms_client.Network.Response;
 using icpms_client.Network.Response.Visitor;
@@ -124,6 +125,37 @@ public class VisitorService: ApiService
         catch (Exception ex)
         {
             _log.Error($"SearchRecentVisitors Error: {ex.Message}");
+            return new BaseErrorResponse<string>
+            {
+                Success = false,
+                Message = ex.Message,
+                Data = ex.Message
+            };
+        }
+    }
+    
+    public async Task<Response.Response?> SearchSession(ParkingSessionSearchRequest searchRequest)
+    {
+        try
+        {
+            var accessToken = UserSession.CurrentUser.CurrentAuth?.AccessToken;
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                _log.Error("Access token is null or empty");
+                return new BaseErrorResponse<string>
+                {
+                    Success = false,
+                    Message = "No active session/access token found.",
+                    Data = "No active session/access token found."
+                };
+            }
+
+            return await ApiClient.PostAsync<SearchResultDto<ParkingSessionDto>>(
+                "visitors/search", searchRequest, true, accessToken);
+        }
+        catch (Exception ex)
+        {
+            _log.Error($"SearchSession Error: {ex.Message}");
             return new BaseErrorResponse<string>
             {
                 Success = false,

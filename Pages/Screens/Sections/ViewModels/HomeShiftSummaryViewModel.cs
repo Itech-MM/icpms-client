@@ -1,16 +1,15 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using icpms_client.Common.UI;
 using icpms_client.Network.DTO.Shift;
 using icpms_client.Network.Response;
 using icpms_client.Network.Services.Shift;
+using icpms_client.State;
 
 namespace icpms_client.Pages.Screens.Sections.ViewModels;
 
-public class HomeShiftSummaryViewModel : INotifyPropertyChanged
+public class HomeShiftSummaryViewModel : ScreenViewModelBase
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private readonly ShiftService _shiftService = new();
+    private readonly ShiftService _shiftService;
+    private readonly ShiftSummaryState _shiftSummaryState;
 
     private bool _isShiftSummaryLoading = true;
     private string? _shiftSummaryLoadError;
@@ -20,6 +19,12 @@ public class HomeShiftSummaryViewModel : INotifyPropertyChanged
     private int _vehiclesOut;
     private int _currentlyParked;
     private string _revenueCollectedText = "0";
+
+    public HomeShiftSummaryViewModel(ShiftService shiftService, ShiftSummaryState shiftSummaryState)
+    {
+        _shiftService = shiftService;
+        _shiftSummaryState = shiftSummaryState;
+    }
 
     public async Task LoadShiftSummaryAsync()
     {
@@ -44,6 +49,11 @@ public class HomeShiftSummaryViewModel : INotifyPropertyChanged
         VehiclesOut = data.TotalCompletedTransactions;
         CurrentlyParked = data.TotalIncompleteTransactions;
         RevenueCollectedText = data.TotalAmountDesc;
+
+        _shiftSummaryState.VehiclesIn = data.TotalTransactions;
+        _shiftSummaryState.VehiclesOut = data.TotalCompletedTransactions;
+        _shiftSummaryState.CurrentlyParked = data.TotalIncompleteTransactions;
+        _shiftSummaryState.RevenueCollectedText = data.TotalAmountDesc;
 
         OnPropertyChanged(nameof(ShiftSubtitle));
     }
@@ -116,9 +126,4 @@ public class HomeShiftSummaryViewModel : INotifyPropertyChanged
     }
 
     public string ShiftSubtitle => string.IsNullOrEmpty(ShiftCode) ? "####" : $"{ShiftCode}";
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }

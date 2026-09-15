@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using icpms_client.Common.UI;
 using icpms_client.Network.DTO.ParkingSession;
 
 namespace icpms_client.Pages.Screens.Sections.ViewModels;
 
-public class RecentVisitorItemViewModel : INotifyPropertyChanged
+public class RecentVisitorItemViewModel : ScreenViewModelBase
 {
     public long Id { get; }
 
@@ -80,7 +81,4 @@ public class RecentVisitorItemViewModel : INotifyPropertyChanged
         IsVip = dto.IsVip;
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }

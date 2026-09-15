@@ -13,7 +13,7 @@ namespace icpms_client.UserControls.Customs.Forms.Validations.Form
     {
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register(nameof(Value), typeof(string), typeof(FormField),
-                new PropertyMetadata(default(string)));
+                new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public static readonly DependencyProperty ValidationRuleProperty =
             DependencyProperty.Register(nameof(ValidationRule), typeof(ITextValidationRule), typeof(FormField),

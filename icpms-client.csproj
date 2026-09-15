@@ -10,6 +10,10 @@
         <ApplicationIcon>Assets\Images\FlexiTech-Logo-Icon.ico</ApplicationIcon>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <PlatformTarget>x64</PlatformTarget>
+    </PropertyGroup>
+
     <ItemGroup>
       <PackageReference Include="FluentFTP" Version="54.2.0" />
       <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
@@ -29,10 +33,12 @@
       <PackageReference Include="System.IO.Ports" Version="9.0.0" />
 
       <PackageReference Include="Vlc.DotNet.Wpf" Version="3.1.0" />
+
+      <PackageReference Include="FFME.Windows" Version="4.4.350" />
+      <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Common\" />
       <Folder Include="UserControls\" />
       <Folder Include="Utils\Helpers\Video\" />
       <Folder Include="Utils\ModelHelpers\" />
@@ -51,6 +57,9 @@
       <Resource Include="Assets\Fonts\Poppins-Regular.ttf">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Resource>
+      <None Update="ffmpeg\*.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -105,5 +114,49 @@
     <Private>true</Private>
   </Reference>
 </ItemGroup>
+
+   <ItemGroup>
+     <Reference Include="FlexiStream.Player">
+       <HintPath>libs\FlexiStream.Player.dll</HintPath>
+     </Reference>
+   </ItemGroup>
+
+   <ItemGroup>
+    <None Include="ffmpeg\avdevice-58.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Link>ffmpeg\avdevice-58.dll</Link>
+    </None>
+    <None Include="ffmpeg\avfilter-7.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Link>ffmpeg\avfilter-7.dll</Link>
+    </None>
+    <None Include="ffmpeg\avformat-58.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Link>ffmpeg\avformat-58.dll</Link>
+    </None>
+    <None Include="ffmpeg\avutil-56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Link>ffmpeg\avutil-56.dll</Link>
+    </None>
+    <None Include="ffmpeg\postproc-55.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Link>ffmpeg\postproc-55.dll</Link>
+    </None>
+    <None Include="ffmpeg\swresample-3.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Link>ffmpeg\swresample-3.dll</Link>
+    </None>
+    <None Include="ffmpeg\swscale-5.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Link>ffmpeg\swscale-5.dll</Link>
+    </None>
+  </ItemGroup>
 
 </Project>
