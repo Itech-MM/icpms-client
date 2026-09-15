@@ -3,10 +3,44 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:icpms_client.Pages.Auth"
       xmlns:input="clr-namespace:icpms_client.UserControls.UI.Reusable.Inputs.Text"
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
       mc:Ignorable="d"
-      Title="LoginPage" Height="580" Width="420">
+      Loaded="LoginPage_OnLoaded"
+      Title="LoginPage" Height="640" Width="420">
+
+    <Page.Resources>
+        <Style x:Key="AuthChipToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="{DynamicResource SecondaryChipTextColor}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="ChipBorder"
+                                CornerRadius="22"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource PrimaryBorderColor}"
+                                Background="{DynamicResource SecondaryChipBackgroundColor}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="ChipBorder" Property="Background" Value="{DynamicResource PrimaryColor}"/>
+                                <Setter TargetName="ChipBorder" Property="BorderBrush" Value="{DynamicResource PrimaryColor}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource PureWhiteColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ChipBorder" Property="BorderBrush" Value="{DynamicResource InputBorderFocusColor}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
     <Grid Background="{DynamicResource PrimaryBackgroundColor}">
         <Border Width="360" CornerRadius="2" Background="{DynamicResource PrimaryWhiteColor}"
                 BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="1"
@@ -14,7 +48,6 @@
                 ClipToBounds="True">
             <StackPanel Orientation="Vertical">
 
-                <!-- Header -->
                 <Border Background="{DynamicResource AuthHeaderBackgroundColor}" Padding="0,16,0,12">
                     <StackPanel HorizontalAlignment="Center">
                         <Border Width="42" Height="42" CornerRadius="2" Background="{DynamicResource AuthHeaderAccentColor}"
@@ -29,38 +62,139 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Body -->
                 <StackPanel Margin="14,12,14,14">
-                    <TextBlock Text="Enter your credentials"
-                               FontSize="12" Foreground="{DynamicResource SecondaryTextColor}" TextWrapping="Wrap" Margin="0,0,0,10"/>
-
-                    <TextBlock Text="OPERATOR ID" FontSize="11" FontWeight="SemiBold"
+                    
+                    <TextBlock Text="LOGIN METHOD" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center"
                                Foreground="{DynamicResource PrimaryBlackColor}" Margin="0,0,0,4"/>
-                    <input:FormTextField x:Name="LoginNameField"
-                                          ShowErrorMessage="True"
-                                          PlaceHolder="XXXX"
-                                          BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
-                                          Color="{DynamicResource PrimaryBlackColor}"
-                                          RoundedRadius="2"
-                                          BorderSize="1"
-                                          FocusColor="{DynamicResource AuthHeaderBackgroundColor}"
-                                          ContentPadding="10,7"
-                                          Margin="0,0,0,10"/>
+                    <ItemsControl x:Name="AuthMethodChips" Margin="0,0,0,10" HorizontalAlignment="Center">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ToggleButton Style="{StaticResource AuthChipToggleButtonStyle}"
+                                              Click="AuthMethodChip_OnClick"
+                                              Tag="{Binding}"
+                                              ToolTip="{Binding Label}"
+                                              Margin="0,0,8,8">
+                                    <fa:ImageAwesome Icon="{Binding Icon}" Width="16" Height="16"
+                                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}"/>
+                                </ToggleButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock x:Name="AuthMethodStatusText"
+                               FontSize="11"
+                               Foreground="{DynamicResource SecondaryTextColor}"
+                               TextWrapping="Wrap"
+                               Margin="0,-6,0,10"
+                               Visibility="Collapsed"/>
 
-                    <Grid Margin="0,0,0,4">
-                        <TextBlock Text="SECURITY KEY" FontSize="11" FontWeight="SemiBold"
-                                   Foreground="{DynamicResource PrimaryBlackColor}" HorizontalAlignment="Left"/>
-                    </Grid>
-                    <input:FormPasswordField x:Name="PasswordField"
+                    <StackPanel x:Name="PasswordAuthPanel" Visibility="Collapsed">
+                        <TextBlock Text="OPERATOR ID" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryBlackColor}" Margin="0,0,0,4"/>
+                        <input:FormTextField x:Name="LoginNameField"
                                               ShowErrorMessage="True"
-                                              PlaceHolder="••••••••"
+                                              PlaceHolder="XXXX"
                                               BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
                                               Color="{DynamicResource PrimaryBlackColor}"
                                               RoundedRadius="2"
                                               BorderSize="1"
                                               FocusColor="{DynamicResource AuthHeaderBackgroundColor}"
                                               ContentPadding="10,7"
-                                              Margin="0,0,0,14"/>
+                                              Margin="0,0,0,10"/>
+
+                        <TextBlock Text="SECURITY KEY" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryBlackColor}" Margin="0,0,0,4"/>
+                        <input:FormPasswordField x:Name="PasswordField"
+                                                  ShowErrorMessage="True"
+                                                  PlaceHolder="••••••••"
+                                                  BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                  Color="{DynamicResource PrimaryBlackColor}"
+                                                  RoundedRadius="2"
+                                                  BorderSize="1"
+                                                  FocusColor="{DynamicResource AuthHeaderBackgroundColor}"
+                                                  ContentPadding="10,7"
+                                                  Margin="0,0,0,14"/>
+                    </StackPanel>
+
+                    <StackPanel x:Name="DeviceAuthPanel" Visibility="Collapsed" Margin="0,0,0,14">
+                        <TextBlock x:Name="DeviceAuthLabel" Text="Present your credential to the reader"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryBlackColor}" Margin="0,0,0,4"/>
+                        <input:FormTextField x:Name="CredentialField"
+                                              ShowErrorMessage="True"
+                                              PlaceHolder="Waiting for device..."
+                                              BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                              Color="{DynamicResource PrimaryBlackColor}"
+                                              RoundedRadius="2"
+                                              BorderSize="1"
+                                              FocusColor="{DynamicResource AuthHeaderBackgroundColor}"
+                                              ContentPadding="10,7"/>
+                    </StackPanel>
+
+                    <StackPanel x:Name="PinAuthPanel" Visibility="Collapsed" Margin="0,0,0,14">
+                        <TextBlock Text="ENTER 6-DIGIT PIN" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryBlackColor}" Margin="0,0,0,4"/>
+                        <UniformGrid Columns="6" Rows="1">
+                            <input:FormTextField x:Name="Pin1" Length="1"
+                                                  PlaceHolder="0"
+                                                  FormTextAlignment="Center" TextFormatting="Number"
+                                                  FontSize="18" FontWeight="Bold"
+                                                  BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                  Color="{DynamicResource PrimaryBlackColor}"
+                                                  RoundedRadius="2" BorderSize="1"
+                                                  FocusColor="{DynamicResource AuthHeaderBackgroundColor}"
+                                                  ContentPadding="0,7" Margin="0,0,6,0"/>
+                            <input:FormTextField x:Name="Pin2" Length="1"
+                                                  PlaceHolder="0"
+                                                  FormTextAlignment="Center" TextFormatting="Number"
+                                                  FontSize="18" FontWeight="Bold"
+                                                  BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                  Color="{DynamicResource PrimaryBlackColor}"
+                                                  RoundedRadius="2" BorderSize="1"
+                                                  FocusColor="{DynamicResource AuthHeaderBackgroundColor}"
+                                                  ContentPadding="0,7" Margin="0,0,6,0"/>
+                            <input:FormTextField x:Name="Pin3" Length="1"
+                                                  PlaceHolder="0"
+                                                  FormTextAlignment="Center" TextFormatting="Number"
+                                                  FontSize="18" FontWeight="Bold"
+                                                  BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                  Color="{DynamicResource PrimaryBlackColor}"
+                                                  RoundedRadius="2" BorderSize="1"
+                                                  FocusColor="{DynamicResource AuthHeaderBackgroundColor}"
+                                                  ContentPadding="0,7" Margin="0,0,6,0"/>
+                            <input:FormTextField x:Name="Pin4" Length="1"
+                                                  PlaceHolder="0"
+                                                  FormTextAlignment="Center" TextFormatting="Number"
+                                                  FontSize="18" FontWeight="Bold"
+                                                  BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                  Color="{DynamicResource PrimaryBlackColor}"
+                                                  RoundedRadius="2" BorderSize="1"
+                                                  FocusColor="{DynamicResource AuthHeaderBackgroundColor}"
+                                                  ContentPadding="0,7" Margin="0,0,6,0"/>
+                            <input:FormTextField x:Name="Pin5" Length="1"
+                                                  PlaceHolder="0"
+                                                  FormTextAlignment="Center" TextFormatting="Number"
+                                                  FontSize="18" FontWeight="Bold"
+                                                  BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                  Color="{DynamicResource PrimaryBlackColor}"
+                                                  RoundedRadius="2" BorderSize="1"
+                                                  FocusColor="{DynamicResource AuthHeaderBackgroundColor}"
+                                                  ContentPadding="0,7" Margin="0,0,6,0"/>
+                            <input:FormTextField x:Name="Pin6" Length="1"
+                                                  PlaceHolder="0"
+                                                  FormTextAlignment="Center" TextFormatting="Number"
+                                                  FontSize="18" FontWeight="Bold"
+                                                  BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                  Color="{DynamicResource PrimaryBlackColor}"
+                                                  RoundedRadius="2" BorderSize="1"
+                                                  FocusColor="{DynamicResource AuthHeaderBackgroundColor}"
+                                                  ContentPadding="0,7"/>
+                        </UniformGrid>
+                    </StackPanel>
 
                     <Button x:Name="LoginButton" Height="38"
                             Click="ButtonBase_OnClick"
@@ -79,7 +213,6 @@
                     </Button>
                 </StackPanel>
 
-                <!-- Footer -->
                 <Border BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="0,1,0,0" Padding="14,8">
                     <Grid>
                         <Grid.ColumnDefinitions>

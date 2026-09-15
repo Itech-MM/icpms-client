@@ -1,4 +1,5 @@
 ﻿using icpms_client.Network.Core;
+using icpms_client.Network.DTO.Setting;
 using icpms_client.Network.DTO.User;
 using icpms_client.Network.Request.Auth;
 using icpms_client.Network.Response;
@@ -36,6 +37,25 @@ public class AuthService: ApiService
         try
         {
             var response = await ApiClient.GetAsync<AuthResponse>("auth/validate?token="+token, requiresAuth:false);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            var error = new BaseErrorResponse<string>
+            {
+                Success = false,
+                Message = ex.Message,
+                Data = ex.Message
+            };
+            return error;
+        }
+    }
+    
+    public async Task<Response.Response?> GetAuthMethods()
+    {
+        try
+        {
+            var response = await ApiClient.GetAsync<List<SettingDto>>("auth/methods", requiresAuth:false);
             return response;
         }
         catch (Exception ex)

@@ -99,5 +99,11 @@ namespace icpms_client.UserControls.UI.Reusable.Inputs.Text
             var allow = FormattingHelper.IsAllowText(TextFormatting, newText);
             e.Handled = !allow;
         }
+        
+        public void FocusInput()
+        {
+            TxtBox.Focus();
+            Keyboard.Focus(TxtBox);
+        }
     }
 }
