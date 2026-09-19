@@ -125,6 +125,7 @@ public static class CommonData
 
     public static void InitializeFtp(string host, string userName, string password)
     {
+        CommonData.FtpUtil?.Dispose();
         FtpUtil = new FtpUtil(host, userName, password);
     }
 
@@ -137,7 +138,7 @@ public static class SettingCodes
     public const string FtpHost = "FTP_PATH";
     public const string FtpUser = "FTP_USER";
     public const string FtpPassword = "FTP_PASSWORD";
-    public const string FtpFolderPath = "FTP_FOLDER_PATH";
+    public const string FtpFolderPath = "FTP_IMAGE_PATH";
 }
 public enum SettingInputType
 {

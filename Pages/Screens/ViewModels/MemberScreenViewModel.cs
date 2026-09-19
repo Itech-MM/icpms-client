@@ -42,8 +42,6 @@ public class MemberScreenViewModel : ScreenViewModelBase
     private string? _topUpRemark;
 
     private bool _isSupervisorModalOpen;
-    private string? _supervisorUsername;
-    private string? _supervisorPassword;
     private Func<long?, Task>? _pendingAction;
 
     public ObservableCollection<MemberDto> SearchResults { get; } = new();
@@ -70,7 +68,6 @@ public class MemberScreenViewModel : ScreenViewModelBase
         TopUpCommand = new RelayCommand(async void (_) => await ExecuteSupervisorGatedAsync(TopUpAsync), _ => SelectedMember != null && SelectedSubscription != null && TopUpAmount.HasValue);
         CancelSubscriptionCommand = new RelayCommand(async void (_) => await ExecuteSupervisorGatedAsync(CancelSubscriptionAsync), _ => SelectedMember != null && SelectedSubscription != null);
 
-        ConfirmSupervisorApprovalCommand = new RelayCommand(async void (_) => await ConfirmSupervisorApprovalAsync());
         CancelSupervisorApprovalCommand = new RelayCommand(_ => CloseSupervisorModal());
         
         RegisterMemberCommand = new RelayCommand(
@@ -295,18 +292,6 @@ public class MemberScreenViewModel : ScreenViewModelBase
         private set { _isSupervisorModalOpen = value; OnPropertyChanged(); }
     }
 
-    public string? SupervisorUsername
-    {
-        get => _supervisorUsername;
-        set { _supervisorUsername = value; OnPropertyChanged(); }
-    }
-
-    public string? SupervisorPassword
-    {
-        get => _supervisorPassword;
-        set { _supervisorPassword = value; OnPropertyChanged(); }
-    }
-
     public string? NewVehiclePlateNumber
     {
         get => _newVehiclePlateNumber;
@@ -327,7 +312,6 @@ public class MemberScreenViewModel : ScreenViewModelBase
     public RelayCommand RenewCommand { get; }
     public RelayCommand TopUpCommand { get; }
     public RelayCommand CancelSubscriptionCommand { get; }
-    public RelayCommand ConfirmSupervisorApprovalCommand { get; }
     public RelayCommand CancelSupervisorApprovalCommand { get; }
     public RelayCommand AddVehicleCommand { get; }
     public RelayCommand RemoveVehicleCommand { get; }
@@ -433,7 +417,7 @@ public class MemberScreenViewModel : ScreenViewModelBase
         IsSupervisorModalOpen = true;
     }
 
-    private async Task ConfirmSupervisorApprovalAsync()
+    public async Task<bool> ConfirmSupervisorApprovalAsync(SupervisorApprovalRequest request)
     {
         var owner = BaseWindow.MainWindowInstance;
         DialogService.ShowLoadingDialog(owner, "Verifying supervisor...");
@@ -441,11 +425,7 @@ public class MemberScreenViewModel : ScreenViewModelBase
         Response? response;
         try
         {
-            response = await _memberService.ValidateSupervisor(new SupervisorApprovalRequest
-            {
-                Username = SupervisorUsername,
-                Password = SupervisorPassword
-            });
+            response = await _memberService.ValidateSupervisor(request);
         }
         finally
         {
@@ -457,19 +437,17 @@ public class MemberScreenViewModel : ScreenViewModelBase
             var pending = _pendingAction;
             CloseSupervisorModal();
             if (pending != null) await pending(success.Data.SupervisorId);
+            return true;
         }
-        else
-        {
-            var reason = (response as BaseErrorResponse<string>)?.Message ?? "Invalid supervisor credentials.";
-            ToastService.ShowError(reason);
-        }
+
+        var reason = (response as BaseErrorResponse<string>)?.Message ?? "Invalid supervisor credentials.";
+        ToastService.ShowError(reason);
+        return false;
     }
 
     private void CloseSupervisorModal()
     {
         IsSupervisorModalOpen = false;
-        SupervisorUsername = null;
-        SupervisorPassword = null;
         _pendingAction = null;
     }
 

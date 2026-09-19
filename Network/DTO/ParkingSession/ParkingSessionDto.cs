@@ -16,8 +16,10 @@ public class ParkingSessionDto : CommonDto
     public string? OperatorName { get; set; }
     public string? EntryTime { get; set; }
     public string? EntryPhotoUrl { get; set; }
+    public string? EntryPlatePhotoUrl { get; set; }
     public string? ExitTime { get; set; }
     public string? ExitPhotoUrl { get; set; }
+    public string? ExitPlatePhotoUrl { get; set; }
     public decimal? TotalAmount { get; set; }
     public int? Status { get; set; } = 1;
     public string? StatusDesc { get; set; }

@@ -17,7 +17,7 @@ public class VisitorService: ApiService
     {
         try
         {
-            var accessToken = UserSession.CurrentUser?.CurrentAuth?.AccessToken;
+            var accessToken = UserSession.CurrentUser.CurrentAuth?.AccessToken;
             if (string.IsNullOrEmpty(accessToken))
             {
                 return new BaseErrorResponse<string>
@@ -47,7 +47,7 @@ public class VisitorService: ApiService
     {
         try
         {
-            var accessToken = UserSession.CurrentUser?.CurrentAuth?.AccessToken;
+            var accessToken = UserSession.CurrentUser.CurrentAuth?.AccessToken;
             if (string.IsNullOrEmpty(accessToken))
             {
                 return new BaseErrorResponse<string>
@@ -77,7 +77,7 @@ public class VisitorService: ApiService
     {
         try
         {
-            var accessToken = UserSession.CurrentUser?.CurrentAuth?.AccessToken;
+            var accessToken = UserSession.CurrentUser.CurrentAuth?.AccessToken;
             if (string.IsNullOrEmpty(accessToken))
             {
                 return new BaseErrorResponse<string>
@@ -162,6 +162,36 @@ public class VisitorService: ApiService
                 Message = ex.Message,
                 Data = ex.Message
             };
+        }
+    }
+    
+    public async Task<Response.Response?> GetVisitorDetail(long id)
+    {
+        try
+        {
+            var accessToken = UserSession.CurrentUser.CurrentAuth?.AccessToken;
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                return new BaseErrorResponse<string>
+                {
+                    Success = false,
+                    Message = "No active session/access token found.",
+                    Data = "No active session/access token found."
+                };
+            }
+
+            var response = await ApiClient.GetAsync<ParkingSessionDto>($"visitors/{id}", true, accessToken);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            var error = new BaseErrorResponse<string>
+            {
+                Success = false,
+                Message = ex.Message,
+                Data = ex.Message
+            };
+            return error;
         }
     }
 }

@@ -36,9 +36,6 @@ public partial class MainWindow
 
     private ShiftSummaryState? _shiftSummaryState;
 
-    private string _operatorName = string.Empty;
-    private string _operatorRole = string.Empty;
-
     public MainWindow()
     {
         MainWindowInstance = this;
@@ -77,25 +74,6 @@ public partial class MainWindow
     }
 
     public ShiftSummaryState? ShiftState => _shiftSummaryState;
-
-    public new string OperatorName
-    {
-        get => _operatorName;
-        set { _operatorName = value; OnPropertyChanged(); }
-    }
-
-    public new string OperatorRole
-    {
-        get => _operatorRole;
-        set { _operatorRole = value; OnPropertyChanged(); }
-    }
-
-    private new void ApplyOperatorInfo()
-    {
-        var auth = UserSession.CurrentUser.CurrentAuth;
-        OperatorName = auth?.OperatorName ?? string.Empty;
-        OperatorRole = auth?.Roles is { Count: > 0 } roles ? string.Join(", ", roles) : string.Empty;
-    }
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {

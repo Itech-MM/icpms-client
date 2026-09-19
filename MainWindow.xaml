@@ -136,6 +136,7 @@
                     <MenuItem Header="Dashboard" Tag="{x:Static enums:AppPage.Dashboard}" Click="MenuItem_Click" Style="{StaticResource TitleBarMenuItemStyle}"/>
                     <MenuItem Header="Visitors"   Tag="{x:Static enums:AppPage.Visitors}"   Click="MenuItem_Click" Style="{StaticResource TitleBarMenuItemStyle}"/>
                     <MenuItem Header="Members"   Tag="{x:Static enums:AppPage.Members}"   Click="MenuItem_Click" Style="{StaticResource TitleBarMenuItemStyle}"/>
+                    <MenuItem Header="Diagnostics"   Tag="{x:Static enums:AppPage.Diagnostics}"   Click="MenuItem_Click" Style="{StaticResource TitleBarMenuItemStyle}"/>
                 </Menu>
 
                 <StackPanel Grid.Column="3"

@@ -18,4 +18,11 @@ public class VisitorExitRequest
     
     [JsonProperty("isFoc")]
     public bool IsFoc { get; set; }
+    
+    
+    [JsonProperty("photoUrl")]
+    public string? PhotoUrl { get; set; } = string.Empty;
+	
+    [JsonProperty("platePhotoUrl")]
+    public string? PlatePhotoUrl{ get; set; } = string.Empty;
 }

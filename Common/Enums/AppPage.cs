@@ -4,5 +4,6 @@ public enum AppPage
 {
     Dashboard,
     Visitors,
-    Members
+    Members,
+    Diagnostics
 }

@@ -17,6 +17,36 @@
         <conv:TransactionColorConverter x:Key="TransactionColorConverter" />
         <conv:NullableDecimalToStringConverter x:Key="NullableDecimalToStringConverter" />
         <conv:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter" />
+        
+        <Style x:Key="AuthChipToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="{DynamicResource SecondaryChipTextColor}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="ChipBorder"
+                                CornerRadius="22"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource PrimaryBorderColor}"
+                                Background="{DynamicResource SecondaryChipBackgroundColor}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="ChipBorder" Property="Background" Value="{DynamicResource PrimaryColor}"/>
+                                <Setter TargetName="ChipBorder" Property="BorderBrush" Value="{DynamicResource PrimaryColor}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource PureWhiteColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ChipBorder" Property="BorderBrush" Value="{DynamicResource InputBorderFocusColor}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Border Background="{DynamicResource PrimaryBackgroundColor}">
@@ -457,45 +487,84 @@
                         BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="1"
                         Padding="16" Width="380" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <StackPanel>
-                        <DockPanel LastChildFill="False" Margin="0,0,0,10">
-                            <TextBlock DockPanel.Dock="Left" Text="Supervisor Approval Required"
-                                       Style="{DynamicResource SmallTitleTextStyle}" FontSize="15" />
-                            <Button DockPanel.Dock="Right" Command="{Binding CancelSupervisorApprovalCommand}">
-                                <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
-                                        <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}" />
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
-                                                <Setter Property="Cursor" Value="Hand" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                                <fa:FontAwesome Icon="Close" />
-                            </Button>
-                        </DockPanel>
-
                         <TextBlock Text="This action requires a supervisor to confirm." FontSize="11.5"
                                    Foreground="{DynamicResource SecondaryTextColor}" Margin="0,0,0,12" TextWrapping="Wrap" />
 
-                        <TextBlock Text="Supervisor Username" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4" />
-                        <input:FormTextField Value="{Binding SupervisorUsername, UpdateSourceTrigger=PropertyChanged}"
-                                              ContentPadding="8,6" Margin="0,0,0,8"
-                                              BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
-                                              Color="{DynamicResource PrimaryBlackColor}" BorderSize="1.2" />
+                        <TextBlock Text="VERIFICATION METHOD" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center"
+                                   Foreground="{DynamicResource PrimaryBlackColor}" Margin="0,0,0,4"/>
+                        <ItemsControl x:Name="SupervisorAuthMethodChips" Margin="0,0,0,10" HorizontalAlignment="Center">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ToggleButton Style="{StaticResource AuthChipToggleButtonStyle}"
+                                                  Click="SupervisorAuthMethodChip_OnClick"
+                                                  Tag="{Binding}"
+                                                  ToolTip="{Binding Label}"
+                                                  Margin="0,0,8,8">
+                                        <fa:ImageAwesome Icon="{Binding Icon}" Width="16" Height="16"
+                                                         Foreground="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}"/>
+                                    </ToggleButton>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
-                        <TextBlock Text="Supervisor Password" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4" />
-                        <input:FormPasswordField Value="{Binding SupervisorPassword, UpdateSourceTrigger=PropertyChanged}"
-                                                  ContentPadding="8,6" Margin="0,0,0,14"
+                        <StackPanel x:Name="SupervisorPasswordAuthPanel" Visibility="Collapsed">
+                            <TextBlock Text="Supervisor Username" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4" />
+                            <input:FormTextField x:Name="SupervisorUsernameField"
+                                                  ContentPadding="8,6" Margin="0,0,0,8"
                                                   BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
                                                   Color="{DynamicResource PrimaryBlackColor}" BorderSize="1.2" />
+
+                            <TextBlock Text="Supervisor Password" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4" />
+                            <input:FormPasswordField x:Name="SupervisorPasswordField"
+                                                      ContentPadding="8,6" Margin="0,0,0,14"
+                                                      BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                      Color="{DynamicResource PrimaryBlackColor}" BorderSize="1.2" />
+                        </StackPanel>
+
+                        <StackPanel x:Name="SupervisorDeviceAuthPanel" Visibility="Collapsed" Margin="0,0,0,14">
+                            <TextBlock x:Name="SupervisorDeviceAuthLabel" Text="Present supervisor credential to the reader"
+                                       FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4" />
+                            <input:FormTextField x:Name="SupervisorCredentialField"
+                                                  PlaceHolder="Waiting for device..."
+                                                  ContentPadding="8,6"
+                                                  BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                  Color="{DynamicResource PrimaryBlackColor}" BorderSize="1.2" />
+                        </StackPanel>
+
+                        <StackPanel x:Name="SupervisorPinAuthPanel" Visibility="Collapsed" Margin="0,0,0,14">
+                            <TextBlock Text="ENTER 6-DIGIT PIN" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4" />
+                            <UniformGrid Columns="6" Rows="1">
+                                <input:FormTextField x:Name="SupPin1" Length="1" PlaceHolder="0" FormTextAlignment="Center" TextFormatting="Number"
+                                                      FontSize="18" FontWeight="Bold" BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                      Color="{DynamicResource PrimaryBlackColor}" BorderSize="1" ContentPadding="0,7" Margin="0,0,6,0"/>
+                                <input:FormTextField x:Name="SupPin2" Length="1" PlaceHolder="0" FormTextAlignment="Center" TextFormatting="Number"
+                                                      FontSize="18" FontWeight="Bold" BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                      Color="{DynamicResource PrimaryBlackColor}" BorderSize="1" ContentPadding="0,7" Margin="0,0,6,0"/>
+                                <input:FormTextField x:Name="SupPin3" Length="1" PlaceHolder="0" FormTextAlignment="Center" TextFormatting="Number"
+                                                      FontSize="18" FontWeight="Bold" BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                      Color="{DynamicResource PrimaryBlackColor}" BorderSize="1" ContentPadding="0,7" Margin="0,0,6,0"/>
+                                <input:FormTextField x:Name="SupPin4" Length="1" PlaceHolder="0" FormTextAlignment="Center" TextFormatting="Number"
+                                                      FontSize="18" FontWeight="Bold" BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                      Color="{DynamicResource PrimaryBlackColor}" BorderSize="1" ContentPadding="0,7" Margin="0,0,6,0"/>
+                                <input:FormTextField x:Name="SupPin5" Length="1" PlaceHolder="0" FormTextAlignment="Center" TextFormatting="Number"
+                                                      FontSize="18" FontWeight="Bold" BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                      Color="{DynamicResource PrimaryBlackColor}" BorderSize="1" ContentPadding="0,7" Margin="0,0,6,0"/>
+                                <input:FormTextField x:Name="SupPin6" Length="1" PlaceHolder="0" FormTextAlignment="Center" TextFormatting="Number"
+                                                      FontSize="18" FontWeight="Bold" BackgroundColor="{DynamicResource PrimaryBackgroundColor}"
+                                                      Color="{DynamicResource PrimaryBlackColor}" BorderSize="1" ContentPadding="0,7"/>
+                            </UniformGrid>
+                        </StackPanel>
 
                         <DockPanel LastChildFill="True">
                             <Button Content="Cancel" Style="{DynamicResource SecondaryOutlineButtonStyle}"
                                     Command="{Binding CancelSupervisorApprovalCommand}" Width="110" DockPanel.Dock="Left" />
-                            <Button Content="Confirm" Style="{DynamicResource PrimaryButtonStyle}"
-                                    Command="{Binding ConfirmSupervisorApprovalCommand}"
+                            <Button x:Name="ConfirmSupervisorButton" Content="Confirm" Style="{DynamicResource PrimaryButtonStyle}"
+                                    Click="ConfirmSupervisorButton_OnClick"
                                     HorizontalAlignment="Stretch" Margin="8,0,0,0" />
                         </DockPanel>
                     </StackPanel>

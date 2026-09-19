@@ -97,6 +97,13 @@ public class HomeScreenViewModel : ScreenViewModelBase
     private ImageSource? _entranceSnapshotImage;
     private ImageSource? _exitSnapshotImage;
 
+    private byte[]? _entranceAnprBytes;
+    private byte[]? _entranceCctvBytes;
+    private byte[]? _exitAnprBytes;
+    private byte[]? _exitCctvBytes;
+
+    private VisitorPhotoUploaderService.UploadedPhotos? _exitUploadedPhotos;
+
     private bool _isSnapshotModalOpen;
     private ImageSource? _modalSnapshotImage;
     private string? _modalSnapshotTitle;
@@ -139,21 +146,21 @@ public class HomeScreenViewModel : ScreenViewModelBase
 
     private bool _isPlateSearchModalOpen;
     private PlateSearchMode _plateSearchMode;
-    
+
     private readonly VehicleDetectionRealtimeService _vehicleDetectionRealtimeService;
 
 
     private readonly IPluginConstants? _pluginsConstants;
 
     private readonly IStreamLogger _streamLogger;
-    
+
     public HomeScreenViewModel(HomeScreenService homeScreenService, VehicleDetectionRealtimeService vehicleDetectionRealtimeService,
         VehicleService vehicleService, VisitorService visitorService, VehicleAlertRealtimeService alertService,
         VehicleAlertLogService vehicleAlertLogService, IPluginConstants pluginConstants)
     {
 
         _streamLogger = new FileStreamLogger();
-        
+
         _homeScreenService = homeScreenService;
 
         _vehicleDetectionRealtimeService = vehicleDetectionRealtimeService;
@@ -898,10 +905,21 @@ public class HomeScreenViewModel : ScreenViewModelBase
         IsPaymentModalOpen = true;
     }
 
+    private static bool IsUploadComplete(VisitorPhotoUploaderService.UploadedPhotos photos, byte[]? plateBytes, byte[]? vehicleBytes)
+    {
+        return (plateBytes == null || photos.PlatePhotoName != null)
+               && (vehicleBytes == null || photos.VehiclePhotoName != null);
+    }
+
     private async Task ConfirmPaymentAsync()
     {
         var plateNumber = ExitDetectedVehicleNo;
         if (string.IsNullOrWhiteSpace(plateNumber) || plateNumber == "------") return;
+
+        var seq = _exitRequestSeq;
+        var plateBytes = _exitAnprBytes;
+        var vehicleBytes = _exitCctvBytes;
+        var photos = _exitUploadedPhotos;
 
         var owner = BaseWindow.MainWindowInstance;
         DialogService.ShowLoadingDialog(owner, "Processing payment...");
@@ -909,13 +927,23 @@ public class HomeScreenViewModel : ScreenViewModelBase
         Response? response;
         try
         {
+            if (photos == null)
+            {
+                photos = await VisitorPhotoUploaderService.UploadAsync("exit", plateBytes, vehicleBytes);
+
+                if (seq == _exitRequestSeq && IsUploadComplete(photos, plateBytes, vehicleBytes))
+                    _exitUploadedPhotos = photos;
+            }
+
             response = await _visitorService.SaveExitVisitor(new VisitorExitRequest
             {
                 PlateNumber = plateNumber,
                 PaymentMethod = SelectedPaymentMethod?.Code ?? 0,
                 Remark = ExitRemark,
                 IsMember = ExitIsMember,
-                IsFoc = IsFocChecked
+                IsFoc = IsFocChecked,
+                PhotoUrl = photos.VehiclePhotoName,
+                PlatePhotoUrl = photos.PlatePhotoName
             });
         }
         catch (Exception ex)
@@ -993,13 +1021,15 @@ public class HomeScreenViewModel : ScreenViewModelBase
         ResetExitData();
     }
 
-    private static async Task<ImageSource?> CaptureSnapshotImageAsync(RtspStreamPlayer? player)
+    private sealed record SnapshotCapture(ImageSource Image, byte[] Bytes);
+
+    private static async Task<SnapshotCapture?> CaptureSnapshotAsync(RtspStreamPlayer? player)
     {
         if (player == null) return null;
 
         try
         {
-            var bytes = await player.CaptureSnapshotAsync(ImageFormat.Png);
+            var bytes = await player.CaptureSnapshotAsync(ImageFormat.Jpeg);
             if (bytes == null || bytes.Length == 0) return null;
 
             using var ms = new MemoryStream(bytes);
@@ -1011,7 +1041,7 @@ public class HomeScreenViewModel : ScreenViewModelBase
             bitmap.EndInit();
             bitmap.Freeze();
 
-            return bitmap;
+            return new SnapshotCapture(bitmap, bytes);
         }
         catch
         {
@@ -1019,18 +1049,69 @@ public class HomeScreenViewModel : ScreenViewModelBase
         }
     }
 
-    private async Task CaptureEntranceSnapshotAsync()
+    private void ClearEntranceSnapshot()
     {
-        var captured = await CaptureSnapshotImageAsync(EntranceAnprPlayer);
-        EntranceSnapshotImage = captured;
-        EntranceHasSnapshot = captured != null;
+        EntranceSnapshotImage = null;
+        EntranceHasSnapshot = false;
+        _entranceAnprBytes = null;
+        _entranceCctvBytes = null;
     }
 
-    private async Task CaptureExitSnapshotAsync()
+    private void ClearExitSnapshot()
     {
-        var captured = await CaptureSnapshotImageAsync(ExitAnprPlayer);
-        ExitSnapshotImage = captured;
-        ExitHasSnapshot = captured != null;
+        ExitSnapshotImage = null;
+        ExitHasSnapshot = false;
+        _exitAnprBytes = null;
+        _exitCctvBytes = null;
+        _exitUploadedPhotos = null;
+    }
+
+    private async Task CaptureEntranceSnapshotAsync(int seq)
+    {
+        var plateTask = CaptureSnapshotAsync(EntranceAnprPlayer);
+        var vehicleTask = CaptureSnapshotAsync(EntranceCctvPlayer);
+
+        var plate = await plateTask;
+        var vehicle = await vehicleTask;
+
+        if (seq != _entranceRequestSeq) return;
+
+        if (plate != null)
+        {
+            EntranceSnapshotImage = plate.Image;
+            EntranceHasSnapshot = true;
+            _entranceAnprBytes = plate.Bytes;
+        }
+
+        if (vehicle != null)
+        {
+            _entranceCctvBytes = vehicle.Bytes;
+        }
+    }
+
+    private async Task CaptureExitSnapshotAsync(int seq)
+    {
+        var plateTask = CaptureSnapshotAsync(ExitAnprPlayer);
+        var vehicleTask = CaptureSnapshotAsync(ExitCctvPlayer);
+
+        var plate = await plateTask;
+        var vehicle = await vehicleTask;
+
+        if (seq != _exitRequestSeq) return;
+
+        if (plate != null)
+        {
+            ExitSnapshotImage = plate.Image;
+            ExitHasSnapshot = true;
+            _exitAnprBytes = plate.Bytes;
+            _exitUploadedPhotos = null;
+        }
+
+        if (vehicle != null)
+        {
+            _exitCctvBytes = vehicle.Bytes;
+            _exitUploadedPhotos = null;
+        }
     }
 
     private void OpenSnapshotModal(SnapshotSide side)
@@ -1050,12 +1131,12 @@ public class HomeScreenViewModel : ScreenViewModelBase
     {
         if (_activeSnapshotSide == SnapshotSide.Entrance)
         {
-            await CaptureEntranceSnapshotAsync();
+            await CaptureEntranceSnapshotAsync(_entranceRequestSeq);
             ModalSnapshotImage = EntranceSnapshotImage;
         }
         else
         {
-            await CaptureExitSnapshotAsync();
+            await CaptureExitSnapshotAsync(_exitRequestSeq);
             ModalSnapshotImage = ExitSnapshotImage;
         }
     }
@@ -1080,14 +1161,17 @@ public class HomeScreenViewModel : ScreenViewModelBase
     {
         var mySeq = ++_entranceRequestSeq;
 
-        Application.Current.Dispatcher.Invoke(async () =>
+        await Application.Current.Dispatcher.Invoke(async () =>
         {
+            if (mySeq != _entranceRequestSeq) return;
+
             ToastService.ShowInfo("Entrance vehicle detected.");
             EntranceDetectedVehicleNo = evt.LicensePlate;
             EntranceManualEntryRequired = false;
             EntranceManualEntryReason = null;
             EntranceHasUnknownPlate = false;
-            await CaptureEntranceSnapshotAsync();
+            ClearEntranceSnapshot();
+            await CaptureEntranceSnapshotAsync(mySeq);
         });
 
         Response? response;
@@ -1102,6 +1186,9 @@ public class HomeScreenViewModel : ScreenViewModelBase
         }
 
         if (mySeq != _entranceRequestSeq) return;
+
+        var plateBytes = _entranceAnprBytes;
+        var vehicleBytes = _entranceCctvBytes;
 
         if (response?.ErrorCode == "VEHICLE_BLACKLISTED")
         {
@@ -1140,19 +1227,23 @@ public class HomeScreenViewModel : ScreenViewModelBase
             }
         });
 
-        await SaveEntranceVisitorAsync(mySeq, evt.LicensePlate, evt.PlateType);
+        await SaveEntranceVisitorAsync(mySeq, evt.LicensePlate, evt.PlateType, plateBytes, vehicleBytes);
     }
 
-    private async Task SaveEntranceVisitorAsync(int mySeq, string plateNumber, string vehicleType)
+    private async Task SaveEntranceVisitorAsync(int mySeq, string plateNumber, string vehicleType, byte[]? plateBytes, byte[]? vehicleBytes)
     {
         Response? visitorResponse;
         try
         {
+            var photos = await VisitorPhotoUploaderService.UploadAsync("entry", plateBytes, vehicleBytes);
+
             visitorResponse = await _visitorService.SaveEntryVisitor(new VisitorEntryRequest
             {
                 PlateNumber = plateNumber,
                 VehicleType = vehicleType,
-                ParkingSlotId = null
+                ParkingSlotId = null,
+                PhotoUrl = photos.VehiclePhotoName,
+                PlatePhotoUrl = photos.PlatePhotoName
             });
         }
         catch (Exception ex)
@@ -1182,8 +1273,8 @@ public class HomeScreenViewModel : ScreenViewModelBase
                 ToastService.ShowSuccess($"Successfully saved visitor entry for {plateNumber}");
                 EntranceManualEntryReason = null;
                 EntranceManualEntryRequired = false;
+                ResetEntranceData();
             });
-            ResetEntranceData();
             OnVisitorSaved?.Invoke(true);
         }
     }
@@ -1199,13 +1290,17 @@ public class HomeScreenViewModel : ScreenViewModelBase
     {
         var mySeq = ++_exitRequestSeq;
 
-        Application.Current.Dispatcher.InvokeAsync(async () =>
+        await Application.Current.Dispatcher.Invoke(async () =>
         {
+            if (mySeq != _exitRequestSeq) return;
+
             ExitDetectedVehicleNo = evt.LicensePlate;
+            ExitPlateMatched = false;
             ExitParkedDurationText = null;
             ExitFeeDueText = null;
             ExitHasUnknownPlate = false;
-            await CaptureExitSnapshotAsync();
+            ClearExitSnapshot();
+            await CaptureExitSnapshotAsync(mySeq);
         });
 
         Response? response;
@@ -1315,8 +1410,7 @@ public class HomeScreenViewModel : ScreenViewModelBase
         EntranceIsMember = false;
         EntranceIsVip = false;
 
-        EntranceSnapshotImage = null;
-        EntranceHasSnapshot = false;
+        ClearEntranceSnapshot();
 
         EntranceManualEntryRequired = false;
         EntranceManualEntryReason = null;
@@ -1332,8 +1426,7 @@ public class HomeScreenViewModel : ScreenViewModelBase
         ExitIsMember = false;
         ExitIsVip = false;
 
-        ExitSnapshotImage = null;
-        ExitHasSnapshot = false;
+        ClearExitSnapshot();
 
         ExitGateOpen = false;
         ExitStatusText = null;
@@ -1369,6 +1462,12 @@ public class HomeScreenViewModel : ScreenViewModelBase
 
         OnVisitorSaved = null;
         OnExitVisitorSaved = null;
+
+        _entranceAnprBytes = null;
+        _entranceCctvBytes = null;
+        _exitAnprBytes = null;
+        _exitCctvBytes = null;
+        _exitUploadedPhotos = null;
     }
 
     protected override async Task OnDisposeAsync()

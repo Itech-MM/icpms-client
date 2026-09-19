@@ -140,8 +140,7 @@ public abstract class BaseWindow : Window, INotifyPropertyChanged
     public void ApplyOperatorInfo()
     {
         var auth = UserSession.CurrentUser.CurrentAuth;
-        Console.WriteLine($"Current auth :: {JsonConvert.SerializeObject(auth)}");
-        OperatorName = auth?.Username ?? string.Empty;
+        OperatorName = auth?.OperatorName ?? string.Empty;
         OperatorRole = auth?.Roles is { Count: > 0 } roles ? string.Join(", ", roles) : string.Empty;
     }
 
