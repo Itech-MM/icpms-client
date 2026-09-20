@@ -370,7 +370,7 @@
                             <ContentPresenter.Resources>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextElement.FontFamily" Value="/Assets/Fonts/#Poppins" />
-                                    <Setter Property="Foreground" Value="{DynamicResource SurfaceBrush}"/>
+                                    <Setter Property="TextElement.Foreground" Value="{DynamicResource SurfaceBrush}"/>
                                 </Style>
                             </ContentPresenter.Resources>
                         </ContentPresenter>
@@ -389,7 +389,7 @@
     <!-- Secondary Button Style -->
     <Style x:Key="SecondaryButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource SecondaryButtonColor}" /> <!-- Light Gray -->
-        <Setter Property="TextElement.Foreground" Value="{DynamicResource PureBlackColor}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Padding" Value="10,5" />
         <Setter Property="BorderBrush" Value="#B0B0B0" />
@@ -409,7 +409,7 @@
                             <ContentPresenter.Resources>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextElement.FontFamily" Value="/Assets/Fonts/#Poppins" />
-                                    <Setter Property="Foreground" Value="#333333"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
                                 </Style>
                             </ContentPresenter.Resources>
 

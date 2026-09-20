@@ -76,6 +76,7 @@
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
                                         <Button Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Clear" 
                                                 Padding="6,4"
+                                                Visibility="Hidden"
                                                 Command="{Binding TestEntranceEntryCommand}" Margin="0,0,6,0"/>
                                         <Border Style="{DynamicResource StatusPillStyle}" VerticalAlignment="Center"
                                                 Background="{Binding EntranceGateOpen, Converter={StaticResource GateStateBrushConverter}}">
@@ -294,6 +295,7 @@
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
                                         <Button Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Clear"
                                                 Padding="6,4"
+                                                Visibility="Hidden"
                                                 Command="{Binding TestExitEntryCommand}" Margin="0,0,6,0" />
                                         <Border Style="{DynamicResource StatusPillStyle}" VerticalAlignment="Center"
                                                 Background="{Binding ExitGateOpen, Converter={StaticResource GateStateBrushConverter}}">
@@ -450,7 +452,7 @@
                                                 </Button>
                                                 <Button Grid.Column="1" Style="{DynamicResource InfoButtonStyle}" HorizontalAlignment="Stretch"
                                                         Command="{Binding OpenPaymentModalCommand}" Margin="3,0,0,0">
-                                                    <TextBlock Text="Confirm Payment" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
+                                                    <TextBlock Text="Confirm Payment" TextTrimming="CharacterEllipsis" TextAlignment="Center" Foreground="{DynamicResource SurfaceBrush}" />
                                                 </Button>
                                             </Grid>
                                         </StackPanel>

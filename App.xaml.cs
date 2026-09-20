@@ -5,6 +5,7 @@ using FlexiStream.Player;
 using icpms_client.Common.Constants;
 using icpms_client.Network.Constants;
 using icpms_client.Network.Core;
+using icpms_client.Network.Services.Gate;
 using icpms_client.Network.Services.Home;
 using icpms_client.Network.Services.Logs;
 using icpms_client.Network.Services.Member;
@@ -15,6 +16,7 @@ using icpms_client.Network.Services.Vehicle;
 using icpms_client.Network.Services.Visitor;
 using icpms_client.Pages.Screens.Sections.ViewModels;
 using icpms_client.Pages.Screens.ViewModels;
+using icpms_client.Services.DeviceDiagnosis;
 using icpms_client.Services.ExternalServices;
 using icpms_client.State;
 using icpms_client.Utils.Settings;
@@ -116,6 +118,7 @@ public partial class App
             services.AddSingleton<ParkingAreaService>();
             services.AddSingleton<ShiftService>();
             services.AddSingleton<MemberService>();
+            services.AddSingleton<GateService>();
 
             services.AddSingleton<VehicleAlertRealtimeService>();
             services.AddSingleton<VehicleAlertLogService>();
@@ -126,6 +129,10 @@ public partial class App
             services.AddTransient<RecentVisitorsSectionViewModel>();
             services.AddTransient<ParkingSessionSearchViewModel>();
             services.AddTransient<MemberScreenViewModel>();
+            
+            services.AddSingleton<IDeviceProbe, SimulatedDeviceProbe>();
+            services.AddSingleton<IDeviceDiagnosisService, DeviceDiagnosisService>();
+            services.AddTransient<DeviceDiagnosisViewModel>();
             
             // state
             services.AddSingleton<ShiftSummaryState>();

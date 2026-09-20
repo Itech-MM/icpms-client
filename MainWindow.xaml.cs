@@ -157,6 +157,9 @@ public partial class MainWindow
             case AppPage.Members:
                 await ChangeScreenAsync(new MemberScreen(), terminalLabel: "Members");
                 break;
+            case AppPage.Diagnostics:
+                await ChangeScreenAsync(new DeviceDiagnosisScreen(), terminalLabel: "Diagnostics");
+                break;
         }
     }
 

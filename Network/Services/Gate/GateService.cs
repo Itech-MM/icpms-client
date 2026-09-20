@@ -41,4 +41,36 @@ public class GateService: ApiService
             return error;
         }
     }
+    
+    public async Task<Response.Response?> UpdateBatchStatusAsync(
+        GateDeviceBatchStatusRequestDto request)
+    {
+        try
+        {
+            var accessToken = UserSession.CurrentUser.CurrentAuth?.AccessToken;
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                _log.Error("Access token is null or empty");
+                return new BaseErrorResponse<string>
+                {
+                    Success = false,
+                    Message = "No active session/access token found.",
+                    Data = "No active session/access token found."
+                };
+            }
+
+            return await ApiClient.PutAsync<GateDeviceBatchStatusResponseDto>(
+                "gate/devices/batch-status", request, requiresAuth: true, token: accessToken);
+        }
+        catch (Exception ex)
+        {
+            _log.Error($"UpdateBatchStatusAsync Error: {ex.Message}");
+            return new BaseErrorResponse<string>
+            {
+                Success = false,
+                Message = ex.Message,
+                Data = ex.Message
+            };
+        }
+    }
 }
