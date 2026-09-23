@@ -21,6 +21,14 @@ public class VehicleAlertItemViewModel : INotifyPropertyChanged
     public string TagLabel { get; }
     public string PrimaryActionLabel { get; }
     public AlertSeverity Severity { get; }
+    
+    public string AlertTypeDesc { get; }
+    public string ReceivedTimeText { get; }
+    public string VehicleIdText { get; }
+    public string MemberIdText { get; }
+    public string SessionIdText { get; }
+    public string GateIdText { get; }
+    public string OperatorIdText { get; }
 
     private bool _isDismissing;
     public bool IsDismissing
@@ -42,6 +50,14 @@ public class VehicleAlertItemViewModel : INotifyPropertyChanged
         Id = dto.Id;
         PlateNumber = dto.PlateNumber ?? "-";
         Message = dto.Message ?? string.Empty;
+        
+        AlertTypeDesc = string.IsNullOrWhiteSpace(dto.AlertTypeDesc) ? "-" : dto.AlertTypeDesc;
+        ReceivedTimeText = string.IsNullOrWhiteSpace(dto.CreatedTime) ? "-" : dto.CreatedTime;
+        VehicleIdText = FormatId(dto.VehicleId);
+        MemberIdText = FormatId(dto.MemberId);
+        SessionIdText = FormatId(dto.SessionId);
+        GateIdText = FormatId(dto.GateId);
+        OperatorIdText = FormatId(dto.OperatorId);
 
         var desc = dto.AlertTypeDesc?.ToLowerInvariant() ?? string.Empty;
 
@@ -74,4 +90,6 @@ public class VehicleAlertItemViewModel : INotifyPropertyChanged
 
         PrimaryActionCommand = new RelayCommand(_ => onPrimaryAction(this));
     }
+    
+    private static string FormatId(long? id) => id?.ToString() ?? "-";
 }

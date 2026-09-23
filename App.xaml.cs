@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using FlexiStream.Player;
@@ -28,25 +29,26 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace icpms_client;
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
 public partial class App
 {
+    private const string MutexName = @"Global\ICPMS.Client.SingleInstance.7c1f4a9e";
+    private const string ActivateEventName = @"Global\ICPMS.Client.Activate.7c1f4a9e";
+
     public static IServiceProvider? ServiceProvider { get; set; }
     public static IConfiguration? Configuration { get; set; }
 
     private CrashLogSettings _crashLogSettings = new();
 
+    private Mutex? _mutex;
+    private EventWaitHandle? _activateEvent;
+    private bool _ownsMutex;
+
     public App()
     {
-        // Register global handlers FIRST, before anything else can fail.
         AppDomain.CurrentDomain.UnhandledException += OnAppDomainUnhandledException;
         DispatcherUnhandledException += OnDispatcherUnhandledException;
         TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
 
-        // Load just enough config to know where the crash log should go,
-        // before the full DI-based configuration is built in OnStartup.
         try
         {
             var earlyConfig = new ConfigurationBuilder()
@@ -58,8 +60,6 @@ public partial class App
         }
         catch
         {
-            // Fall back to defaults in CrashLogSettings if appsettings.json
-            // can't even be read yet — we still want crash logging to work.
         }
 
         XmlConfigurator.Configure();
@@ -67,6 +67,22 @@ public partial class App
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        var activateEvent = new EventWaitHandle(false, EventResetMode.AutoReset, ActivateEventName);
+        _mutex = new Mutex(true, MutexName, out _ownsMutex);
+
+        if (!_ownsMutex)
+        {
+            activateEvent.Set();
+            activateEvent.Dispose();
+            _mutex.Dispose();
+            _mutex = null;
+            Shutdown();
+            return;
+        }
+
+        _activateEvent = activateEvent;
+        StartActivationListener(activateEvent);
+
         base.OnStartup(e);
 
         try
@@ -83,7 +99,6 @@ public partial class App
 
             services.AddSingleton(Configuration);
 
-            // Configuration binding
             services.Configure<ApiSettings>(options =>
                 Configuration.GetSection("ApiSettings").Bind(options));
             services.Configure<EnvironmentSettings>(options =>
@@ -97,7 +112,6 @@ public partial class App
             services.Configure<CrashLogSettings>(options =>
                 Configuration.GetSection("CrashLogSettings").Bind(options));
 
-            // Register services
             services.AddSingleton<IApiConstant, ApiConstant>();
             services.AddSingleton<ApiClient>();
             services.AddSingleton<IEnvironmentConstant, EnvironmentConstant>();
@@ -109,7 +123,6 @@ public partial class App
 
             services.AddSingleton<VehicleDetectionRealtimeService>();
 
-            // ViewModels
             services.AddSingleton<MainViewModel>();
 
             services.AddSingleton<HomeScreenService>();
@@ -129,15 +142,13 @@ public partial class App
             services.AddTransient<RecentVisitorsSectionViewModel>();
             services.AddTransient<ParkingSessionSearchViewModel>();
             services.AddTransient<MemberScreenViewModel>();
-            
+
             services.AddSingleton<IDeviceProbe, SimulatedDeviceProbe>();
             services.AddSingleton<IDeviceDiagnosisService, DeviceDiagnosisService>();
             services.AddTransient<DeviceDiagnosisViewModel>();
-            
-            // state
+
             services.AddSingleton<ShiftSummaryState>();
 
-            // Window
             services.AddTransient<MainWindow>();
 
             ServiceProvider = services.BuildServiceProvider();
@@ -181,7 +192,60 @@ public partial class App
             LogFatal("OnExit", ex);
         }
 
+        _activateEvent?.Dispose();
+        ReleaseInstanceMutex();
+
         base.OnExit(e);
+    }
+
+    private void StartActivationListener(EventWaitHandle activateEvent)
+    {
+        var listener = new Thread(() =>
+        {
+            try
+            {
+                while (activateEvent.WaitOne())
+                    Dispatcher.InvokeAsync(ActivateMainWindow);
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+        })
+        {
+            IsBackground = true
+        };
+
+        listener.Start();
+    }
+
+    private void ActivateMainWindow()
+    {
+        var window = MainWindow;
+        if (window == null) return;
+
+        if (!window.IsVisible) window.Show();
+        if (window.WindowState == WindowState.Minimized) window.WindowState = WindowState.Normal;
+
+        window.Activate();
+        window.Topmost = true;
+        window.Topmost = false;
+        window.Focus();
+    }
+
+    private void ReleaseInstanceMutex()
+    {
+        if (_mutex == null) return;
+
+        try
+        {
+            if (_ownsMutex) _mutex.ReleaseMutex();
+        }
+        catch (ApplicationException)
+        {
+        }
+
+        _mutex.Dispose();
+        _mutex = null;
     }
 
     private void OnAppDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -223,9 +287,6 @@ public partial class App
         }
     }
 
-    /// <summary>
-    /// Copies TS_DATA.db to a writable location if it doesn't exist.
-    /// </summary>
     private static string PrepareWritableDatabase()
     {
         string appDataPath = Path.Combine(

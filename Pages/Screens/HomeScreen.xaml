@@ -19,6 +19,21 @@
         <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
         <conv:BoolToCursorConverter x:Key="BoolToCursorConverter" />
         <conv:InverseBooleanConverter x:Key="InverseBoolConverter" />
+        <Style x:Key="AlertDetailLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11.5" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+
+        <Style x:Key="AlertDetailValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12.5" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryBlackColor}" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
     </UserControl.Resources>
 
     <Border Background="{DynamicResource PrimaryBackgroundColor}">
@@ -593,50 +608,59 @@
                                                         </Border.Style>
 
                                                         <Grid>
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="Auto" />
-                                                                <RowDefinition Height="Auto" />
-                                                                <RowDefinition Height="Auto" />
-                                                            </Grid.RowDefinitions>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto" />
+                                                                    <RowDefinition Height="Auto" />
+                                                                    <RowDefinition Height="Auto" />
+                                                                    <RowDefinition Height="Auto" />
+                                                                </Grid.RowDefinitions>
 
-                                                            <DockPanel Grid.Row="0" LastChildFill="False">
-                                                                <TextBlock DockPanel.Dock="Left" Text="{Binding PlateNumber}"
-                                                                           FontWeight="Bold" FontSize="13.5"
-                                                                           Foreground="{DynamicResource PrimaryBlackColor}" />
+                                                                <DockPanel Grid.Row="0" LastChildFill="False">
+                                                                    <TextBlock DockPanel.Dock="Left" Text="{Binding PlateNumber}"
+                                                                               FontWeight="Bold" FontSize="13.5"
+                                                                               Foreground="{DynamicResource PrimaryBlackColor}" />
 
-                                                                <Border DockPanel.Dock="Right" CornerRadius="2" Padding="6,2">
-                                                                    <Border.Style>
-                                                                        <Style TargetType="Border">
-                                                                            <Setter Property="Background" Value="{DynamicResource MutedButtonColor}" />
-                                                                            <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding Severity}" Value="Danger">
-                                                                                    <Setter Property="Background" Value="{DynamicResource PrimaryRedColor}" />
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding Severity}" Value="Warning">
-                                                                                    <Setter Property="Background" Value="{DynamicResource SecondaryAccentColor}" />
-                                                                                </DataTrigger>
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </Border.Style>
-                                                                    <TextBlock Text="{Binding TagLabel}" FontSize="9.5" FontWeight="SemiBold"
-                                                                               Foreground="{DynamicResource PureWhiteColor}" />
-                                                                </Border>
-                                                            </DockPanel>
+                                                                    <Border DockPanel.Dock="Right" CornerRadius="2" Padding="6,2">
+                                                                        <Border.Style>
+                                                                            <Style TargetType="Border">
+                                                                                <Setter Property="Background" Value="{DynamicResource MutedButtonColor}" />
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding Severity}" Value="Danger">
+                                                                                        <Setter Property="Background" Value="{DynamicResource PrimaryRedColor}" />
+                                                                                    </DataTrigger>
+                                                                                    <DataTrigger Binding="{Binding Severity}" Value="Warning">
+                                                                                        <Setter Property="Background" Value="{DynamicResource SecondaryAccentColor}" />
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Border.Style>
+                                                                        <TextBlock Text="{Binding TagLabel}" FontSize="9.5" FontWeight="SemiBold"
+                                                                                   Foreground="{DynamicResource PureWhiteColor}" />
+                                                                    </Border>
+                                                                </DockPanel>
 
-                                                            <TextBlock Grid.Row="1" Text="{Binding Message}" FontSize="11.5"
-                                                                       Margin="0,4,0,6" TextWrapping="Wrap"
-                                                                       Foreground="{DynamicResource SecondaryTextColor}" />
+                                                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,2,0,0">
+                                                                    <fa:ImageAwesome Icon="ClockOutline" Width="10" Height="10"
+                                                                                     Foreground="{DynamicResource SecondaryTextColor}" />
+                                                                    <TextBlock Text="{Binding ReceivedTimeText}" FontSize="10.5" Margin="4,0,0,0"
+                                                                               VerticalAlignment="Center"
+                                                                               Foreground="{DynamicResource SecondaryTextColor}" />
+                                                                </StackPanel>
 
-                                                            <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                                                <Button Content="{Binding PrimaryActionLabel}"
-                                                                        Style="{StaticResource SecondaryOutlineButtonStyle}"
-                                                                        Command="{Binding PrimaryActionCommand}"
-                                                                        Padding="8,3" Margin="0,0,6,0" />
-                                                                <Button Content="Dismiss" Style="{StaticResource SecondaryOutlineButtonStyle}"
-                                                                        Command="{Binding DismissCommand}" Padding="8,3"
-                                                                        IsEnabled="{Binding IsDismissing, Converter={StaticResource InverseBoolConverter}}" />
-                                                            </StackPanel>
-                                                        </Grid>
+                                                                <TextBlock Grid.Row="2" Text="{Binding Message}" FontSize="11.5"
+                                                                           Margin="0,4,0,6" TextWrapping="Wrap"
+                                                                           Foreground="{DynamicResource SecondaryTextColor}" />
+
+                                                                <StackPanel Grid.Row="3" Orientation="Horizontal">
+                                                                    <Button Content="{Binding PrimaryActionLabel}"
+                                                                            Style="{StaticResource SecondaryOutlineButtonStyle}"
+                                                                            Command="{Binding PrimaryActionCommand}"
+                                                                            Padding="8,3" Margin="0,0,6,0" />
+                                                                    <Button Content="Dismiss" Style="{StaticResource SecondaryOutlineButtonStyle}"
+                                                                            Command="{Binding DismissCommand}" Padding="8,3"
+                                                                            IsEnabled="{Binding IsDismissing, Converter={StaticResource InverseBoolConverter}}" />
+                                                                </StackPanel>
+                                                            </Grid>
                                                     </Border>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
@@ -972,6 +996,121 @@
         </Grid>
     </Border>
 </Border>
+        
+            <Border Background="#CC000000"
+                Visibility="{Binding IsAlertDetailModalOpen, Converter={StaticResource BoolToVisibilityConverter}}"
+                d:DesignHeight="0">
+            <Border Background="{DynamicResource SecondaryBackgroundColor}" CornerRadius="3"
+                    BorderBrush="{DynamicResource PrimaryBorderColor}" BorderThickness="1"
+                    Padding="14" Width="480" MaxHeight="600"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,10">
+                        <TextBlock DockPanel.Dock="Left" Text="Alert Details"
+                                   Style="{DynamicResource SmallTitleTextStyle}" FontSize="16" />
+                        <Button DockPanel.Dock="Right" Command="{Binding CloseAlertDetailModalCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
+                                    <Setter Property="Foreground" Value="{DynamicResource SecondaryTextColor}" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
+                                            <Setter Property="Cursor" Value="Hand" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <fa:FontAwesome Icon="Close" />
+                        </Button>
+                    </DockPanel>
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                                  DataContext="{Binding SelectedAlert}">
+                        <StackPanel>
+                            <Border Background="{DynamicResource PrimaryBackgroundColor}" CornerRadius="2"
+                                    Padding="10" Margin="0,0,0,10">
+                                <DockPanel LastChildFill="False">
+                                    <Border DockPanel.Dock="Left" Style="{StaticResource PlateBadgeStyle}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding PlateNumber}"
+                                                   Style="{DynamicResource PlateBadgeTextStyle}" />
+                                    </Border>
+                                    <Border DockPanel.Dock="Right" CornerRadius="2" Padding="8,3"
+                                            VerticalAlignment="Center">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="{DynamicResource MutedButtonColor}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Severity}" Value="Danger">
+                                                        <Setter Property="Background" Value="{DynamicResource PrimaryRedColor}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Severity}" Value="Warning">
+                                                        <Setter Property="Background" Value="{DynamicResource SecondaryAccentColor}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="{Binding TagLabel}" FontSize="10.5" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource PureWhiteColor}" />
+                                    </Border>
+                                </DockPanel>
+                            </Border>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="110" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Received" Style="{StaticResource AlertDetailLabelStyle}" />
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ReceivedTimeText}" Style="{StaticResource AlertDetailValueStyle}" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Alert Type" Style="{StaticResource AlertDetailLabelStyle}" />
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding AlertTypeDesc}" Style="{StaticResource AlertDetailValueStyle}" />
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Message" Style="{StaticResource AlertDetailLabelStyle}" />
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Message}" Style="{StaticResource AlertDetailValueStyle}" />
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Vehicle ID" Style="{StaticResource AlertDetailLabelStyle}" />
+                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding VehicleIdText}" Style="{StaticResource AlertDetailValueStyle}" />
+
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Member ID" Style="{StaticResource AlertDetailLabelStyle}" />
+                                <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding MemberIdText}" Style="{StaticResource AlertDetailValueStyle}" />
+
+                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Session ID" Style="{StaticResource AlertDetailLabelStyle}" />
+                                <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding SessionIdText}" Style="{StaticResource AlertDetailValueStyle}" />
+
+                                <TextBlock Grid.Row="6" Grid.Column="0" Text="Gate / Operator" Style="{StaticResource AlertDetailLabelStyle}" />
+                                <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+                                    <TextBlock Text="{Binding GateIdText}" Style="{StaticResource AlertDetailValueStyle}" />
+                                    <TextBlock Text="/" Margin="6,0,6,8" Foreground="{DynamicResource SecondaryTextColor}" />
+                                    <TextBlock Text="{Binding OperatorIdText}" Style="{StaticResource AlertDetailValueStyle}" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <Button Grid.Row="2" Content="Close" Style="{DynamicResource SecondaryOutlineButtonStyle}"
+                            Command="{Binding CloseAlertDetailModalCommand}"
+                            HorizontalAlignment="Stretch" Margin="0,10,0,0" />
+                </Grid>
+            </Border>
+        </Border>
         </Grid>
     </Border>
 </UserControl>

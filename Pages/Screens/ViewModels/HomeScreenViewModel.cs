@@ -135,6 +135,9 @@ public class HomeScreenViewModel : ScreenViewModelBase
     private bool _hasNextPage = true;
 
     private bool _isLoadingMoreAlerts;
+    
+    private bool _isAlertDetailModalOpen;
+    private VehicleAlertItemViewModel? _selectedAlert;
 
     public ObservableCollection<VehicleAlertItemViewModel> SecurityAlerts { get; } = new();
 
@@ -209,6 +212,7 @@ public class HomeScreenViewModel : ScreenViewModelBase
         OpenExitPlateSearchCommand = new RelayCommand(_ => OpenPlateSearchModal(PlateSearchMode.Exit), _ => ExitHasUnknownPlate);
         ClosePlateSearchModalCommand = new RelayCommand(_ => ClosePlateSearchModal());
         SelectPlateSearchResultCommand = new RelayCommand(async void (param) => await SelectPlateSearchResultAsync(param as VehicleDto));
+        CloseAlertDetailModalCommand = new RelayCommand(_ => CloseAlertDetailModal());
     }
 
     private void OpenPlateSearchModal(PlateSearchMode mode)
@@ -380,11 +384,15 @@ public class HomeScreenViewModel : ScreenViewModelBase
 
     private void OnAlertPrimaryAction(VehicleAlertItemViewModel item)
     {
-        // TODO: hook up to whatever "inspect" / "dispatch guard" actually does —
-        // e.g. open the snapshot modal, or notify security via another API call
+        SelectedAlert = item;
+        IsAlertDetailModalOpen = true;
     }
 
-
+    private void CloseAlertDetailModal()
+    {
+        IsAlertDetailModalOpen = false;
+        SelectedAlert = null;
+    }
 
     private void RaiseAlertCountChanged()
     {
@@ -745,6 +753,19 @@ public class HomeScreenViewModel : ScreenViewModelBase
     public void InitializeExitAnprCamera(RtspStreamPlayer control) => ExitAnprPlayer = control;
     public void InitializeExitCctvCamera(RtspStreamPlayer control) => ExitCctvPlayer = control;
 
+    public bool IsAlertDetailModalOpen
+    {
+        get => _isAlertDetailModalOpen;
+        private set { _isAlertDetailModalOpen = value; OnPropertyChanged(); }
+    }
+
+    public VehicleAlertItemViewModel? SelectedAlert
+    {
+        get => _selectedAlert;
+        private set { _selectedAlert = value; OnPropertyChanged(); }
+    }
+
+    public RelayCommand CloseAlertDetailModalCommand { get; }
     public RelayCommand OpenExitGateCommand { get; }
     public RelayCommand ConfirmPaymentCommand { get; }
     public RelayCommand SelectCardPaymentCommand { get; }
